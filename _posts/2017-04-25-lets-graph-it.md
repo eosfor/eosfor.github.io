@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Lets graph it!"
+title:  Lets graph it!
 date:   2017-04-25 22:06:50.000000000 +03:00
 categories: [powershell]
 tags: [powershell]
@@ -10,21 +10,7 @@ So, after some time my  friends and I released the first version on the [PSQuic
 
 Let's give it a try. First you need to do is to install it. To do it, just start PowerShell and issue the following command, which  installs  the module from PS  gallery
 
-{% highlight powershell %}
-Install-Module PSQuickGraph -Scope CurrentUser
-{% endhighlight %}
-
-{% highlight ruby %}
-def show
-  @widget = Widget(params[:id])
-  respond_to do |format|
-    format.html # show.html.erb
-    format.json { render json: @widget }
-  end
-end
-{% endhighlight %}
-
-```powershell
+```
 Install-Module PSQuickGraph -Scope CurrentUser
 ```
 
