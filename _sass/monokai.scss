@@ -64,3 +64,54 @@ pre.highlight,
 .highlight .gu { color: #75715e; } /* Generic.Subheading & Diff Unified/Comment? */
 .highlight .gd { color: #f92672; } /* Generic.Deleted & Diff Deleted */
 .highlight .gi { color: #a6e22e; } /* Generic.Inserted & Diff Inserted */
+
+
+/* console highlight */
+.language-posh pre.highlight, .language-posh .highlight pre, 
+.language-console pre.highlight, .language-console .highlight pre  
+{
+    background: #012456;
+    color: #fff;
+}
+
+.language-posh td.gutter.gl pre.lineno,
+.language-console td.gutter.gl pre.lineno
+{
+    background: #003279;
+    color: #FF0;
+}
+
+/* text highlight */
+
+ .language-text .highlight .code pre
+{
+    /*color: #66d9ef;*/
+    color: #fff;
+}
+
+/* powershell highlight */
+pre.lineno {
+    background: #1a1b17;
+    width: auto;
+    border-radius: 3px 0px 0px 3px;
+}
+
+td.code pre
+{
+    border-radius: 0px 3px 3px 0px;
+}
+
+.highlight table, .highlight td.code pre
+{
+    width: 100%;
+}
+
+td.gutter.gl{
+    width: 40px;
+}
+
+/* use dart for file tree highlighting lol */
+.language-dart .highlight .err {
+    color: #f92672;
+    background-color: transparent;
+}
