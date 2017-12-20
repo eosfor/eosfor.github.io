@@ -14,7 +14,7 @@ Let's give it a try. First you need to do is to install it. To do it, just start
 Install-Module PSQuickGraph -Scope CurrentUser
 ```
 
->Next thing you need to do is to install  [graphviz](http://graphviz.org/). It is a command line tool which takes the text file in a special format and makes a picture from it. You can take it from [here](http://graphviz.org/Download_windows.php) and simply unzip into a folder. In my case I use c:\temp\graphviz folder. Once it is there you can do some magic.
+Next thing you need to do is to install  [graphviz](http://graphviz.org/). It is a command line tool which takes the text file in a special format and makes a picture from it. You can take it from [here](http://graphviz.org/Download_windows.php) and simply unzip into a folder. In my case I use c:\temp\graphviz folder. Once it is there you can do some magic.
 
 First -  start PowerShell and say:
 
