@@ -10,6 +10,10 @@ So, after some time my  friends and I released the first version on the [PSQuic
 
 Let's give it a try. First you need to do is to install it. To do it, just start PowerShell and issue the following command, which  installs  the module from PS  gallery
 
+{% highlight powershell %}
+Install-Module PSQuickGraph -Scope CurrentUser
+{% endhighlight %}
+
 ```powershell
 Install-Module PSQuickGraph -Scope CurrentUser
 ```
