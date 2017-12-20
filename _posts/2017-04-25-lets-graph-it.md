@@ -14,6 +14,16 @@ Let's give it a try. First you need to do is to install it. To do it, just start
 Install-Module PSQuickGraph -Scope CurrentUser
 {% endhighlight %}
 
+{% highlight ruby %}
+def show
+  @widget = Widget(params[:id])
+  respond_to do |format|
+    format.html # show.html.erb
+    format.json { render json: @widget }
+  end
+end
+{% endhighlight %}
+
 ```powershell
 Install-Module PSQuickGraph -Scope CurrentUser
 ```
