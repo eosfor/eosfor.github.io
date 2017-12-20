@@ -3,12 +3,12 @@ title: New-PowerShellBlog
 description: 'New home for https://eosfor.wordpress.com'
 url: 'http://eosfor.github.io'
 baseurl: '/'
-# google_analytics: 'UA-XXXXXX-X'
+google_analytics: 'UA-111426314-1'
 # disqus_shortname: 'your-disqus-name'
 
 author:
   name: 'Andrey Vernigora'
-  email: eosfor@gmail.com
+  email: yet.another.powershell.guy@gmail.com
 
 defaults:
   -
