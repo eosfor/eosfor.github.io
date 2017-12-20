@@ -14,5 +14,5 @@ C:\Program Files\Microsoft Office\root\Office16\Visio Content\1033. And suddenly
 <li>Select them all, copy (CTRL+C) and paste (CTRL+V) them once again in the same directory</li>
 </ol>
 <p>And they immediately appear in the search! Don't ask me why.</p>
-<p><img class="alignnone size-full wp-image-239" src="{{ site.baseurl }}/images/posts/visiofilescopied.png" alt="visioFilesCopied" width="1016" height="600" /></p>
-<p><img class="alignnone size-full wp-image-247" src="{{ site.baseurl }}/images/posts/visiofilescopied2.png" alt="visioFilesCopied2" width="278" height="435" /></p>
+<p><img class="alignnone size-full wp-image-239" src="{{ site.baseurl }}/images/posts/2017-04-10-visio2016-search-is-not-working/visiofilescopied.png" alt="visioFilesCopied" width="1016" height="600" /></p>
+<p><img class="alignnone size-full wp-image-247" src="{{ site.baseurl }}/images/posts/2017-04-10-visio2016-search-is-not-working/visiofilescopied2.png" alt="visioFilesCopied2" width="278" height="435" /></p>
