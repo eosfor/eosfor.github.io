@@ -35,7 +35,7 @@ kramdown:
   # do not replace newlines by <br>s
   hard_wrap: false
 
-    syntax_highlighter_opts:
+  syntax_highlighter_opts:
     css_class: 'highlight'
     span:
       line_numbers: false
