@@ -22,6 +22,13 @@ First -  start PowerShell and say:
 Import-Module PSQuickGraph
 ```
 
+```powershell
+# Class Syntax
+class CyberNinja
+{
+}
+```
+
 Now just open [this link](https://raw.githubusercontent.com/eosfor/PSGraph/master/PSGraph/processTreeSample.ps1) and copy the contents to the PowerShell window. And in a second  you will see a your first graph made using PowerShell.
 
 You can do a lot more with it,
