@@ -1,9 +1,9 @@
 # Site settings
 title: New-PowerShellBlog
 description: 'New home for https://eosfor.wordpress.com'
-url: 'http://eosfor.github.io'
-baseurl: '/'
-google_analytics: 'UA-111426314-1'
+url: 'https://staticblog01.blob.core.windows.net'
+baseurl: '/blog'
+# google_analytics: 'UA-111426314-1'
 # disqus_shortname: 'your-disqus-name'
 
 author:
