@@ -2,8 +2,8 @@
 layout: post
 title: How to find dependencies between applications
 date: 2017-11-04 16:10:28.000000000 +03:00
-categories: [PowerShell]
-tags: [PowerShell]
+categories: [PowerShell, PSQuickGraph]
+tags: [PowerShell, PSQuickGraph]
 ---
 Hello colleagues. As part of migrations to the cloud most common question is - how to map existing application landscape? How to find all relations of the application being moved? How to see which systems it communicates to?</p>
 Actually I already blogged about this some time ago but this time example is a bit more clear. We need to do the following steps to graph our environment:
