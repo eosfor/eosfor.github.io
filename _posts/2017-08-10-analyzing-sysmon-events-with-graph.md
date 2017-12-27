@@ -9,7 +9,7 @@ Hello colleagues, this is an example I promised answering [this](https://twitter
 So first thing to do in this case is create a graph object
 
 ```powershell
-$g = New-Graph -Type BidirectionalGraph<br />
+$g = New-Graph -Type BidirectionalGraph
 ```
 
 And now we can fill in the graph with some data right from the event log. It may take few seconds until all events are processed
@@ -21,7 +21,7 @@ Get-WinEvent -LogName Microsoft-Windows-Sysmon/Operational | ? {$_.id -eq 1} |
 
 And then we just display the graph
 ```powershell
-Show-GraphLayout -Graph $g<br />
+Show-GraphLayout -Graph $g
 ```
 This is how it looks like
 {% youtube https://youtu.be/LuRo8GEwp1w %}
