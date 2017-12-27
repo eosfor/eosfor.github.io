@@ -1,0 +1,77 @@
+---
+layout: post
+title: Support Manifesto
+date: 2015-05-29 08:25:54.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _publicize_job_id: '11124173022'
+  _edit_last: '57516972'
+  geo_public: '0'
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p><strong>Nowadays there is a big gap between developers and infrastructure operations. The problem is that they exist in two different worlds. They use different terminology and approaches, have distinctive strategies and goals, varying sets of knowledge, and even a different mindset. How can we work together like this, and who can join us?<br />
+</strong></p>
+<p>We should all think not only in terms of our technical field, but also about the people we are doing this for. Customers don't just require a solution itself. They also need to support and monitor this solution, manage it, integrate it with existing solutions and data flows, deploy new instances and restore failed ones. When a solution contains a number of components that can run on various servers and be moved from one to another, there is a lifesaving property that should be provided – the system should be self-descriptive. In other words, it should provide some interface to track its state and components in an easy way.</p>
+<p>How can we achieve this? Here are some ideas and technologies to use for developers who want to do something really great.</p>
+<p><!--more--></p>
+<p><strong>Manageability Strategy – give us tools and docs!<br />
+</strong></p>
+<p><img class=" alignleft" src="{{ site.baseurl }}/assets/052915_0825_supportmani1.png" alt="" align="right" />When a solution runs a lot of instances across a number of boxes, it is crucial to have some kind of  scriptable command line interface to manage it. This command line based toolset should provide management and enumeration functionality with which it should be easy to perform tasks like the ones below:</p>
+<ol>
+<li>Return all the components of the solution running on the server, by provided name of the server. Simple pseudo code example might look like this:<em>Get-AppComponents –Computername my.server.com </em>This gives the ability to automatically build a map of the running components and their statuses.</li>
+<li>Perform basic operations on these components, like stop, start, restart, retrieve status and current configuration options, and reconfigure the component remotely.</li>
+</ol>
+<p>All of this can be accomplished via the WMI interface provided by the solution and its components. It is possible to generate PowerShell cmdlets based on WMI if we have them. With IIS, there isn't even the need for a provider, because IIS offers enough tools for all of these tasks. Only some wrappers over the existing commands should be provided as part of the solution. Besides that, having WMI will give us the option to automatically discover the components of the application in a simple way.</p>
+<p><img src="{{ site.baseurl }}/assets/052915_0825_supportmani2.jpg" alt="" /></p>
+<p><span style="color:#44546a;font-size:9pt;"><em>Hey Ops guys, here is the documentation you asked for<br />
+</em></span></p>
+<p>Thus, in order to make the solution manageable, developers should:</p>
+<ol>
+<li>Provide a command line based, scriptable management interface for the whole solution. On Windows, this should be accomplished via providing PowerShell based interface OR providing WMI interface. It can be easily converted to cmdlet using CDXML</li>
+<li>
+<div>Provide technical documentation describing the high level overview, map and workflow between the components, the protocols used to communicate, and details on the internals of the components</div>
+</li>
+</ol>
+<p><img class=" alignleft" src="{{ site.baseurl }}/assets/052915_0825_supportmani3.png" alt="" align="left" /><strong>Monitorability Strategy<br />
+</strong></p>
+<p>To be able to maintain good quality of service provided by the solution, it should be easy to monitor and react to incoming incidents. Besides, it should easily integrate into the existing monitoring solution of the enterprise. So how can we achieve this? There are three main ways to do it, from simple to complicated, and they are: event logs, performance counters, and event tracing for Windows.</p>
+<p>Event log is the easiest way to provide data to all the existing monitoring systems. If the application puts a message in the log, it could be taken by a monitoring system and processed accordingly.</p>
+<p>On the other hand, sometimes support, as well as development, requires additional information about the performance of the solution. For that, the solution should provide performance counters for its key points. But there is more, monitoring systems can also consume this data and generate alerts based on them. This gives the ability to quickly find the problem and react to it. Moreover, it becomes possible to gather statistics and look for ways to improve the solution. As a result, you have monitoring out of the box with no effort, no 3<sup>rd</sup> party tools, and no additional costs.</p>
+<p>But, at some point, even this is not enough. You might need to look deeper into the solution and find how much time the solution spends inside of function calls. There are some situations where there is a need to correlate the events happening in the system at a particular point or during a particular period of time to find out the cause of slowness. And that is what Event Tracing for Windows (ETW) was introduced to do. If the solution provides information of this depth, it becomes possible to do deep dives into performance issues using nice looking graphical tools, and making different slices on different angles of view.</p>
+<p>In summary, to make a solution fit into ITIL and the existing monitoring, incident management, and problem management, and to change management policies, developers should:</p>
+<ol>
+<li>Consider using one of the standard ways to register events in the system.</li>
+<li>Consider providing key performance metrics via system performance counters</li>
+<li>Optionally, make ETW (<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb968803%28v=vs.85%29.aspx">Event Tracing for Windows</a>) providers for the product</li>
+</ol>
+<p><strong>Deployment Strategy<br />
+</strong></p>
+<p><img src="{{ site.baseurl }}/assets/052915_0825_supportmani4.png" alt="" /><strong><br />
+</strong></p>
+<p>Here is the thing, deployment should be planned at the very beginning, at the point when the application architecture is just being built. This is the main prerequisite for easy deployment. There is another cornerstone of easy deployment on the Windows platform – packet based deployment. Having packets gives the option to rollback failed deployment out of the box. There are other benefits, like logging, temporary admin rights, uninstallation, centralized management with enterprise level, self-repair, setup customizations, the ability to advertise packages, and simple deployment based on GPO. So when the deployment method for the solution is the MSI packet, all of the above is provided out of the box.</p>
+<p>These two technologies are on the cutting edge of deployment: Desired State Configuration (DSC) and OneGet.</p>
+<p>DSC technology is a way of making complex deployment workflows in a declarative way. The idea is to define the configuration of the server in a simple declarative way and request the server to configure itself. The main scenario is when servers query the main configuration point for newer configurations. If there are some, servers download them along with the necessary files and apply them. The benefit here is that this functionality is a part of the OS and is provided by the OS vendor. You don't need to use a 3<sup>rd</sup> party. The only thing that is required is a piece of logic called DSC Resource, which knows how to deploy this particular component. Make it, the DSC Resource code, put it on the configuration server and voilà – all your components and apps get configured automatically.</p>
+<p>OneGet is a cutting edge experimental approach based on powershell. Think of it as a packet management system for Windows. In general, it is a framework that can be attached to any repository; by default, it is the Chocolatey public repository based on NuGet through a powershell-based or C#-based repository provider. If you have a provider framework, you can query the repository for packages and manage them.</p>
+<p>At this stage, the workflow becomes simple and clear. The developer team should simply build the package and put it into the package repository. All the rest is automated by DSC and OneGet.</p>
+<p>In conclusion, I should point out that for deployment to the existing enterprise infrastructure, developers should:</p>
+<ol>
+<li>Check if there is a source control/repository/deployment infrastructure in place and consider it as a default deployment platform</li>
+<li>Architect their solutions with that in mind</li>
+</ol>
+<p>When there is no such infrastructure in place, the points to remember are:</p>
+<ol>
+<li>Use the platform provided package mechanisms as a default way of deployment.</li>
+<li>Make a central repository for packages.</li>
+<li>Make a package management solution based on OneGet or PowerShell.</li>
+</ol>

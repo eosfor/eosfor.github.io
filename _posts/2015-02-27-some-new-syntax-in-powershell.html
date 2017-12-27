@@ -1,0 +1,49 @@
+---
+layout: post
+title: Some new syntax in Powershell
+date: 2015-02-27 18:28:02.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _wpas_skip_path: '1'
+  _wpas_skip_tumblr: '1'
+  _wpas_skip_linkedin: '1'
+  _wpas_skip_twitter: '1'
+  _wpas_skip_facebook: '1'
+  _wpas_skip_google_plus: '1'
+  _rest_api_published: '1'
+  _rest_api_client_id: "-1"
+  _publicize_pending: '1'
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p>Now sure when this happened, but looks like we have new syntax for defining arrays. It looks like below:</p>
+<p>[code language="powershell"]</p>
+<p>$a = $(1,2,3)</p>
+<p>[/code]</p>
+<p>What is this, what is the result here. Lets try some new features of <a title="WMF 5.0 Preview February 2015" href="http://www.microsoft.com/en-us/download/details.aspx?id=45883" target="_blank">WMF 5 February</a> preview. Just do couple of things</p>
+<ol>
+<li>Download and install the preview</li>
+<li>Start the PowerShell with admin credentials</li>
+<li>Run the following command. This going to download the module from PowerShell repository from <a title="Powershell galery" href="https://www.powershellgallery.com" target="_blank">here</a>
+<p>[code language="powershell"]<br />
+Install-Module -Name PowerShellCookbook<br />
+[/code]</p>
+<p><a href="https://eosfor.files.wordpress.com/2015/02/2015-02-27-20_43_18-administrator_-windows-powershell.png"><img class="alignnone size-medium wp-image-10" src="{{ site.baseurl }}/assets/2015-02-27-20_43_18-administrator_-windows-powershell.png?w=300" alt="2015-02-27 20_43_18-Administrator_ Windows PowerShell" width="300" height="28" /></a></li>
+<li>At this point we have installed the <a href="https://msconfiggallery.cloudapp.net/packages/PowerShellCookbook/" target="_blank">PowerShellCookbook</a> module and we are interested in Show-Object cmdlet from it.</li>
+<li>We can just pipe pass the variable to it and see the below megathing!
+<p>[code language="powershell"]<br />
+Show-Object $a<br />
+[/code]</p>
+<p><a href="https://eosfor.files.wordpress.com/2015/02/array.png"><img class="alignnone size-medium wp-image-11" src="{{ site.baseurl }}/assets/array.png?w=282" alt="Array" width="282" height="300" /></a></li>
+</ol>
+<p>Really cool. Here we see it is an array</p>

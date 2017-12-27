@@ -1,0 +1,45 @@
+---
+layout: post
+title: Building relatively complex data structures in Powershell
+date: 2015-12-22 08:23:50.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _rest_api_published: '1'
+  _rest_api_client_id: "-1"
+  _publicize_job_id: '18023750612'
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p style="text-align:justify;">Ok, lets continue our discussion about building an Azure asset database. In this short article I'm going to show a simple way of building a dynamic data structure which stores database alongside with its indexes.</p>
+<p style="text-align:justify;">lets start from quick reminder of where we are. At the moment we have a variable, containing database of Azure based VMs. And we have a procedure of building indexes, based on <a href="https://en.wikipedia.org/wiki/Hash_table" target="_blank">hash tables</a>. How can we use it to search the DB in a cmdlet based way. I think that the best way is to use following semantics:</p>
+<p>[code language="powershell"]<br />
+Find-AzureDBObject -Database $DB -IPAddress 10.10.10.10<br />
+[/code]</p>
+<p style="text-align:justify;">where <em>IPAddress</em> parameter is a name of an index. So here we have two problems. First we need to store name of the index together with index itself (add index operation), and second, we need to enumerate indexes we have added (get index operation). In this case we going to get an option to dynamically add indexes to the structure. On the other hand we need this cmdlet to be able to dynamically add parameters to itself depending on the indexes of the DB.</p>
+<p style="text-align:justify;">In my opinion simplest way to achieve this is to build a structure of nested hash tables. For instance like this:</p>
+<p style="text-align:justify;"><img class="alignnone size-full wp-image-143" src="{{ site.baseurl }}/assets/structure.png" alt="structure" width="471" height="311" /></p>
+<p style="text-align:justify;">it simply contains database itself and links to a set of indexes. And as I mentioned before each index has links to the original database. Each of these structures is basically a hash table. For instance key described as following:</p>
+<p>[code language="powershell"]<br />
+$DB = @{Database = $ht; Index = @{}}<br />
+[/code]</p>
+<p style="text-align:justify;">where $ht is the original database, extracted from Azure. Second field will contain the list of indexes, like this</p>
+<p>[code language="powershell"]<br />
+$Index = @{'IPAddress' = $ipAddrIndex; StorageAccount = $storageAcctIndex; DriveFile = $storageFileIndex}<br />
+[/code]</p>
+<p style="text-align:justify;">and as a result we build whole structure like this</p>
+<p>[code language="powershell"]</p>
+<p>#create database</p>
+<p>$DB = @{Database = $ht; Index = @{'IPAddress' = $ipAddrIndex; StorageAccount = $storageAcctIndex; DriveFile = $storageFileIndex}}<br />
+[/code]</p>
+<p>This gives us an ability to add/remove indexes on the fly, use them and build cmdlets with dynamic parameters to easily use these indexes for search.</p>
+<p>Next time we will look at how to use this in cmdlets</p>

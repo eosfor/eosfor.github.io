@@ -1,0 +1,29 @@
+---
+layout: post
+title: Powershell and Azure pricing
+date: 2016-09-09 14:42:10.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _rest_api_client_id: "-1"
+  _publicize_job_id: '26648657461'
+  _rest_api_published: '1'
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p>Sometimes it is difficult to calculate prices for Azure. Especially when you have a lot of machines. What to do? It is easy:</p>
+<p>[code language="powershell"]<br />
+$request = Invoke-WebRequest -Uri https://azure.microsoft.com/api/v1/pricing/virtual-machines/calculator/?culture=en-us<br />
+$offers = $request.Content | ConvertFrom-Json</p>
+<p>$offers.offers.'standard-d11v2'.prices | select -Property &quot;us-east*&quot;<br />
+[/code]</p>
+<p>Enjoy</p>

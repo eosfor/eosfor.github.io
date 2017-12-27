@@ -1,0 +1,32 @@
+---
+layout: post
+title: How to bring up Windows 2012 R2 in HyperV without installing it
+date: 2015-05-08 15:49:17.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags:
+- ISO
+- VHD
+meta:
+  _edit_last: '57516972'
+  geo_public: '0'
+  _publicize_pending: '1'
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p>Hey, here is a great stuff out <a href="https://gallery.technet.microsoft.com/scriptcenter/Convert-WindowsImageps1-0fe23a8f" target="_blank">there.</a> This script is able, so to speak, to convert an ISO file into VHD(x) file, that can be easily attached to the VM. Basically you take ISO, convert it, attach VHD to a Vm and voila, you are done. So what to do to achieve this? Easy, just download the script! And after that just:</p>
+<p>[code language="powershell"]<br />
+.\Convert-WindowsImage.ps1 -source D:\X64FRE_SERVER_EVAL.ISO `<br />
+-Edition ServerDataCenterEval -VHDPath 'D:\VMs\Virtual Hard Disks\CONTOSO-DC1.vhdx' `<br />
+-VHDFormat vhdx -VHDPartitionStyle GPT<br />
+[/code]</p>
+<p><span style="color:#8a2be2;font-family:Lucida Console;font-size:xx-small;"> </span></p>
+<p><a href="https://eosfor.files.wordpress.com/2015/05/2015-05-08-18_41_49-administrator_-windows-powershell.png"><img class="alignnone wp-image-26 size-large" src="{{ site.baseurl }}/assets/2015-05-08-18_41_49-administrator_-windows-powershell.png?w=775" alt="2015-05-08 18_41_49-Administrator_ Windows PowerShell" width="775" height="190" /></a></p>

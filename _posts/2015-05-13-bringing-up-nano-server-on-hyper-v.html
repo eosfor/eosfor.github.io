@@ -1,0 +1,40 @@
+---
+layout: post
+title: Bringing up Nano Server on Hyper-V
+date: 2015-05-13 19:52:50.000000000 +03:00
+type: post
+parent_id: '0'
+published: true
+password: ''
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '57516972'
+  geo_public: '0'
+  _publicize_pending: '1'
+  _rest_api_published: '1'
+  _rest_api_client_id: "-1"
+author:
+  login: eosfor
+  email: eosfor@gmail.com
+  display_name: eosfor
+  first_name: ''
+  last_name: ''
+---
+<p>On the MS Ignite new thing,<a href="http://blogs.technet.com/b/windowsserver/archive/2015/04/08/microsoft-announces-nano-server-for-modern-apps-and-cloud.aspx"> Nano Server was announced</a>. The idea is to get smallest footprint for the Windows Server ever. Now it is possible to try it. In general it is quite straightforward. First you need to download the technical preview of new Server from <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-technical-preview">here</a>. "There you will find the gate to hell, opened before you. You must find the courage to step through that gate …" (c) oops ). No, not that bad.</p>
+<p>After you have downloaded the image you can mount it and find a folder called NanoServer. There will be the wim image of the server and some additional folder with packages wich can be additionally added to the new installation. Next you need to follow the link <a href="http://www.aka.ms/nanoserver">here</a> and read the documentation. What I did is just wrapped the doc into a small script which shows the steps in brief</p>
+<p>[code language="powershell"]</p>
+<p>$dism = &quot;D:\temp\NewDism\dism.exe&quot;<br />
+$imageFile = &quot;D:\VMs\Virtual Hard Disks\nanoServerBaseLine2.vhd&quot;<br />
+$mountDir = &quot;D:\temp\mountdir&quot;<br />
+$convert = &quot;D:\Temp\Convert-WindowsImage.ps1&quot;</p>
+<p>&amp; $convert -SourcePath E:\NanoServer\NanoServer.wim -VHDPath $imageFile -VHDFormat VHD -Edition 1<br />
+&amp; $dism /Mount-Image /ImageFile:$imageFile /Index:1 /MountDir:$mountDir<br />
+&amp; $dism /Add-Package /PackagePath:E:\NanoServer\Packages\Microsoft-NanoServer-Guest-Package.cab /Image:$mountdir</p>
+<p>&amp; $dism /Image:$mountdir /Apply-Unattend:D:\VMs\Unattend.xml</p>
+<p>md $mountDir\windows\panther<br />
+copy D:\VMs\Unattend.xml $mountDir\Windows\panther</p>
+<p>&amp; $dism /Unmount-Image /MountDir:$mountdir /Commit</p>
+<p>New-VM –Name testNanoVM –MemoryStartupBytes 1GB –VHDPath $imageFile -SwitchName Internal | Start-VM</p>
+<p>[/code]</p>
