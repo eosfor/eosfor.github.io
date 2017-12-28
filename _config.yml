@@ -34,18 +34,18 @@ kramdown:
   # use Github Flavored Markdown
   input: GFM
   # do not replace newlines by <br>s
-  hard_wrap: false
-  syntax_highlighter: coderay
+  hard_wrap: true
+  syntax_highlighter: rouge
 
   syntax_highlighter_opts:
     disable: false
     span:
-      line_numbers: false
+      line_numbers: true
     block:
       line_numbers: true
       start_line: 1
 
-plugins: [jekyll-youtube, jekyll-gist]
+plugins: [jekyll-gist]
 
-gems: ['jekyll-paginate', 'jemoji', 'jekyll-sitemap', 'jekyll-gist', 'jekyll-youtube']
+gems: ['jekyll-paginate', 'jemoji', 'jekyll-sitemap', 'jekyll-gist']
 exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']
