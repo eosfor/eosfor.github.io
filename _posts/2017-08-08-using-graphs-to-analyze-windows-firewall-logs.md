@@ -55,6 +55,7 @@ $log | ? {$_.srcip -and $_.dstip} | % {
     Add-Edge -From $_.srcip -To $_.dstip -Graph $g | out-null
 }
 ```
+
 So here we create a graph and add vertices. Source and destination IPs being converted into string representations and added to the graph, and the library itself takes care about duplicated entries. So at the end we have a $g variable containing the graph. Now we can easily display it by issuing
 
 ```powershell
@@ -92,58 +93,4 @@ Show-GraphLayout -Graph $g2
 
 Complete set of commands is below
 
-```powershell
-#file and regular expression
-$f = gc "C:\Temp\pfirewall_public.log"
-$regex = '^(?<datetime>\d{4,4}-\d{2,2}-\d{2,2}\s\d{2}:\d{2}:\d{2})\s(?<action>\w+)\s(?<protocol>\w+)\s(?<srcip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<dstip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<srcport>\d{1,5})\s(?<dstport>\d{1,5})\s(?<size>\d+|-)\s(?<tcpflags>\d+|-)\s(?<tcpsyn>\d+|-)\s(?<tcpack>\d+|-)\s(?<tcpwin>\d+|-)\s(?<icmptype>\d+|-)\s(?<icmpcode>\d+|-)\s(?<info>\d+|-)\s(?<path>.+)$'
-
-#parsing
-$log =
-$f | % {
-    $_ -match $regex | Out-Null
-    if ($Matches) {
-    [PSCustomObject]@{
-        action   = $Matches.action
-        srcip    = [ipaddress]$Matches.srcip
-        dstport  = $Matches.dstport
-        tcpflags = $Matches.tcpflags
-        dstip    = [ipaddress]$Matches.dstip
-        info     = $Matches.info
-        size     = $Matches.size
-        protocol = $Matches.protocol
-        tcpack   = $Matches.tcpac
-        srcport  = $Matches.srcport
-        tcpsyn   = $Matches.tcpsyn
-        datetime = [datetime]$Matches.datetime
-        icmptype = $Matches.icmptype
-        tcpwin   = $Matches.tcpwin
-        icmpcode = $Matches.icmpcode
-        path     = $Matches.path
-    }
-    }
-}
- #whole graph
-$g = new-graph -Type BidirectionalGraph
-$log | ? {$_.srcip -and $_.dstip} | % {
-    Add-Edge -From $_.srcip -To $_.dstip -Graph $g | out-null
-}
-
-Show-GraphLayout -Graph $g
-
-#subset of log records filterd by time
-$d = ($log | sort datetime -Descending | select -First 1).datetime.addhours(-1)
-$twoHrsLog = $log.Where({$_.datetime -gt $d})
-$g1 = new-graph -Type BidirectionalGraph
-$twoHrsLog | ? {$_.srcip -and $_.dstip} | % {
-    Add-Edge -From $_.srcip -To $_.dstip -Graph $g1 | out-null
-}
-
-Show-GraphLayout -Graph $g1
-
-#subset of log records filtered by degree of edges
-$g2 = new-graph -Type BidirectionalGraph
-$x = $g.Vertices.Where({$g.OutDegree($_) -gt 0})
-$x | where {$_ -ne '192.168.0.107'} | % {$e = $g.InEdges($_); if ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
-$x | where {$_ -ne '192.168.0.107'} | % {$e = $g.OutEdges($_); if ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
-Show-GraphLayout -Graph $g2
-```
+{% gist f59298b0ab6ceea170df3d69efb4787f %}
