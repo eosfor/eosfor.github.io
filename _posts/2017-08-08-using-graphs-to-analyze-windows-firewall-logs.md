@@ -12,7 +12,7 @@ Hello colleagues, lets talk about how we can use graphs to look inside of commun
 
 As you can see, it is structured, so it is good idea to parse it as objects. Lets do it, and it may look like the following:
 
-```
+    
 $f = gc "C:\Temp\pfirewall_public.log"
 $regex = '^(?<datetime>\d{4,4}-\d{2,2}-\d{2,2}\s\d{2}:\d{2}:\d{2})\s(?<action>\w+)\s(?<protocol>\w+)\s(?<srcip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<dstip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<srcport>\d{1,5})\s(?<dstport>\d{1,5})\s(?<size>\d+|-)\s(?<tcpflags>\d+|-)\s(?<tcpsyn>\d+|-)\s(?<tcpack>\d+|-)\s(?<tcpwin>\d+|-)\s(?<icmptype>\d+|-)\s(?<icmpcode>\d+|-)\s(?<info>\d+|-)\s(?<path>.+)$'
  
@@ -41,8 +41,7 @@ $f | % {
     }
     }
 }
-```
-{: .language-powershell}
+
 
 The **$regex** variable here contains a long regular expression which is going to parse our file onto objects - one per line. We use **-match** operator in the pipeline to apply this expression to each line of the file and suppress output by piping it to **Out-Null**. This is not the fastest way of parsing files but to me one of the easiest ones. If the there is a match **$Matches** variable gets populated. Here we want to do the trick. First we fill in the hashtable with the fields we would like to put into our new object and then convert this hashtable to an object. One thing to pay attention to is we convert datetime field into [datetime] type to be able to use filtering and sorting capabilities later on. The same we do with ip addresses. So at the end we've got objects and they look like this:
 
