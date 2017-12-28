@@ -24,4 +24,4 @@ And then we just display the graph
 Show-GraphLayout -Graph $g
 ```
 This is how it looks like
-<iframe width="560" height="420" src="https://youtu.be/LuRo8GEwp1w"></iframe>
+[![img](http://img.youtube.com/vi/LuRo8GEwp1w/0.jpg)](http://www.youtube.com/watch?v=LuRo8GEwp1w)
