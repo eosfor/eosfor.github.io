@@ -17,4 +17,4 @@ For the second step here is the simplest example
 {% gist a29f53052c7bdfc98339e630149cccdb %}
 
 And here is what we can get out of it.
-![Img](/images/posts/oldposts/apprelgraph.png)
+![Img](/images/posts/oldPosts/apprelgraph.png)
