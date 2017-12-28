@@ -18,4 +18,4 @@ For the second step here is the simplest example
 
 And here is what we can get out of it.
 
-![Img](/images/posts/oldPosts/apprelgraph.png)
+![Img](/images/posts/oldposts/apprelgraph.png)
