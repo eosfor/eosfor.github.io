@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Another way of looking for objects in Azure
+title: Another way to search objects in Azure
 date: 2015-12-17 10:35:09.000000000 +03:00
 categories: [Powershell, Azure]
 tags: [Powershell, Azure]
