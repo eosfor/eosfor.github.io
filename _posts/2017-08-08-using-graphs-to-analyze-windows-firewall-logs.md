@@ -11,6 +11,7 @@ Hello colleagues, lets talk about how we can use graphs to look inside of commun
 ![img](/images/posts/oldPosts/fwlog.png)
 
 As you can see, it is structured, so it is good idea to parse it as objects. Lets do it, and it may look like the following:
+
 ```powershell
 $f = gc "C:\Temp\pfirewall_public.log"
 $regex = '^(?<datetime>\d{4,4}-\d{2,2}-\d{2,2}\s\d{2}:\d{2}:\d{2})\s(?<action>\w+)\s(?<protocol>\w+)\s(?<srcip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<dstip>\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?<srcport>\d{1,5})\s(?<dstport>\d{1,5})\s(?<size>\d+|-)\s(?<tcpflags>\d+|-)\s(?<tcpsyn>\d+|-)\s(?<tcpack>\d+|-)\s(?<tcpwin>\d+|-)\s(?<icmptype>\d+|-)\s(?<icmpcode>\d+|-)\s(?<info>\d+|-)\s(?<path>.+)$'
@@ -43,9 +44,11 @@ $f | % {
 ```
 
 The **$regex** variable here contains a long regular expression which is going to parse our file onto objects - one per line. We use **-match** operator in the pipeline to apply this expression to each line of the file and suppress output by piping it to **Out-Null**. This is not the fastest way of parsing files but to me one of the easiest ones. If the there is a match **$Matches** variable gets populated. Here we want to do the trick. First we fill in the hashtable with the fields we would like to put into our new object and then convert this hashtable to an object. One thing to pay attention to is we convert datetime field into [datetime] type to be able to use filtering and sorting capabilities later on. The same we do with ip addresses. So at the end we've got objects and they look like this:
+
 ![Img](/images/posts/oldposts/fwlog3.png)
 
 Looks great so far, but what is next? First of all objects we've got are just edges of our graph. So what we can do now to convert the set of edges to a set of vertices along with their edges? This is really easy, lets just add them
+
 ```powershell
 $g = new-graph -Type BidirectionalGraph
 $log | ? {$_.srcip -and $_.dstip} | % {
@@ -53,16 +56,19 @@ $log | ? {$_.srcip -and $_.dstip} | % {
 }
 ```
 So here we create a graph and add vertices. Source and destination IPs being converted into string representations and added to the graph, and the library itself takes care about duplicated entries. So at the end we have a $g variable containing the graph. Now we can easily display it by issuing
+
 ```powershell
 Show-GraphLayout -Graph $g
 ```
 
 which will display something like this
+
 ![Img](/images/posts/oldposts/fwlog4.png)
 
 It does not look beautiful for me as it basically shows only a single log from my own laptop. But if we had multiple logs from some environment we would be able to see communications happened inside and outside the environment.
 
 What else can we do here? For example we can try to filter the set of log data we parsed and display the smaller subset of data, for instance like this
+
 ```powershell
 $d = ($log | sort datetime -Descending | select -First 1).datetime.addhours(-1)
 $twoHrsLog = $log.Where({$_.datetime -gt $d})
@@ -74,6 +80,7 @@ Show-GraphLayout -Graph $g1
 ```
 
 where we just filter the log to see just communications happened for the last hour. We could also filter by IPs or by degree of out or in edges
+
 ```powershell
 $g2 = new-graph -Type BidirectionalGraph
 $x = $g.Vertices.Where({$g.OutDegree($_) -gt 0})
@@ -84,6 +91,7 @@ Show-GraphLayout -Graph $g2
 ```
 
 Complete set of commands is below
+
 ```powershell
 #file and regular expression
 $f = gc "C:\Temp\pfirewall_public.log"
