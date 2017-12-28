@@ -43,8 +43,14 @@ kramdown:
       line_numbers: true
       start_line: 1
 
+<<<<<<< HEAD
 plugins:
   - jekyll-gist
 
 gems: ['jekyll-paginate', 'jemoji', 'jekyll-sitemap', 'jekyll-gist']
+=======
+plugins: [jekyll-youtube, jekyll-gist]
+
+gems: ['jekyll-paginate', 'jemoji', 'jekyll-sitemap', 'jekyll-gist', 'jekyll-youtube']
+>>>>>>> reworkingOldPosts
 exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']
