@@ -24,6 +24,7 @@ paginate: 10
 permalink: /:year/:title/
 markdown: kramdown
 # highlighter: rouge
+# highlighter: coderay
 
 sass:
     sass_dir: _sass
@@ -34,10 +35,10 @@ kramdown:
   input: GFM
   # do not replace newlines by <br>s
   hard_wrap: false
-  syntax_highlighter: rouge
+  syntax_highlighter: coderay
 
   syntax_highlighter_opts:
-    disable: true
+    disable: false
     span:
       line_numbers: false
     block:
