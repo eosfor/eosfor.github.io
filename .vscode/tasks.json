@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    // Start PowerShell
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "args": [
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "linux": {
+        "options": {
+            "shell": {
+                "executable": "/usr/bin/pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "osx": {
+        "options": {
+            "shell": {
+                "executable": "/usr/local/bin/pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        }
+    },
+    "tasks": [
+        {
+            "label": "New blog post",
+            "type": "shell",
+            "command": "Invoke-Plaster -TemplatePath C:\\Repo\\Blog\\eosfor.github.io\\plaster -DestinationPath C:\\Repo\\Blog\\eosfor.github.io\\_posts -postdate (Get-Date -Format 'yyyy-MM-dd') -Verbose"
+        }
+    ]
+}
