@@ -42,7 +42,7 @@
         {
             "label": "New blog post",
             "type": "shell",
-            "command": "Invoke-Plaster -TemplatePath C:\\Repo\\Blog\\eosfor.github.io\\plaster -DestinationPath C:\\Repo\\Blog\\eosfor.github.io\\_posts -postdate (Get-Date -Format 'yyyy-MM-dd') -Verbose"
+            "command": "Invoke-Plaster -TemplatePath .\\plaster -DestinationPath .\\_posts -postdate (Get-Date -Format 'yyyy-MM-dd') -Verbose"
         }
     ]
 }
