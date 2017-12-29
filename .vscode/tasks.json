@@ -40,9 +40,19 @@
     },
     "tasks": [
         {
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "label": "New blog post",
             "type": "shell",
-            "command": "Invoke-Plaster -TemplatePath .\\plaster -DestinationPath .\\_posts -postdate (Get-Date -Format 'yyyy-MM-dd') -Verbose"
+            "command": "Invoke-Plaster -TemplatePath .\\plaster -DestinationPath .\\_posts -postdate (Get-Date -Format 'yyyy-MM-dd') -Verbose",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            }
         }
     ]
 }
