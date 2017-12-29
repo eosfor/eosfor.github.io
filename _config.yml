@@ -1,8 +1,8 @@
 # Site settings
 title: New-PowerShellBlog
-description: 'New home for https://eosfor.wordpress.com'
+description: 'New home for eosfor.wordpress.com'
 url: 'http://eosfor.github.io'
-baseurl: '/'
+baseurl: ''
 google_analytics: 'UA-111426314-1'
 # disqus_shortname: 'your-disqus-name'
 
@@ -23,8 +23,7 @@ destination: _site
 paginate: 10
 permalink: /:year/:title/
 markdown: kramdown
-# highlighter: rouge
-# highlighter: coderay
+highlighter: none
 
 sass:
     sass_dir: _sass
@@ -34,18 +33,7 @@ kramdown:
   # use Github Flavored Markdown
   input: GFM
   # do not replace newlines by <br>s
-  hard_wrap: true
-  syntax_highlighter: rouge
+  hard_wrap: false
 
-  syntax_highlighter_opts:
-    disable: false
-    span:
-      line_numbers: true
-    block:
-      line_numbers: true
-      start_line: 1
-
-plugins: [jekyll-gist]
-
-gems: ['jekyll-paginate', 'jemoji', 'jekyll-sitemap', 'jekyll-gist']
+plugins: ['jekyll-paginate','jekyll-gist', 'jekyll-sitemap']
 exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']

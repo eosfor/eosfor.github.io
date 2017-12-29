@@ -12,4 +12,16 @@ Jekyll also offers powerful support for code snippets:
 get-command get-item
 ```
 
+<h1 style="border-bottom: 2px solid black;">powershell</h1>
+<pre class="brush: powershell;">
+$request = [System.Net.WebRequest]::Create(&#34;http://www.somelocation.com/testlink.aspx&#34;)
+$response = $request.GetResponse()
+$requestStream = $response.GetResponseStream()
+$readStream = new-object System.IO.StreamReader $requestStream
+new-variable db
+$db = $readStream.ReadToEnd()
+$readStream.Close()
+$response.Close()
+</pre>
+
 HO HO HO!

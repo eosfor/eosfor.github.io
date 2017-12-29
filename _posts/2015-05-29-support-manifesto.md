@@ -13,7 +13,7 @@ We should all think not only in terms of our technical field, but also about the
 How can we achieve this? Here are some ideas and technologies to use for developers who want to do something really great.
 
 ## Manageability Strategy – give us tools and docs!
-![img](/images/posts/oldposts/052915_0825_supportmani1.png)
+![img]({{ site.baseurl }}/images/posts/oldposts/052915_0825_supportmani1.png)
 
 When a solution runs a lot of instances across a number of boxes, it is crucial to have some kind of  *scriptable* command line interface to manage it. This command line based toolset should provide management and enumeration functionality with which it should be easy to perform tasks like the ones below:
 
@@ -23,7 +23,7 @@ When a solution runs a lot of instances across a number of boxes, it is crucial 
 All of this can be accomplished via the WMI interface provided by the solution and its components. It is possible to generate PowerShell cmdlets based on WMI if we have them. With IIS, there isn't even the need for a provider, because IIS offers enough tools for all of these tasks. Only some wrappers over the existing commands should be provided as part of the solution. Besides that, having WMI will give us the option to automatically discover the components of the application in a simple way.
 
 ## Hey Ops guys, here is the documentation you asked for
-![img](/images/posts/oldposts/052915_0825_supportmani2.jpg)
+![img]({{ site.baseurl }}/images/posts/oldposts/052915_0825_supportmani2.jpg)
 
 Thus, in order to make the solution manageable, developers should:
 
@@ -31,7 +31,7 @@ Thus, in order to make the solution manageable, developers should:
 - Provide technical documentation describing the high level overview, map and workflow between the components, the protocols used to communicate, and details on the internals of the components
 
 ## Monitorability Strategy
-![img](/images/posts/oldposts/052915_0825_supportmani3.png)
+![img]({{ site.baseurl }}/images/posts/oldposts/052915_0825_supportmani3.png)
 
 To be able to maintain good quality of service provided by the solution, it should be easy to monitor and react to incoming incidents. Besides, it should easily integrate into the existing monitoring solution of the enterprise. So how can we achieve this? There are three main ways to do it, from simple to complicated, and they are: event logs, performance counters, and event tracing for Windows.
 
@@ -48,7 +48,7 @@ In summary, to make a solution fit into [ITIL](https://en.wikipedia.org/wiki/ITI
 - Optionally, make [Event Tracing for Windows](https://msdn.microsoft.com/en-us/library/windows/desktop/bb968803%28v=vs.85%29.aspx) providers for the product.
 
 ## Deployment Strategy
-![img](/images/posts/oldposts/052915_0825_supportmani4.png)
+![img]({{ site.baseurl }}/images/posts/oldposts/052915_0825_supportmani4.png)
 
 Here is the thing, deployment should be planned at the very beginning, at the point when the application architecture is just being built. This is the main prerequisite for easy deployment. There is another cornerstone of easy deployment on the Windows platform – packet based deployment. Having packets gives the option to rollback failed deployment out of the box. There are other benefits, like logging, temporary admin rights, uninstallation, centralized management with enterprise level, self-repair, setup customizations, the ability to advertise packages, and simple deployment based on GPO. So when the deployment method for the solution is the MSI packet, all of the above is provided out of the box.
 

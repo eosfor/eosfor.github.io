@@ -12,7 +12,7 @@ No, not that bad.
 
 After you have downloaded the image you can mount it and find a folder called NanoServer. There will be the wim image of the server and some additional folder with packages wich can be additionally added to the new installation. Next you need to follow the link [here](http://www.aka.ms/nanoserver) and read the documentation. What I did is just wrapped the doc into a small script which shows the steps in brief
 
-```powershell
+<pre class="brush: powershell;">
 $dism = 'D:\temp\NewDism\dism.exe'
 $imageFile = 'D:\VMs\Virtual Hard Disks\nanoServerBaseLine2.vhd'
 $mountDir = 'D:\temp\mountdir'
@@ -25,4 +25,4 @@ md $mountDir\windows\panther
 copy D:\VMs\Unattend.xml $mountDir\Windows\panther
 $dism /Unmount-Image /MountDir:$mountdir /Commit
 New-VM –Name testNanoVM –MemoryStartupBytes 1GB –VHDPath $imageFile -SwitchName Internal | Start-VM
-```
+</pre>

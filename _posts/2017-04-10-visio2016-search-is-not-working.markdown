@@ -15,5 +15,6 @@ So the workaround was to:
  - Select them all, copy (CTRL+C) and paste (CTRL+V) them once again in the same directory
 
 And they immediately appeared in the search! Don't ask me why.
-![Img](/images/posts/2017-04-10-visio2016-search-is-not-working/visiofilescopied.png)
-![Img](/images/posts/2017-04-10-visio2016-search-is-not-working/visiofilescopied2.png)
+
+![Img]({{ site.baseurl }}/images/posts/oldposts/visiofilescopied.png)
+![Img]({{ site.baseurl }}/images/posts/oldposts/visiofilescopied2.png)

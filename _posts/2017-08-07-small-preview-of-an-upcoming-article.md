@@ -8,4 +8,4 @@ tags: []
 ---
 Here is what it can do :)
 
-![img](/images/posts/oldposts/7570f991-ab21-4977-b1b9-dcb6fa004b541.gif)
+![img]({{ site.baseurl }}/images/posts/oldposts/7570f991-ab21-4977-b1b9-dcb6fa004b541.gif)
