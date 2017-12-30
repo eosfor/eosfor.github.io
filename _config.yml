@@ -23,7 +23,7 @@ destination: _site
 paginate: 10
 permalink: /:year/:title/
 markdown: kramdown
-highlighter: rough
+highlighter: rouge
 
 sass:
     sass_dir: _sass
