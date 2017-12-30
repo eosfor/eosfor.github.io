@@ -95,4 +95,4 @@ Show-GraphLayout -Graph $g2
 
 Complete set of commands is below
 
-{% gist f59298b0ab6ceea170df3d69efb4787f %}
+{% gist f59298b0ab6ceea170df3d69efb4787f winFWAnalizeGist.ps1%}

@@ -14,7 +14,7 @@ Actually I already blogged about this some time ago but this time example is a b
 
 
 For the second step here is the simplest example
-{% gist a29f53052c7bdfc98339e630149cccdb %}
+{% gist a29f53052c7bdfc98339e630149cccdb multipleLogsGraph.ps1 %}
 
 And here is what we can get out of it.
 

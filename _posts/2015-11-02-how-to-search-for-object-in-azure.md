@@ -36,6 +36,6 @@ So whole solution works as follows:
 - Parses the results and removes all that is not required according to parameters, for instance remove all results except VMs
 - For each object from step 3 uses classic cmdlets to receive actual objects using Subscription, ObjectName and resource group returned by the original search query
 
-{% gist 9c51ea9ec66c114ce947 %}
+{% gist 9c51ea9ec66c114ce947 getAzureObject.ps1 %}
 
 I have to say that this piece of code uses some proxy functions that i wrote to hide Subscription context switching. But i'll describe them next time.
