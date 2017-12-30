@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "WSL, Jekyll and crazy cool things you can now do on Windows"
-categories:  ['PowerShell']
-tags:  ['PowerShell']
+categories:  ['PowerShell','WSL', 'Windows']
+tags:  ['PowerShell','WSL', 'Windows']
 date:  2017-12-30 08:31:14 +03:00
 beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
