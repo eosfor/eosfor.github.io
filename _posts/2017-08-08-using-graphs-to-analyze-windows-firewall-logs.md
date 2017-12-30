@@ -7,13 +7,14 @@ categories: [PowerShell, PSQuickGraph]
 tags: [PowerShell, PSQuickGraph]
 beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
+excerpt_separator: <!--more-->
 ---
 Hello colleagues, lets talk about how we can use graphs to look inside of communications happening in our environments in an easy way. First of all we need to have some data to analyze. Lets gather some. It is pretty simple - just use [this article](https://technet.microsoft.com/en-us/library/cc947815(v=ws.10).aspx) and enable Windows Firewall Logging. I usually put the logs into a separate folder, just for easy access. Here is how it looks like on my system:
 
 ![img]({{ site.baseurl }}/images/posts/oldposts/fwlog.png)
 
 As you can see, it is structured, so it is good idea to parse it as objects. Lets do it, and it may look like the following:
-
+<!--more-->
 
 {{ page.beginps }}
 $f = gc "C:\Temp\pfirewall_public.log"
