@@ -37,34 +37,20 @@ So far so good. Lets now install couple of Linux-based components. From the Jeky
 - Ruby version 2.2.5 or above, including all development headers RubyGems
 - GCC and Make (in case your system doesn’t have them installed, which you can check by running gcc -v and make -v in your system’s command line interface)
 
-Ok, let's assume we have some Linux. Let's go and install some Ruby. But first
-
-```bash
-sudo apt update
-```
-and then, as described on [docs page](https://www.ruby-lang.org/en/documentation/installation/#apt)
-
-```bash
-sudo apt-get install ruby-full
-```
+Ok, let's assume we have some Linux. Let's go and install some Ruby. But first ``` sudo apt update ```, and then, as described on [docs page](https://www.ruby-lang.org/en/documentation/installation/#apt), ``` sudo apt-get install ruby-full ```
 
 ![InstallingRubyFull](https://content.screencast.com/users/eosfor/folders/Snagit/media/e2d03ec4-d9cb-46b2-8b08-5f5d787c4d73/12.30.2017-21.27.png)
 
-In addition to that seems they want development headers to be installed. Let's do that as well:
-
-```bash
-sudo apt-get install ruby-dev
-```
-but it seems to be already there:
+In addition to that seems they want development headers to be installed. Let's do that as well, ``` sudo apt-get install ruby-dev ```, but it seems to be already there:
 
 ![InstallingRubyDev](https://content.screencast.com/users/eosfor/folders/Snagit/media/106fd7ec-9217-4dbb-8f7e-aefa6aa7a0bc/12.30.2017-21.26.png)
 
 Let's also install gcc and make, as Jekyll requires:
 
-```bash
+{% highlight bash linenos %}
 sudo apt install gcc
 sudo apt install make
-```
+{% endhighlight %}
 
 Ok, done
 
@@ -76,11 +62,11 @@ Ok, done
 
 Good, now let's follow the book and install Jekyll itself ``` sudo gem install jekyll bundler ```. Ok, done. Let's check it
 
-```bash
+{% highlight bash linenos %}
 sudo jekyll new my-awesome-site
 cd my-awesome-site/
 sudo bundle exec jekyll serve
-```
+{% endhighlight %}
 
 And what we see?
 
@@ -92,24 +78,18 @@ Crazy cool (c)!! This means that WSL works perfectly! It can run Ruby, and even 
 
 Great, now we can try to build some more nice-looking site. As i see a lot of good people out ther use [Jekyll-uno](https://github.com/joshgerdes/jekyll-uno) theme. So let's go for it. In addition to that let's put it to a Windows based folder at c:\Repo\Blog\.
 
-```bash
+{% highlight bash linenos %}
 cd /mnt/c/Repo/Blog
 git clone https://github.com/joshgerdes/jekyll-uno
 cd jekyll-uno/
 sudo bundle exec jekyll serve
-```
+{% endhighlight %}
 
 Oh, it fails
 
 ![failsoserveruno](https://content.screencast.com/users/eosfor/folders/Snagit/media/850f2eb3-0e41-4b39-a99b-38408e5b95d7/12.30.2017-21.47.png)
 
-Ok, following the messages
-
-```bash
-bundle install
-```
-
-and it fails again
+Ok, following the messages ```bundle install```, and it fails again
 
 ![unofailsagain](https://content.screencast.com/users/eosfor/folders/Snagit/media/4bc72398-a4ca-4c8d-811a-86540df8c3ef/12.30.2017-21.50.png)
 
@@ -127,7 +107,7 @@ Let's also see what it is out there in repo.
 
 And here i'm like "WAAT?". Which one of these should i install. Oh my... This is crazy! What is the correct way for doing that? What if i have no bing/google? What do i do?
 
-Ok, after some searching i got the following example ```sudo apt install zlib1g-dev ``` and after that ``` bundle install ``` ... Ok, looks better now
+Ok, after some searching i got the following example ```sudo apt install zlib1g-dev ``` and after that ``` bundle install ``` ... And it looks better now
 
 ![bundleinstallok](https://content.screencast.com/users/eosfor/folders/Snagit/media/1edf330b-42ab-45b7-86b4-e038f286b813/12.30.2017-22.17.png)
 
@@ -135,3 +115,11 @@ Let's try to serve it once again ``` bundle exec jekyll serve ```, and here we g
 
 ![itworks](https://content.screencast.com/users/eosfor/folders/Snagit/media/475e5afe-7091-433a-a162-56a9a26ba20e/12.30.2017-22.20.png)
 
+## Conclusion
+
+What i can say here? First of all, kudos to MSFT. They made it possible to run Linux binaries natively on Windows. This simplifies every thing a lot. I'm waiting for times when we could run all types of software made for Linux directly in Windows. This going to make Linux a Windows app ;).
+
+## Next step
+Next time we going to put some modifications on this. 
+- We will put some posts
+- We will intergrate [sintaxhighlighter](https://github.com/syntaxhighlighter/syntaxhighlighter) into our site
