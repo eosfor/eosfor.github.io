@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  how to see relationships in your module
+title:  How to see relationships in your module
 categories:  ['PowerShell']
 tags:  ['PowerShell']
 date:  2018-01-17 05:18:26 +03:00
@@ -9,7 +9,7 @@ endps: '</pre></div>'
 excerpt_separator: <!--more-->
 ---
 
-Hello colleagues, long ago i blogged about a quick and dirty way to see the graph you your function calls in the powershell script. Now it is time to see the graph for such calls or dependencies in your PowerShell module.
+Hello colleagues, long ago i blogged about a quick and dirty way to see the graph your function calls in the powershell script. Now it is time to see the graph for such calls or dependencies in your PowerShell module.
 <!--more-->
 
 I need to mention here that this only works with pure PowerShell based modules.
