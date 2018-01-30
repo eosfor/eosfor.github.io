@@ -9,7 +9,7 @@ endps: '</pre></div>'
 excerpt_separator: <!--more-->
 ---
 
-Hello colleagues, this is another quick article regarding issues with search in Visio. It is somewhat extends the one of the previous [articles](2017-04-10-visio2016-search-is-not-working)
+Hello colleagues, this is another quick article regarding issues with search in Visio. It is somewhat extends the one of the previous [articles](visio2016-search-is-not-working)
 
 So lets start ...
 <!--more-->
