@@ -9,7 +9,7 @@ endps: '</pre></div>'
 ---
 
 Hello colleagues!
-Sometimes it is good to spend some time playing with kids. So i play with my kid Minecraft from time to time. And so i decided to try it in Azure Container Instances. What i want to do is, i want to see if it is cheaper than running it on a VM or not. Another thing i wanted to try is to configure all of this from my Mac. Actually my OS of choice is Windows, but this time i tried to use Mac.
+Sometimes it is good to spend some time playing with kids. So i play Minecraft with my kid from time to time. And so i decided to try it in Azure Container Instances. What i want to do is, i want to see if it is cheaper than running it on a VM or not. Another thing i wanted to try is to configure all of this from my Mac. Actually my OS of choice is Windows, but this time i tried to use Mac.
 So what we are going to look at today?
 
 - Create and run a container in Azure Container Instance
