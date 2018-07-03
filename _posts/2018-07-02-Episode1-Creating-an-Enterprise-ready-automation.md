@@ -8,8 +8,6 @@ beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
 ---
 
-# Episode 1: Introduction
-
 When expanding  a Data center environment to Azure it is critical to build a toolset, which gives an ability to  perform day to day tasks with ease. Such a toolset should be able to integrate with existing CMDB and ITSM tools and processes. This allows existing teams manage new environment as they used to do it with existing one. In this series of videos and blog posts we will try to look closer at possibilities, Powershell provides, to achieve this goal.
 I’m going to go talk about some tools, techniques and tricks I use when developing Powershell-based automation. We will also look at approach we can take to build enterprise-ready automation, so to speak.​
 
