@@ -8,7 +8,7 @@ beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
 ---
 
-Hello colleagues, in this post i'm going to talk about Powershell modules. However, i'm dont want to write about usual thing everyone knows. There are a lot of information about then in help files and on the Internet. What i'd like to talk about is why you may want to use them, and what i learned from my experience about them.
+Hello colleagues, in this post i'm going to talk about Powershell modules. However, I don't want to write usual things everyone knows about. There are a lot of information about them in the [help files](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-6) and [on the Internet](https://kevinmarquette.github.io/2017-05-27-Powershell-module-building-basics/). What i'd like to talk about is why you may want to use them, and what i learned from my experience about them.
 
 # Two common patterns i use
 
