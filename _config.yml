@@ -9,6 +9,7 @@ google_analytics: 'UA-111426314-1'
 author:
   name: 'Andrey Vernigora'
   email: yet.another.powershell.guy@gmail.com
+  twitter_username: pwsh_guy
 
 defaults:
   -
