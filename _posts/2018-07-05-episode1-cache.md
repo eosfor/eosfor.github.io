@@ -63,6 +63,6 @@ function Get-AzureCMDBData {
 
 What we do here is, we basically the function which takes two switch-parameters. They identify which part of our dataset to return. If none is set it will return the whole dataset. As you can see, here is the syntax we use here: ```[CMDBCache]::Instance.cache.DB```. Basically, ```::``` means that we accessing a static member. So in this case, syntactically, we use static member ```Instance``` to get to the ```cache.DB```. This, on first call, will first instantiate and initialize an object with a constructor, and on all subsequent calls will simply return our data, without calling ```Get-AzureTableData``` again.
 
-Here you can found some more information :)
+Here you can find some more information :)
 
 [![EPISODE 1: Caching Azure Storage Table calls](http://img.youtube.com/vi/0mYWMPtjzuM/0.jpg)](http://www.youtube.com/watch?v=0mYWMPtjzuM)
