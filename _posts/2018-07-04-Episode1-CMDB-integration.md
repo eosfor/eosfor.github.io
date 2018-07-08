@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'Episode 1: PowerShell, Azure Tables, CMDB integration. Part 1'
+title:  'Episode 1: PowerShell, Azure Tables, CMDB integration'
 categories:  ['PowerShell', 'Azure']
 tags:  ['PowerShell', 'Azure']
 date:  2018-07-04 05:00:22 +03:00
