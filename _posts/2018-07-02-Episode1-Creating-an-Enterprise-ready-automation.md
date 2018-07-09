@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Episode 1: Creating an Enterprise ready automation. Intro"
+title:  "01. Episode 1: Creating an Enterprise ready automation. Intro"
 categories:  ['PowerShell', 'Azure', 'Automation']
 tags:  ['PowerShell', 'Azure', 'Automation']
 date:  2018-07-02 09:55:16 +03:00

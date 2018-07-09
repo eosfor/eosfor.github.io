@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'Episode 1: Making PowerShell module'
+title:  '02. Episode 1: Making PowerShell module'
 categories:  ['PowerShell', 'Azure']
 tags:  ['PowerShell', 'Azure']
 date:  2018-07-03 11:17:59 +03:00

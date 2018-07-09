@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'Episode 1: Lets talk to CMDB at last!'
+title:  '05. Episode 1: Lets talk to CMDB at last!'
 categories:  ['PowerShell','Azure','Tab']
 tags:  ['PowerShell','Azure']
 date:  2018-07-08 02:55:44 +03:00

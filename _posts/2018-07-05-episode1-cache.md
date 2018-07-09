@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'Episode 1: Cache, Singleton and Hashtables'
+title:  '04. Episode 1: Cache, Singleton and Hashtables'
 categories:  ['PowerShell']
 tags:  ['PowerShell']
 date:  2018-07-05 05:18:57 +03:00
