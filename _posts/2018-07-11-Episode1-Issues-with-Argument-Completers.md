@@ -48,21 +48,21 @@ function Get-CMDBdata {
 
 And here is how it looks like
 
-![completers do not work](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/doNotWork.gif)
+![completers do not work](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/doNotWork.gif)
 
 As you can see, cmdlet itself works fine, it returns our data. But completer does not work! If I return TabExpansionPlusPlus into the picture it starts working. But why? it calls the same function as TabExpansionPlusPlus!
 
 Well, I played around with it a little bit. Here are some findings. If we look at the ```function:\``` drive in a global scope, here what we can see:
 
-![functions global](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/functions1.png)
+![functions global](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/functions1.png)
 
 there is not "completer" functions there. Ok, lets look at what module sees internally. For that lets set a breakpoint inside one of our functions and see this drive from there. We can do this right in the console by using ```Set-PSBreakpoint``` cmdlet, like this.
 
-![set ps breakpoint](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/psbreakpoint.png)
+![set ps breakpoint](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/psbreakpoint.png)
 
 Now lets see the drive:
 
-![drive from function](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/psbreakpointdrive.png)
+![drive from function](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/psbreakpointdrive.png)
 
 Yikes, functions are there! Well, lets now try to put these functions to a global scope. For that we can change our ```Export-ModuleMember -Function *-*``` call in cloudmgmt.psm1 to export all functions, but not just those with dash ```-``` in their name, like below, and try again
 
@@ -73,11 +73,11 @@ Export-ModuleMember -Function *
 
 And here is what we've got
 
-![working via publishing](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/globalScopeWorking.gif)
+![working via publishing](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/globalScopeWorking.gif)
 
 Basically we see that everything starts working again. When we hit <TAB> it takes some time to call the function and populate the cache and then it start completing parameters. So what is our global ```function:\``` dive now?
 
-![global drive after exporting](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/exportedGlobally.png)
+![global drive after exporting](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/exportedGlobally.png)
 
 Functions exported to a global scope and ```[ArgumentCompleter()]``` started working again.
 
@@ -113,7 +113,7 @@ class CMDBBUCompleter4 : IArgumentCompleter
 
 It got everything we used previously, the same set of parameters, the same result type, the same body. Well, almost the same. If we try to use our variable, instead of a direct call to the CMDB interface, we get PSAnalyzer error message, like below.
 
-![cant use a variable](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerClassProblem.png)
+![cant use a variable](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerClassProblem.png)
 
 To work this around we can use scope modifier
 
@@ -143,7 +143,7 @@ function Get-CMDBdata {
 
 And the result is - it is working. Even with functions not in global scope.
 
-![completer with class](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass.gif)
+![completer with class](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass.gif)
 
 So, at the moment it looks like we should stick to using this attribute + export all functions globally. But, will see ...
 
