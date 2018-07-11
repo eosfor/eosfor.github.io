@@ -99,7 +99,7 @@ class CMDBBUCompleter4 : IArgumentCompleter
     {
         $resultList = [List[CompletionResult]]::new()
 
-        Get-AzureCMDBData | ? PartitionKey -EQ "BU" |
+        (& $Global:cmdbFunc) | ? PartitionKey -EQ "BU" |            #<- pay attention to this line
         Select-Object code, name -Unique |
         ? {$_.name -like "*$wordToComplete*"} | % {
             $resultList.Add([CompletionResult]::new($_.code, $_.name, "ParameterValue", 'BU'))
@@ -111,9 +111,11 @@ class CMDBBUCompleter4 : IArgumentCompleter
 }
 ```
 
-It got everything we used previously, the same set of parameters, the same result type, the same body. Well, almost the same. If we try to use our variable, instead of a direct call to the CMDB interface, we get PSAnalyzer error message, so unfortunately we need to call the function directly, but at the end of the day it breaks our goals, so we not going to go this way. But for the sake of our testing, let's continue
+It got everything we used previously, the same set of parameters, the same result type, the same body. Well, almost the same. If we try to use our variable, instead of a direct call to the CMDB interface, we get PSAnalyzer error message, like below.
 
 ![cant use a variable](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerClassProblem.png)
+
+To work this around we can use scope modifier
 
 Good, so we updated our code, we returned ```Export-ModuleMember``` as it was before, and added another class. Now we need to update our cmdlet in a proper way, like below, and try
 
