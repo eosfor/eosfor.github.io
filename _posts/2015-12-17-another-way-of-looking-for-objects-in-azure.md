@@ -2,8 +2,8 @@
 layout: post
 title: Another way to search objects in Azure
 date: 2015-12-17 10:35:09.000000000 +03:00
-categories: [Powershell, Azure]
-tags: [Powershell, Azure]
+categories: [PowerShell, Azure]
+tags: [PowerShell, Azure]
 ---
 ##Overview.
 In this article we are going to have a look at number of things in PowerShell. We are going to try dynamic parameters, parallel execution of scriptblocks, building indexes for simple and fast search and much more.

@@ -2,8 +2,8 @@
 layout: post
 title: How to search for an object in Azure
 date: 2015-11-02 19:35:54.000000000 +03:00
-categories: [Powershell, Azure]
-tags: [Powershell, Azure]
+categories: [PowerShell, Azure]
+tags: [PowerShell, Azure]
 ---
 ##Problem statement
 In our environment we have more than one subscription. Even more than five. And this amount grows constantly. What we do with all of this is we support VMs and stuff there. One of the issues is that users usually do not know name of Azure Service which is used to host their VMs, and it so happens that they do not know even their Subscription Name or Subscription ID. To bring up and control their VMs and environments the use some “middleware” which hides all of this info from them. So they usually come to us and say: “here you are a list of VMs we have problems with, please have a look and fix”. Sometimes such list contains not only VMs but storage accounts along with VMs etc. Unfortunately classic azure cmdlets does not provide an option to search for objects in the cloud by their name. On the other hand new Azure Management portal does. It can find objects by name. So I decided to do a little hack end use this API in order to simplify our live.

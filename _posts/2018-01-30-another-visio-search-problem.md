@@ -14,13 +14,13 @@ Hello colleagues, this is another quick article regarding issues with search in 
 So lets start ...
 <!--more-->
 
-First of all i need to say that i downloaded a stencil pack from [here](https://blog.sandro-pereira.com/2017/09/19/microsoft-integration-azure-and-much-more-stencils-pack-v26-for-visio/) and unfortunately search was not working for it. I tried the workaround i had found in the mentioned article, but it did not work either! It was really unexpected! I tried to reindex, move index to another folder. I even opened the Search Index DB with a hope to see something there. It was a waste of time, frankly.
+First of all I need to say that I downloaded a stencil pack from [here](https://blog.sandro-pereira.com/2017/09/19/microsoft-integration-azure-and-much-more-stencils-pack-v26-for-visio/) and unfortunately search was not working for it. I tried the workaround I had found in the mentioned article, but it did not work either! It was really unexpected! I tried to reindex, move index to another folder. I even opened the Search Index DB with a hope to see something there. It was a waste of time, frankly.
 
-So what i did then. I decided to see if there are any ETW providers for Windows Search. And there are a lot of them, so i used [Microsoft Message Analyzer](https://www.microsoft.com/en-us/download/details.aspx?id=44226) and started a tracing session as follows: 
+So what I did then. I decided to see if there are any ETW providers for Windows Search. And there are a lot of them, so I used [Microsoft Message Analyzer](https://www.microsoft.com/en-us/download/details.aspx?id=44226) and started a tracing session as follows: 
 
 ![msganalizerproviders](/images/posts/msganalyzerproviders.png)
 
-Then i put filter to the trace to see only messages with specific words like this ```contains "Event" and contains "Grid"``` and i managed to see queries Visio issues against Search Service!
+Then I put filter to the trace to see only messages with specific words like this ```contains "Event" and contains "Grid"``` and I managed to see queries Visio issues against Search Service!
 
 ![msganalizerquery](/images/posts/msganalyzerquery.png)
 
@@ -37,11 +37,11 @@ $ds      = new-object System.Data.DataSet
 if ($adapter.Fill($ds)) { $ds.Tables[0] }
 {{ page.endps }}
 
-And i got an answer, which means that files have been properly indexed and they exists in the Search Database.
+And I got an answer, which means that files have been properly indexed and they exists in the Search Database.
 
 ![msganalizerquery2](/images/posts/msganalyzerquery2.png)
 
-Luckily, i payed attention to the locale code in the query. And decided to look at the language of the stencil, and it appeared to be in Portugese! 
+Luckily, I payed attention to the locale code in the query. And decided to look at the language of the stencil, and it appeared to be in Portugese! 
 
 ![portugesestencil](/images/posts/portugesestencil.png)
 
@@ -49,7 +49,7 @@ But all my drawings are in English!
 
 ![myfile](/images/posts/myfile.png)
 
-So i just changed the language option on each of the stencil files i was interested in. Put them to a target location and copied/pasted as i did previously. And it WORKED!
+So I just changed the language option on each of the stencil files I was interested in. Put them to a target location and copied/pasted as I did previously. And it WORKED!
 
 To do this you need to open empty Visio drawing, then load a stencil, click ```edit``` on it, select ```Properties```, change the language and then save.
 
