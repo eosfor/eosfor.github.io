@@ -81,7 +81,7 @@ Basically we see that everything starts working again. When we hit <TAB> it take
 
 Functions exported to a global scope and ```[ArgumentCompleter()]``` started working again.
 
-So the bottom line here - you should export your completers if you what your ```[ArgumentCompleter()]``` working. Which is not good, I think. IMHO I'd to hide this complexity inside module, so I think it is time to raise an issue on github.
+So the bottom line here - you should export your completers if you what your ```[ArgumentCompleter()]``` working. Which is not good, I think. IMHO I'd to hide this complexity inside module, so I think it is time to raise an issue on github, [#7265](https://github.com/PowerShell/PowerShell/issues/7265).
 
 ## Using it with a type
 
