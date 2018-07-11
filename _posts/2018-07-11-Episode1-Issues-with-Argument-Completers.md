@@ -73,7 +73,7 @@ Export-ModuleMember -Function *
 
 And here is what we've got
 
-![working via publishing](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/globalScopeWorking.gif)
+![working via publishing](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/globalScopeWorking2.gif)
 
 Basically we see that everything starts working again. When we hit <TAB> it takes some time to call the function and populate the cache and then it start completing parameters. So what is our global ```function:\``` dive now?
 
@@ -143,7 +143,7 @@ function Get-CMDBdata {
 
 And the result is - it is working. Even with functions not in global scope.
 
-![completer with class](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass2.gif)
+![completer with class](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass.gif)
 
 So, at the moment it looks like we should stick to using this attribute + export all functions globally. But, will see ...
 
