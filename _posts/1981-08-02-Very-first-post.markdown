@@ -4,7 +4,7 @@ date:   1981-08-02 15:04:23
 categories: [jekyll]
 tags: [jekyll]
 ---
-Here is the first PowerShell post i've made
+Here is the first PowerShell post I've made
 
 Jekyll also offers powerful support for code snippets:
 

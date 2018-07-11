@@ -3,8 +3,8 @@ layout: post
 title: Support Manifesto
 date: 2015-05-29 08:25:54.000000000 +03:00
 type: post
-categories: [SupportManifesto]
-tags: [SupportManifesto]
+categories: [SupportManifesto, PowerShell]
+tags: [SupportManifesto, PowerShell]
 ---
 Nowadays there is a big gap between developers and infrastructure operations. The problem is that they exist in two different worlds. They use different terminology and approaches, have distinctive strategies and goals, varying sets of knowledge, and even a different mindset. How can we work together like this, and who can join us?
 
@@ -54,7 +54,7 @@ Here is the thing, deployment should be planned at the very beginning, at the po
 
 These two technologies are on the cutting edge of deployment: Desired State Configuration (DSC) and OneGet.
 - DSC technology is a way of making complex deployment workflows in a declarative way. The idea is to define the configuration of the server in a simple declarative way and request the server to configure itself. The main scenario is when servers query the main configuration point for newer configurations. If there are some, servers download them along with the necessary files and apply them. The benefit here is that this functionality is a part of the OS and is provided by the OS vendor. You don't need to use a 3rd party. The only thing that is required is a piece of logic called DSC Resource, which knows how to deploy this particular component. Make it, the DSC Resource code, put it on the configuration server and voilà – all your components and apps get configured automatically.
-- [OneGet](https://github.com/OneGet/oneget) is a cutting edge experimental approach based on powershell. Think of it as a packet management system for Windows. In general, it is a framework that can be attached to any repository; by default, it is the Chocolatey public repository based on NuGet through a powershell-based or C#-based repository provider. If you have a provider framework, you can query the repository for packages and manage them.
+- [OneGet](https://github.com/OneGet/oneget) is a cutting edge experimental approach based on PowerShell. Think of it as a packet management system for Windows. In general, it is a framework that can be attached to any repository; by default, it is the Chocolatey public repository based on NuGet through a PowerShell-based or C#-based repository provider. If you have a provider framework, you can query the repository for packages and manage them.
 
 At this stage, the workflow becomes simple and clear. The developer team should simply build the package and put it into the package repository. All the rest is automated by DSC and OneGet.
 
