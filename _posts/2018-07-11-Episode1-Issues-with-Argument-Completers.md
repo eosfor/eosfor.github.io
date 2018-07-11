@@ -8,7 +8,7 @@ beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
 ---
 
-Testing some stuff with argument completers [in the previous article](./2018-07-08-Episode1-lets-talk-to-cmdb-and-autocomplete!.md) I found some, say, "peculiarities". So lets go through them. Link to our samples github repo is [here](https://github.com/eosfor/cloudmgmt)
+Testing some stuff with argument completers [in the previous article](./2018-07-08-Episode1-lets-talk-to-cmdb-and-autocomplete!) I found some, say, "peculiarities". So lets go through them. Link to our samples github repo is [here](https://github.com/eosfor/cloudmgmt)
 
 # Review the existing options
 
