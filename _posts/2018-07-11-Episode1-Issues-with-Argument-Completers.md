@@ -141,7 +141,7 @@ function Get-CMDBdata {
 }
 ```
 
-And the result is - it is working. Even with functions not in global scope. Well, frankly, it does not use the function this time. But the problem for us here is that we can't use our "interface variable".
+And the result is - it is working. Even with functions not in global scope.
 
 ![completer with class](images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass.gif)
 
