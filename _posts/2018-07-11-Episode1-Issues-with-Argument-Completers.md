@@ -143,7 +143,7 @@ function Get-CMDBdata {
 
 And the result is - it is working. Even with functions not in global scope.
 
-![completer with class](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass.gif)
+![completer with class](/images/posts/2018-07-11-Episode1-Issues-with-Argument-Completers/completerWithClass2.gif)
 
 So, at the moment it looks like we should stick to using this attribute + export all functions globally. But, will see ...
 
