@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "06. Episode 1: There are some "peculiarities" with argument completers, however"
+title:  '06. Episode 1: There are some "peculiarities" with argument completers, however'
 categories:  ['PowerShell']
 tags:  ['PowerShell']
 date:  2018-07-11 01:37:23 +03:00
