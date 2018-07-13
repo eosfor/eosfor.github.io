@@ -37,8 +37,7 @@ And one of the biggest things, I think, is that we are going through the process
 
 So, let's continue. First thing we need to do is to define naming convention. We assume this has been done by our Architecture Team and provided to us, so here is how it looks like:
 
----
-
+## Architecture guidelines
 General resource naming should follow the scheme:
 <BUCODE>-<DEPTCODE>-<ENVCODE>-<AZREGION>-<RESOURCECODE>-<SUFFIX>. Where:
 
@@ -50,13 +49,13 @@ General resource naming should follow the scheme:
 - **SUFFIX** provides some meaning to owner Team and makes the whole name unique. Depends on the length limitations for particular resource type
 
 In addition to all this there are following limitations/restrictions
- 
+
 - Virtual Machine host name is limited to 15 characters, so the naming scheme for it is: <BUCODE><DEPTCODE><ENVCODE><SUFFIX>
 - Azure Storage accounts has limitations on the structure of their name as well as on its length - 24 chars.
 
 All other resources should follow general naming approach.
 
----
+## Implementation
 
 This is something we can now follow, as we are able to talk to CMDB and extract all necessary components. And here is what we need to do
 
