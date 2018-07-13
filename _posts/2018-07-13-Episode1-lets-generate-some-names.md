@@ -38,6 +38,7 @@ And one of the biggest things, I think, is that we are going through the process
 So, let's continue. First thing we need to do is to define naming convention. We assume this has been done by our Architecture Team and provided to us, so here is how it looks like:
 
 ## Architecture guidelines
+
 General resource naming should follow the scheme:
 <BUCODE>-<DEPTCODE>-<ENVCODE>-<AZREGION>-<RESOURCECODE>-<SUFFIX>. Where:
 
