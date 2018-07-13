@@ -41,23 +41,23 @@ So, let's continue. First thing we need to do is to define naming convention. We
 
 General resource naming should follow the scheme:
 
-> <BUCODE>-<DEPTCODE>-<ENVCODE>-<AZREGION>-<RESOURCECODE>-<SUFFIX>
-
-Where:
-
-**BUCODE** is the Business Unit code, taken from CMDB. Identifies the owner of the resource. 3 chars long
-**DEPTCODE** is the Department Code, taken from CMDB. Identifies the owner of the resource. 3 chars long
-**ENVCODE** [DEV,UAT,PDN], specifies the Environment, development testing or production. 3 chars long
-**AZREGION** Azure region code, taken from CMDB. contains Location code, Country code and Number to provide uniqueness. 5 chars total
-**RESOURCECODE** identifies the type of the resource [here goes the list of resource codes and their meanings ;)]. 3 chars long
-**SUFFIX** provides some meaning to owner Team and makes the whole name unique. Depends on the length limitations for particular resource type
-
-In addition to all this there are following limitations/restrictions
-
-- Virtual Machine host name is limited to 15 characters, so the naming scheme for it is: <BUCODE><DEPTCODE><ENVCODE><SUFFIX>
-- Azure Storage accounts has limitations on the structure of their name as well as on its length - 24 chars.
-
-All other resources should follow general naming approach.
+> \<BUCODE\>-\<DEPTCODE\>-\<ENVCODE\>-\<AZREGION\>-\<RESOURCECODE\>-\<SUFFIX\>
+>
+> Where:
+>
+> - **BUCODE** is the Business Unit code, taken from CMDB. Identifies the owner of the resource. 3 chars long
+> - **DEPTCODE** is the Department Code, taken from CMDB. Identifies the owner of the resource. 3 chars long
+> - **ENVCODE** [DEV,UAT,PDN], specifies the Environment, development testing or production. 3 chars long
+> - **AZREGION** Azure region code, taken from CMDB. contains Location code, Country code and Number to provide uniqueness. 5 chars total
+> - **RESOURCECODE** identifies the type of the resource [here goes the list of resource codes and their meanings ;)]. 3 chars long
+> - **SUFFIX** provides some meaning to owner Team and makes the whole name unique. Depends on the length limitations for particular resource > type
+>
+> In addition to all this there are following limitations/restrictions
+>
+> - Virtual Machine host name is limited to 15 characters, so the naming scheme for it is: <BUCODE><DEPTCODE><ENVCODE><SUFFIX>
+> - Azure Storage accounts has limitations on the structure of their name as well as on its length - 24 chars.
+>
+> All other resources should follow general naming approach.
 
 ## Implementation
 
