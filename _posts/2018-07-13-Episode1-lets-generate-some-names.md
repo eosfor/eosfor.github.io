@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  '07. Episode 1: Let's generate some names'
+title:  "07. Episode 1: Let's generate some names"
 categories:  ['PowerShell', 'Azure']
 tags:  ['PowerShell', 'Azure']
 date:  2018-07-13 04:49:29 +03:00
