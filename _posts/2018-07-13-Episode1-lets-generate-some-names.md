@@ -40,7 +40,10 @@ So, let's continue. First thing we need to do is to define naming convention. We
 ## Architecture guidelines
 
 General resource naming should follow the scheme:
-<BUCODE>-<DEPTCODE>-<ENVCODE>-<AZREGION>-<RESOURCECODE>-<SUFFIX>. Where:
+
+> <BUCODE>-<DEPTCODE>-<ENVCODE>-<AZREGION>-<RESOURCECODE>-<SUFFIX>
+
+Where:
 
 **BUCODE** is the Business Unit code, taken from CMDB. Identifies the owner of the resource. 3 chars long
 **DEPTCODE** is the Department Code, taken from CMDB. Identifies the owner of the resource. 3 chars long
