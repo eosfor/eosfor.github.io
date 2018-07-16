@@ -63,7 +63,7 @@ All other resources should follow general naming approach.
 
 This is something we can now follow, as we are able to talk to CMDB and extract all necessary components. And here is what we need to do
 
-```powershell
+{{ page.beginps }}
 function New-AzureResourceName {
     [CmdletBinding()]
     param (
@@ -105,7 +105,7 @@ function New-AzureResourceName {
         $name
     }
 }
-```
+{{ page.endps }}
 
 This one is pretty big, but we have already seen parts of it. First of all we define all parameters for our cmdlet as mandatory. We want to force our users to provide them all. Next thing we did is, we defined completion for almost all parameters. Here we trying to make sure that there will be no room for human error, and all names will be forced to follow the standard. Everything else is more or less straightforward. In order to apply limitations to resource names we defined some resource types, and if we hit them we do some checks and trigger terminating errors in case checks are failed.
 
@@ -113,16 +113,16 @@ This one is pretty big, but we have already seen parts of it. First of all we de
 
 The biggest change we had to do was to the completers part. I completely changed the way I use completers, from using functions to using classes. I've completely removed ```completers.``` file and moved all completers into a separate file with all classes in it. At the very top, to save some time on typing and prettify the code I add this
 
-```powershell
+{{ page.beginps }}
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 using namespace System.Collections
 using namespace System.Collections.Generic
-```
+{{ page.endps }}
 
 This basically specifies namespaces to look for classes. At this point we don't need to specify the the long name for a class. You can find a bit more about this syntax [here](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_using?view=powershell-6). Let's look at some examples
 
-```powershell
+{{ page.beginps }}
 class CMDBDEPTCompleter : IArgumentCompleter
 {
     [IEnumerable[CompletionResult]] CompleteArgument(
@@ -146,7 +146,7 @@ class CMDBDEPTCompleter : IArgumentCompleter
         return $resultList
     }
 }
-```
+{{ page.endps }}
 
 This class, as you can see from it's name, is to auto-complete Departments parameter. Well, I should mention that you can use the same class to any BU/DEPT parameter pair on any cmdlet in our module, so we save a lot of typing. Following [```IArgumentCompleter```](https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.iargumentcompleter?view=powershellsdk-1.1.0) interface definition, we must implement ```CompleteArgument``` method, and we do it. There are few interesting syntactic things, however, to pay attention to. 
 

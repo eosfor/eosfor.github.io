@@ -21,7 +21,7 @@ Singleton, is the way to make something to be instantiated exactly once. Typical
 
 Here is how we can make it in PowerShell, using classes:
 
-```powershell
+{{ page.beginps }}
 class CMDBCache
 {
     $cache = @{}
@@ -31,7 +31,7 @@ class CMDBCache
         $this.cache.DB = (Get-AzureTableData)
     }
 }
-```
+{{ page.endps }}
 
 We don't have "luxury" of having private constructor, so we declare it as ```hidden```. And we got the static member which returns the reference to the instance. In addition to this we have the [```hashtable```](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_hash_tables?view=powershell-6) ```$cashe```. This is basically a data structure which allows you to store key-value pairs. And it also has some more interesting features. For instance it is optimized for lookup by key, and we will use this feature shortly. But lets move on. Constructor basically initializes the key ```DB``` with the value, returned by ```Get-AzureTableData```, so at the moment we want to get the value of the DB key, it is initialized with our data.
 
@@ -39,7 +39,7 @@ We don't have "luxury" of having private constructor, so we declare it as ```hid
 
 So how we can use it? It is simple:
 
-```powershell
+{{ page.beginps }}
 function Get-AzureCMDBData {
     [CmdletBinding()]
     param (
@@ -59,7 +59,7 @@ function Get-AzureCMDBData {
         [CMDBCache]::Instance.cache.DB
     }
 }
-```
+{{ page.endps }}
 
 What we do here is, we basically the function which takes two switch-parameters. They identify which part of our dataset to return. If none is set it will return the whole dataset. As you can see, here is the syntax we use here: ```[CMDBCache]::Instance.cache.DB```. Basically, ```::``` means that we accessing a static member. So in this case, syntactically, we use static member ```Instance``` to get to the ```cache.DB```. This, on first call, will first instantiate and initialize an object with a constructor, and on all subsequent calls will simply return our data, without calling ```Get-AzureTableData``` again.
 

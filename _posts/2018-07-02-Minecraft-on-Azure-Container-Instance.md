@@ -9,7 +9,7 @@ endps: '</pre></div>'
 ---
 
 Hello colleagues!
-Sometimes it is good to spend some time playing with kids. So i play Minecraft with my kid from time to time. And so i decided to try it in Azure Container Instances. What i want to do is, i want to see if it is cheaper than running it on a VM or not. Another thing i wanted to try is to configure all of this from my Mac. Actually my OS of choice is Windows, but this time i tried to use Mac.
+Sometimes it is good to spend some time playing with kids. So I play Minecraft with my kid from time to time. And so I decided to try it in Azure Container Instances. What i want to do is, i want to see if it is cheaper than running it on a VM or not. Another thing i wanted to try is to configure all of this from my Mac. Actually my OS of choice is Windows, but this time i tried to use Mac.
 So what we are going to look at today?
 
 - Create and run a container in Azure Container Instance
@@ -45,7 +45,7 @@ and in few seconds you have your files uploaded to the share.
 
 Great, now what is left is to create your container in Azure. This is simple:
 
-```powershell
+{{ page.beginps }}
 $secpasswd = ConvertTo-SecureString "<your key>" -AsPlainText -Force
 $mycred = New-Object System.Management.Automation.PSCredential ("<your storageacct name>", $secpasswd)
 New-AzureRmContainerGroup -ResourceGroupName minecraft `
@@ -56,7 +56,7 @@ New-AzureRmContainerGroup -ResourceGroupName minecraft `
                           -AzureFileVolumeMountPath "/data" `
                           -OsType Linux -IpAddressType Public -Port @(25565) `
                           -DnsNameLabel <yourname> 
-```
+{{ page.endps }}
 
 this looks something like this
 

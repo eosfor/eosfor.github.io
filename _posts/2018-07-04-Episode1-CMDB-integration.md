@@ -56,7 +56,7 @@ Here is how to do this live :) :
 
 Basically, our "CMDB Aware component" consists of two parts. First, is a part which talks directly to our CMDB in the Cloud. Second part is the one which converts all the stuff we got from the Cloud into something we can easily reuse in PowerShell later - arrays of PowerShell objects. On this iteration we implement the first part this way:
 
-```powershell
+{{ page.beginps }}
 function Get-AzureTableData {
     [CmdletBinding()]
     param (
@@ -79,13 +79,13 @@ function Get-AzureTableData {
         Convert-AzureData -azureRows $res
     }
 }
-```
+{{ page.endps }}
 
 As you see this is an PowerShell [Advanced Function](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-6) with CmdletBinding attribute, which allows it to be used in a PowerShell pipeline and have some additional common parameters automatically. Commonly, when you need to talk to some Azure-based resource, you want to provide couple of pieces of information. First of all it is a Resource Group name, and the Resource name itself. In our case it is name of the Storage Account. And we also need to know which table to query. So we have tree parameters here. Next thing we need is we need to get some objects, which we will use to work with the Storage. We do this in the ```begin``` block, because we don't want this piece to be executed each time something comes to this cmdlet over a pipeline. We request for the Table, which is a part of the Storage Account. So far it seems logical. Next thing is the query itself. It is in the process block. We call it each time something comes over a pipeline, but may be we may need to change this behavior, i don't know yet :). So, after some experiments we made, and you can find them in the video, we figured out that there is a function ```ExecuteQuerySegmentedAsync``` under the ```CloudTable``` member, which, seems like, fits our needs. Frankly, I checked on the Internet it after I made this test, and found docs for it [here](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.table.cloudtable.executequerysegmentedasync?view=azure-dotnet). It is exactly what we need to issue a query. We can even extend our function and provide more sophisticated query and make some parameters to be able to give users an option to provide thier own queries for Azure Tables, but for this example let's keep it simple. So, this function takes two parameters, and we don't need to supply any initial values for them, we just need to instantiate them. Previously we only had a [New-Object](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/new-object?view=powershell-6) cmdlet for creating .NET objects out of .NET Type name. But at some point we got a new syntax using ```::new()``` function. It is a static function which represents a constructor. So, in our case, we simply call this function to create these objects, and then simply pass these objects to a ```ExecuteQuerySegmentedAsync``` method. PowerShell then takes care of all the *Async* related handling. Not sure how it does this, frankly :). Will try to look for this info later. But for the time being we get an answer from Azure Table in our hands.
 
 Next thing we need to do is to convert this data into something we can reuse later. For that we develop another function:
 
-```powershell
+{{ page.beginps }}
 function Convert-AzureData {
     [CmdletBinding()]
     param (
@@ -122,7 +122,7 @@ function Convert-AzureData {
         }
     }
 }
-```
+{{ page.endps }}
 
 What it does is it just iterates through all objects provided to it as a parameter, extracts ```Properties``` property and iterated through all of them. Each property is basically a Dictionary, having a name of a field as a Key of the Dictionary and a value, well, as a value. However, values are stored as instances of a [```DynamicTableEntity ``` class](https://docs.microsoft.com/en-us/dotnet/api/microsoft.windowsazure.storage.table.dynamictableentity?view=azure-dotnet), but we want to extract actual values.  So we iterate through all Keys, extract their actual values and  put all of these into a temporary ```hashtable```. 
 

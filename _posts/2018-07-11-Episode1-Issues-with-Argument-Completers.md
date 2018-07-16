@@ -29,7 +29,7 @@ First of all if we look at the code [here](https://github.com/PowerShell/PowerSh
 
 But here is what I found. In our test we will remove everything related to TabExpansionPlusPlus from our code and do our test. Here is what we are going to call
 
-```powershell
+{{ page.beginps }}
 function Get-CMDBdata {
     [CmdletBinding()]
     param (
@@ -44,7 +44,7 @@ function Get-CMDBdata {
     }
 
 }
-```
+{{ page.endps }}
 
 And here is how it looks like
 
@@ -66,10 +66,10 @@ Now lets see the drive:
 
 Yikes, functions are there! Well, lets now try to put these functions to a global scope. For that we can change our ```Export-ModuleMember -Function *-*``` call in cloudmgmt.psm1 to export all functions, but not just those with dash ```-``` in their name, like below, and try again
 
-```powershell
+{{ page.beginps }}
 # Export-ModuleMember -Function *-*
 Export-ModuleMember -Function *
-```
+{{ page.endps }}
 
 And here is what we've got
 
@@ -87,7 +87,7 @@ So the bottom line here - you should export your completers if you what your ```
 
 Another option to initialize ```[ArgumentCompleter()]``` is using type, derived from [IArgumentCompleter]. Lets look at this option. Before testing we get back to ```Export-ModuleMember -Function *-*```. Now what we need to do, is to declare and implement our type, like this:
 
-```powershell
+{{ page.beginps }}
 class CMDBBUCompleter4 : IArgumentCompleter
 {
     [IEnumerable[CompletionResult]] CompleteArgument(
@@ -109,7 +109,7 @@ class CMDBBUCompleter4 : IArgumentCompleter
      return $resultList
     }
 }
-```
+{{ page.endps }}
 
 It got everything we used previously, the same set of parameters, the same result type, the same body. Well, almost the same. If we try to use our variable, instead of a direct call to the CMDB interface, we get PSAnalyzer error message, like below.
 
@@ -119,7 +119,7 @@ To work this around we can use scope modifier
 
 Good, so we updated our code, we returned ```Export-ModuleMember``` as it was before, and added another class. Now we need to update our cmdlet in a proper way, like below, and try
 
-```powershell
+{{ page.beginps }}
 function Get-CMDBdata {
     [CmdletBinding()]
     param (
@@ -139,7 +139,7 @@ function Get-CMDBdata {
     end {
     }
 }
-```
+{{ page.endps }}
 
 And the result is - it is working. Even with functions not in global scope.
 
