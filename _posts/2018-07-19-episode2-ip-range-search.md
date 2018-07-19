@@ -35,7 +35,7 @@ This is how it works, and now lets look at how we did it.
 
 Well, frankly speaking implementation looks pretty, mm, complex. But in fact it is not. Well, I'd say, I'd like someone with really strong programming background to look at this to point out what is wrong with this. But, well, now it more or less works and we used it a lot in Production and we haven't seen any problems. So, lets look at this closer and put scary things first:
 
-```powershell
+{{ page.beginps }}
 function Get-IPRanges {
     [cmdletbinding()]
     param(
@@ -162,7 +162,7 @@ function Get-IPRanges {
 
     & $calcNets
 }
-```
+{{ page.endps }}
 
 ## Parameters
 
