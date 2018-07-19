@@ -37,5 +37,6 @@ kramdown:
   # do not replace newlines by <br>s
   hard_wrap: false
 
+google_site_verification: "vhFCtwQhU7EpOxQLVbMQTDlzdf9T6w2zyKoHp4eBKSw"
 plugins: ['jekyll-paginate','jekyll-gist', 'jekyll-sitemap', 'jekyll-seo-tag']
 exclude: ['README.md', 'Gemfile', 'Gemfile.lock', 'screenshot.png']
