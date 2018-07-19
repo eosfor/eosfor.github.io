@@ -17,5 +17,6 @@
   </parameters>
   <content>
     <templateFile source='post.md' destination='..\_posts\$PLASTER_PARAM_postdate-$PLASTER_PARAM_postname.md'/>
+    <file destination='..\images\posts\$PLASTER_PARAM_postdate-$PLASTER_PARAM_postname' source='' />
   </content>
 </plasterManifest>
