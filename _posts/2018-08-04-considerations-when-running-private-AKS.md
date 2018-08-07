@@ -43,15 +43,15 @@ Another thing to mention is that there was a requirement to put everything into 
 
 In most cases as part of this design, especially at the very beginning, you may have something called ["Forced tunneling"](https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm), which is basically a default route coming from On-Prem to forward all traffic back, for inspection. Sometime is causes issues. So, in order to be able to provision AKS, you need to make sure that the following list of domains is freely accessible from the VNET, you want to put your AKS to:
 
- - *.azmk8s.io
- - *.azureedge.net
- - *.auth.docker.io
- - *.quay.io
- - *.blob.core.windows.net
- - *.azure-automation.net
- - *.opinsights.azure.com
- - *.management.azure.com
- - *.login.microsoftonline.com
+- *.azmk8s.io
+- *.azureedge.net
+- *.auth.docker.io
+- *.quay.io
+- *.blob.core.windows.net
+- *.azure-automation.net
+- *.opinsights.azure.com
+- *.management.azure.com
+- *.login.microsoftonline.com
 
 These domains/apexes are used during provisioning process and "post-provisioning scripts", so if they are not available, your cluster wont come up.
 
