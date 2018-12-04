@@ -189,11 +189,11 @@ Also, for troubleshooting purposes I added ```-Verbose``` parameter with excessi
 
 Well, the first scenario we used this for was the following:
 
-- Pick the request for network creation, which contained the Azure Region name to put the network to, and the VNET breakdown in a form of just set of sizes, like for example (10,10,10,10). Our default layout was static and consisted of four subnets.
+- Pick the request for network creation, which contained the Azure Region name to put the network to, and the VNET breakdown in a form of just set of sizes, like for example (10.10.10.10). Our default layout was static and consisted of four subnets.
 - Automatically determine the base range from the CMDB, based on the Region provided
 - Calculate a VNET size by just adding together VNET sized, requested by a user
 - Search for a free slot based on the VNET size, base network and the list of networks in use from the CMDB
 - Calculate VLSM breakdown for the free slot we just found
 - Fire the ARM template, providing VNET range, Subnet ranges, Names etc.
 
-Well, this, in general, how it worked. So I hope this will also help you with your automations!
+Well, this, in general, how it worked. So I hope this will also help you with your automation!
