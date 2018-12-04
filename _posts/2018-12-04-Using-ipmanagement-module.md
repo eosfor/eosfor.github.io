@@ -28,7 +28,7 @@ Assume we need to find the next range of size /22 in the network '10.64.0.0/11'.
 Get-IPRanges -Networks $nets -CIDR 22 -BaseNet "10.64.0.0/11" | ft -AutoSize
 {{ page.endps }}
 
-![fisttest](../images/posts/2018-12-04-16-40-18.png)
+![fisttest](/images/posts/2018-12-04-16-40-18.png)
 
 What this output shows is the list of your networks, marked by IsFree flag. Basically, it assumes that if the range is in the list, then it is in use. The row, where IsFree is true, is the range that the commandlet identified as a next available slot for your network. Lets try another one
 
@@ -38,7 +38,7 @@ Get-IPRanges -Networks $nets -CIDR 24 -BaseNet "10.64.0.0/11" | ft -AutoSize
 
 In this case output is a bit different. First two ranges, which have been identified fits one of free slots that the base network range has. And the last one, is the slot at the end of the list of occupied ranges.
 
-![secondtest](../images/posts/2018-12-04-16-40-51.png)
+![secondtest](/images/posts/2018-12-04-16-40-51.png)
 
 So if we want to filter out just those, that we are interested in, we can do like below, so we can pick one of these.
 
@@ -46,7 +46,7 @@ So if we want to filter out just those, that we are interested in, we can do lik
 Get-IPRanges -Networks $nets -CIDR 24 -BaseNet "10.64.0.0/11" | ? isfree -eq $true | ft -AutoSize
 {{ page.endps }}
 
-![thirdtest](../images/posts/2018-12-04-16-44-26.png)
+![thirdtest](/images/posts/2018-12-04-16-44-26.png)
 
 Ok, lets say we've chosen '10.64.6.0/24'. Next step is to break it down by subnets, if needed. Let say that because of some corporate policies we want to have four subnets in this VNET. First subnet will be reserved for Gateway subnet, then we have a DMZ subnet, to put our WAF, as no other devices is supported in the WAF subnet. Next subnet, we call it EDGE - is basically a subnet we put put our WEB-facing VMs into, then APP - for application layer, and BKE - for data layer. In order to do this automatically we need to have a range we picked up on the previous step. And we need to define a layout. We need also to specify a size of each subnet in number of IPs. Like below.
 
@@ -62,4 +62,4 @@ Get-VLSMBreakdown -Network 10.64.6.0/24 -SubnetSize $subnets | ft -AutoSize
 
 This will be our VNET breakdown, by subnets
 
-![breakdown](../images/posts/2018-12-04-16-53-13.png)
+![breakdown](/images/posts/2018-12-04-16-53-13.png)
