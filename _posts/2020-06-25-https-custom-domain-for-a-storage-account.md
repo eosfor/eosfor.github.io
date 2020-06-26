@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "How to attach HTTPS custom domain to a storage account-based static website"
-categories:  ['PowerShell','WSL', 'Windows']
-tags:  ['PowerShell','WSL', 'Windows']
+categories:  ['Azure']
+tags:  ['Azure']
 date:  2020-06-25 21:45:14 -07:00
 beginps: '<div class="syn_wrapper"><pre class="brush: powershell;">'
 endps: '</pre></div>'
