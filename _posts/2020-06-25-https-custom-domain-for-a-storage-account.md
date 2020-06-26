@@ -10,11 +10,11 @@ images: "/images/posts"
 excerpt_separator: <!--more-->
 ---
 
-Well, in their [documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website#mapping-a-custom-domain-to-a-static-website-url) MSFT says that:
-
-> To enable HTTPS, you'll have to use Azure CDN because Azure Storage does not yet natively support HTTPS with custom domains
+Well, in their [documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website#mapping-a-custom-domain-to-a-static-website-url) MSFT says that: To enable HTTPS, you'll have to use Azure CDN because Azure Storage does not yet natively support HTTPS with custom domains
 
 However, I've found a quick trick to make it possible. Well, actually, [they also did it](https://azure.microsoft.com/en-us/services/app-service/static/) :). But I decided to make this post anyway.
+
+<!--more-->
 
 So in general, there is a [proxy functionality](https://docs.microsoft.com/en-us/azure/azure-functions/functions-proxies) on top of Azure Functions. This allows us to put a proxy in front of a storage account and redirect all calls to a function to the storage account static website URL. And then you can configure a custom domain for a Function as usual. Basically all you need to do is to:
 
