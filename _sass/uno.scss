@@ -960,24 +960,24 @@ h5 {
 
 h1 {
 	margin-top: 0;
-	font-size: 3.2em;
+	font-size: 1.7em;
 	line-height: 1.2em;
 	letter-spacing: .05em; }
 
 h2 {
-	font-size: 2.2em; }
+	font-size: 1.5em; }
 
 h3 {
-	font-size: 1.8em; }
-
-h4 {
-	font-size: 1.4em; }
-
-h4 {
 	font-size: 1.2em; }
 
-h5 {
+h4 {
 	font-size: 1em; }
+
+h4 {
+	font-size: .8em; }
+
+h5 {
+	font-size: .6em; }
 
 p {
 	margin-bottom: 1.3em;
@@ -998,7 +998,7 @@ blockquote {
 	font-family: "Roboto Slab", serif;
 	font-weight: lighter;
 	font-style: italic;
-	font-size: 1.3em;
+	font-size: .9em;
 	text-align: left; }
 	blockquote p:last-child {
 		margin-bottom: 0; }
@@ -1214,7 +1214,7 @@ hr {
 	background-size: cover; }
 
 .panel-cover--collapsed {
-	width: 40%;
+	width: 35%;
 	max-width: 530px; }
 
 .panel-cover--overlay {
