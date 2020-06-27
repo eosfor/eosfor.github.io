@@ -10,9 +10,9 @@ endps: '</pre></div>'
 
 For the last two weeks I've been playing with [Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/) (AKS) and with it's public counterpart - [acs-engine](https://github.com/Azure/acs-engine). Here is a bit about the experience I got with it, having in mind I've never worked with these tools before. Here I'm trying to look at this from the Infrastructure perspective, but not from the developers' perspective.
 
-# Containers, Cloud and private environments
+## Containers, Cloud and private environments
 
-## Few things to keep in mind for AKS
+### Few things to keep in mind for AKS
 
 Well first of all, lets see what we've got. There are a lot of documentation on the Internet, I'm not going to repeat it here. I just want to highlight a few key points to keep in mind when building your clusters using either one of these two toolsets.
 
@@ -78,7 +78,7 @@ There are couple of things to pay attention to:
 - **dockerBridgeCidr** option – sets a CIDR notation IP range assigned to the Docker bridge network. It must not overlap with any Subnet IP ranges or the Kubernetes service address range
 - **keyData** option – sets an ssh key to use to access VMs of a cluster. Using this you'll be able to login to your worker VMs
 
-## Azure Kubernetes Service vs acs-engine
+### Azure Kubernetes Service vs acs-engine
 
 As far as I got, Azure Kubernetes Service and acs-engine are similar, but different. Well, from the Azure perspective both provision Kubernetes cluster for you. However, the main difference we've got with acs-engine is that it creates full cluster for you, including master nodes and worker nodes. It also requires access to the same set of endpoints and domains, as it uses, I guess, the same or similar set of scripts, to perform a deployment. One of the biggest benefits of acs-engine is that it is able to use your custom VNETs, and even your own custom images! However, they should be "compatible" with dpkg, as it is used in the scripts. Be default they support Ubuntu and RHEL. In general what acs-engine does is it takes a [json template of it's own format](https://github.com/Azure/acs-engine/blob/master/docs/clusterdefinition.md) as an input, and generates an ARM template, which then can be provisioned into a resource group. At the end of the day you get your own cluster in a form of a number of VMs, and you will need to manage this cluster yourself.
 
