@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Hello colleagues, we continue building our Enterprise-focused PowerShell module for Azure. And this time we will extend functionality of our IP management module.
 
+<!--more-->
+
 # Some considerations
 
 As you might recall we making a module, which will have the following functionality.

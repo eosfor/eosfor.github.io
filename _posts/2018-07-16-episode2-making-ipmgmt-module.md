@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Hello colleagues, we continue building our Enterprise-focused Azure automation module. And now lets took at the task from a different angle. So far we managed to create name generation components, and what we need to do now? Well, if we need to automate VM provisioning we need one more thing - networks. We need to be able to automate network creation, meaning, we need to automate IP ranges calculations and lookups for free IP ranges in our estate. So lets focus on this
 
+<!--more-->
+
 # Goals
 
 In this episode we will create another module which we will later use to automate network provisioning. And things we want to cover here are:

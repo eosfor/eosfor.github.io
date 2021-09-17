@@ -9,6 +9,7 @@ endps: '</pre></div>'
 ---
 
 For the last two weeks I've been playing with [Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/) (AKS) and with it's public counterpart - [acs-engine](https://github.com/Azure/acs-engine). Here is a bit about the experience I got with it, having in mind I've never worked with these tools before. Here I'm trying to look at this from the Infrastructure perspective, but not from the developers' perspective.
+<!--more-->
 
 ## Containers, Cloud and private environments
 

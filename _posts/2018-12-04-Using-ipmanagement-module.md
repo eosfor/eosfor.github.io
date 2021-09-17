@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Ok, now lets start using this thing. Assume we've got three different ranges '10.192.0.0/11', '10.64.0.0/11' and '10.128.0.0/11'. These ranges correspond to three different geographic locations in Azure. There are already some ranges used in these top level blocks. And we have the whole list of ranges, which are in use already. So what we want to achieve is we want to automatically select the next available range and provision VNET for it.
 
+<!--more-->
+
 # The process
 
 Lets say we've extracted all VNET ranges and got their list, like this:
