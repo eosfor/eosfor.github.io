@@ -13,6 +13,8 @@ I’m going to go talk about some tools, techniques and tricks I use when develo
 
 [![EPISODE 1: Intro](http://img.youtube.com/vi/7G8e27SMSZw/0.jpg)](http://www.youtube.com/watch?v=7G8e27SMSZw)
 
+<!--more-->
+
 # Scenario
 
 At the very beginning let’s define our scenario we are going to follow, during whole video and posts series. This scenario represents some general case, and we will use it as a context for our work.​

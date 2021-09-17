@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Hello colleagues, today we are going to look at CMDB integration components, what benefit we going to get from them, how to make them and what to use them for.
 
+<!--more-->
+
 # General idea
 
 Typically, from the management perspective, the cornerstone for all environments I've seen so far were ITSM model and [CMDB](https://en.wikipedia.org/wiki/Configuration_management_database). These components is the most common way, and, perhaps, the only way to be able to manage big and diverse infrastructures. My personal opinion is that even, when you have something small, some small environment or an application you should build and maintain some kind of high level CMDB. It does not need to be big, but it should contain some key information you may need to identify environments, owners, stakeholders etc. In our example we assume we have some CMDB running somewhere in the Cloud, and we want to query it. For now we will focus on querying organizational structure of our company.

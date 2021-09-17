@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Ok, this moment is here! Now we can make a cmdlet, that will generate names for us.
 
+<!--more-->
+
 # Let's review why we are doing this
 
 First of all let's see why we need this and why we've put all of these efforts. Here is the slide

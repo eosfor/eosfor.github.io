@@ -3,7 +3,9 @@ title: New-PowerShellBlog
 description: 'New home for eosfor.wordpress.com'
 url: 'http://eosfor.github.io'
 baseurl: ''
+theme: minima
 google_analytics: 'UA-6043449-4'
+excerpt_separator: <!--more-->
 # disqus_shortname: 'your-disqus-name'
 
 author:

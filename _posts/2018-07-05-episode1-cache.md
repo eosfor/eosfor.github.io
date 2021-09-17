@@ -12,6 +12,8 @@ Hi colleagues, we continue working on our Azure automation module. [Last time](h
 
 First of all let's collect together some thoughts. Cache, typically, is a component, which is shared across multiple entities. It stores data to speed up access to it. So, we are trying to build something that has same two properties. First - it should be "only one", and second - it should store data and we need to be able to get this data from it. And we are going to make it as simple as possible.
 
+<!--more-->
+
 # "There can be only one"
 
 Singleton, is the way to make something to be instantiated exactly once. Typically, this is done by:

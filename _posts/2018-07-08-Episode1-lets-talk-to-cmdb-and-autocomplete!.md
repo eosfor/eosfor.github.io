@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Hello colleagues, we continue building our Azure management module. Next step for us is to complete our CMDB interface and make a cmdlet, which will be used by rest of our code to talk to CMDB. Lets do this, but first we need to recall our goals for it.
 
+<!--more-->
+
 # Goals
 
 We got the following expectations from this command

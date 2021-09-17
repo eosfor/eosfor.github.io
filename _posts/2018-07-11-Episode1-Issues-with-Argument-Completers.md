@@ -10,6 +10,8 @@ endps: '</pre></div>'
 
 Testing some stuff with argument completers [in the previous article](https://eosfor.github.io/2018/Episode1-lets-talk-to-cmdb-and-autocomplete!/) I found some, say, "peculiarities". So lets go through them. Link to our samples github repo is [here](https://github.com/eosfor/cloudmgmt)
 
+<!--more-->
+
 # Review the existing options
 
 Well, first of all we touched some options, we can use to make our completers. They are:
