@@ -5,21 +5,24 @@ date: 2015-12-17 10:35:09.000000000 +03:00
 categories: [PowerShell, Azure]
 tags: [PowerShell, Azure]
 ---
-##Overview.
-In this article we are going to have a look at number of things in PowerShell. We are going to try dynamic parameters, parallel execution of scriptblocks, building indexes for simple and fast search and much more.
 
-So let's start from the very beginning and describe the problem. The main issue is that sometimes it is required to search VMs not only by their names but also by their internal IP addresses or even by name of their disks. Unfortunately i have no idea if there is any API for doing that out of the box. At this point i decided to build this kind of a tool myself. Goals were defined as follows:
+In this article, we are going to have a look at a number of things in PowerShell. We will try dynamic parameters, parallel execution of scriptblocks, building indexes for fast search, and much more.
+
+So let's start from the very beginning and describe the problem. The main issue is that sometimes it is required to search VMs not only by their names, but also by their internal IP addresses, or even by name of their disks. Unfortunately, I have no idea if there is an API for doing that out of the box. At this point, I decided to build this kind of tool myself. Goals were defined as follows:
 
 - Extract data from Azure as fast as possible, use parallel threads
 - Avoid multiple lookups in the array of the VMs. Use some kind of index for this
-- Have an ability to add indexes if necessary. Search commands should adopt dynamically
+- Have the ability to add indexes if necessary. Search commands should adopt dynamically
 - Use standard, documented REST calls as much as possible
 - As far as almost all VMs are V1 use classic REST calls
 
-For those who does not want to read whole article, [code samples are here](https://github.com/eosfor/AzureSearch).
+For those, who does not want to read the whole article, [code samples are here](https://github.com/eosfor/AzureSearch).
 
-##Extracting data.
-In our environment we have more then ten subscriptions and this number going to grow. Lookup procedure should be able to find an object across all existing subscriptions and automagically find new as they appear.  The only way i saw here is to extract all data from Azure and store it locally in some kind of array. I did some tests trying to extract this data using good old PowerShell Azure cmdlets like Get-AzureVM and found performance very slow. It took ages to extract data for only one subscription. So i decided to try to run this cmdlet in parallel using [PSParallel](https://github.com/powercode/PSParallel) module. Unfortunately this was not a good idea. It looks like some of the cmdlets inside of MS Azure module are not ready to run in parallel. I suspect that problem is with Select-AzureSubscription part of it. Parallel execution was failing at some completely unpredictable places with really strange error messages. After some time of experimenting i decided to leave this path and switch to Azure REST API and extract data myself. Drawback of this is that it will be impossible to pass returned objects to other Azure cmdlets. But at least we going to be able find them very fast. Will see how we can overcome this in future.
+<!--more-->
+
+## Extracting data.
+
+In our environment, we have more than ten subscriptions. and this number going to grow. Lookup procedure should be able to find an object across all existing subscriptions and automagically find new as they appear.  The only way i saw here is to extract all data from Azure and store it locally in some kind of array. I did some tests trying to extract this data using good old PowerShell Azure cmdlets like Get-AzureVM and found performance very slow. It took ages to extract data for only one subscription. So i decided to try to run this cmdlet in parallel using [PSParallel](https://github.com/powercode/PSParallel) module. Unfortunately this was not a good idea. It looks like some of the cmdlets inside of MS Azure module are not ready to run in parallel. I suspect that problem is with Select-AzureSubscription part of it. Parallel execution was failing at some completely unpredictable places with really strange error messages. After some time of experimenting i decided to leave this path and switch to Azure REST API and extract data myself. Drawback of this is that it will be impossible to pass returned objects to other Azure cmdlets. But at least we going to be able find them very fast. Will see how we can overcome this in future.
 
 So I stated with listing cloud services in parallel using [this call](https://msdn.microsoft.com/en-us/library/azure/ee460781.aspx?tduid=(7e6af0dae94cd99be610744b05b54dd4)(256380)(2459594)(XdSn0e3h3.k-wrFcUJSbpSAsQV7.MdbuBQ)()).
 
@@ -28,7 +31,7 @@ $sub = Get-AzureSubscription
 $h = $sub.SubscriptionId | Invoke-Parallel { Invoke-RestMethod -uri https://management.core.windows.net/$_/services/hostedservices -Method GET -Headers $headers }
 </pre>
 
-This works pretty fine and pretty fast. After that i run [get deployment](https://msdn.microsoft.com/en-us/library/azure/ee460804.aspx) to extract VMs data and store it into hashtable with a service name as a key. After this is completed i have a list of all VMs across all of subscriptions available to me.
+This works pretty fine and pretty fast. After that, I run [get deployment](https://msdn.microsoft.com/en-us/library/azure/ee460804.aspx) to extract VMs data and store it into hashtable with a service name as a key. After this is completed, I have a list of all VMs across all of subscriptions available to me.
 
 <pre class="brush: powershell;">
 $ht = [hashtable]::Synchronized(@{})
@@ -61,9 +64,9 @@ $h.HostedServices.HostedService | skip-null | invoke-parallel {
 }
 </pre>
 
-There are couple of points here. First one is that data returned by the call is in somewhat strange format. Information about VM is stored in two different places; in RoleInstanceList sub tree and in RoleList sub tree. In order to simplify further index creation I’m doing conversion of mentioned XML sub trees to hashtables, join them together and produce pscustomobject. After all this new object gets added to a hashtable to the appropriate cloud service. Second thing is that this conversion being done by xmlToObject function, which in turn should be added to each “thread” explicitly. That is why the scriptblock to run contains definition of the xmlToObject function along with REST method invocation.
+There are a couple of points here. The first one is that data returned by the call is in a somewhat strange format. Information about VM is stored in two different places; in RoleInstanceList sub tree and in RoleList sub tree. In order to simplify further index creation I’m doing conversion of mentioned XML sub trees to hashtables, join them together and produce pscustomobject. After all this new object gets added to a hashtable to the appropriate cloud service. The second thing is that this conversion is done by xmlToObject function, which in turn should be added to each “thread” explicitly. That is why the scriptblock to run contains definition of the xmlToObject function along with REST method invocation.
 
-In general this scriptblock extracts all deployments from the Cloud Service, extracts machine details from the result, makes objects for each machine and add this object to a hashtable under a Cloud Service Key. As a result we have list of VMs indexed by Cloud Service Name.
+In general, this scriptblock extracts all deployments from the Cloud Service, extracts machine details from the result, makes objects for each machine and add this object to a hashtable under a Cloud Service Key. As a result we have list of VMs indexed by Cloud Service Name.
 
 ##Building indexes
 At this point we have all the data we need. But if suddenly we need to find something there it may take too much time, especially if we need to do lookup many times. The simplest way to address this is to build additional indexes. For that we can use powershell hashtables. That is pretty easy:
