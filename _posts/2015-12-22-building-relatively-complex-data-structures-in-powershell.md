@@ -5,8 +5,12 @@ date: 2015-12-22 08:23:50.000000000 +03:00
 categories: [PowerShell, Azure]
 tags: [PowerShell, Azure]
 ---
+
 Ok, let's continue our discussion about building an Azure asset database. In this short article I'm going to show a simple way of building a dynamic data structure which stores database alongside with its indexes.
-Let's start from quick reminder of where we are. At the moment we have a variable, containing database of Azure based VMs. And we have a procedure of building indexes, based on [hash tables](https://en.wikipedia.org/wiki/Hash_table). How can we use it to search the DB in a cmdlet based way. I think that the best way is to use following semantics:
+
+<!--more-->
+
+Let's start from quick reminder of where we are. At the moment, we have a variable containing a database of Azure based VMs. And we have a procedure of building indexes, based on [hash tables](https://en.wikipedia.org/wiki/Hash_table). How can we use it to search the DB in a cmdlet based way. I think that the best way is to use following semantics:
 
 <pre class="brush: powershell;">
 Find-AzureDBObject -Database $DB -IPAddress 10.10.10.10
