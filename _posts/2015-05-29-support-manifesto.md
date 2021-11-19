@@ -6,11 +6,14 @@ type: post
 categories: [SupportManifesto, PowerShell]
 tags: [SupportManifesto, PowerShell]
 ---
+
 Nowadays there is a big gap between developers and infrastructure operations. The problem is that they exist in two different worlds. They use different terminology and approaches, have distinctive strategies and goals, varying sets of knowledge, and even a different mindset. How can we work together like this, and who can join us?
 
 We should all think not only in terms of our technical field, but also about the people we are doing this for. Customers don't just require a solution itself. They also need to support and monitor this solution, manage it, integrate it with existing solutions and data flows, deploy new instances and restore failed ones. When a solution contains a number of components that can run on various servers and be moved from one to another, there is a lifesaving property that should be provided – the system should be self-descriptive. In other words, it should provide some interface to track its state and components in an easy way.
 
 How can we achieve this? Here are some ideas and technologies to use for developers who want to do something really great.
+
+<!--more-->
 
 ## Manageability Strategy – give us tools and docs!
 ![img]({{ site.baseurl }}/images/posts/oldposts/052915_0825_supportmani1.png)
