@@ -16,12 +16,12 @@ However, I've found a quick trick to make it possible. Well, actually, [they als
 
 <!--more-->
 
-So in general, there is a [proxy functionality](https://docs.microsoft.com/en-us/azure/azure-functions/functions-proxies) on top of Azure Functions. This allows us to put a proxy in front of a storage account and redirect all calls to a function to the storage account static website URL. And then you can configure a custom domain for a Function as usual. Basically all you need to do is to:
+So in general, there is a [proxy functionality](https://docs.microsoft.com/en-us/azure/azure-functions/functions-proxies) on top of Azure Functions. This allows us to put a proxy in front of a storage account and redirect all calls to a function to the storage account static website URL. And then you can configure a custom domain for a Function as usual. Basically, all you need to do is to:
 
 - create a storage account and enable it for static sites
-- create a windows Azure function. I used Consumption plan for my test
-- configure the proxy functionality to redirect requests from a function to the storage account static web app endpoint. It can be dove via portal
-- attach custom domain to the function
+- create a windows Azure function. I used the Consumption plan for my test
+- configure the proxy functionality to redirect requests from a function to the storage account static web app endpoint. It can be done via Portal
+- attach a custom domain to the function
 - generate and attach certificate to the function
 
-That is basically it.
+That is all.
