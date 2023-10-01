@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Modern IT Engineer</title>
+    <link>https://eosfor.github.io/</link>
+    <description>Recent content on Modern IT Engineer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 25 Jun 2020 21:45:14 -0700</lastBuildDate><atom:link href="https://eosfor.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to attach HTTPS custom domain to a storage account-based static website</title>
+      <link>https://eosfor.github.io/posts/2020-06-25-https-custom-domain-for-a-storage-account/</link>
+      <pubDate>Thu, 25 Jun 2020 21:45:14 -0700</pubDate>
+      
+      <guid>https://eosfor.github.io/posts/2020-06-25-https-custom-domain-for-a-storage-account/</guid>
+      <description>Well, in their documentation MSFT says that: To enable HTTPS, you&amp;rsquo;ll have to use Azure CDN because Azure Storage does not yet natively support HTTPS with custom domains
+However, I&amp;rsquo;ve found a quick trick to make it possible. Well, actually, they also did it :). But I decided to make this post anyway.
+So in general, there is a proxy functionality on top of Azure Functions. This allows us to put a proxy in front of a storage account and redirect all calls to a function to the storage account static website URL.</description>
+    </item>
+    
+    <item>
+      <title>Using IP management module</title>
+      <link>https://eosfor.github.io/posts/2018-12-04-using-ipmanagement-module/</link>
+      <pubDate>Tue, 04 Dec 2018 01:38:48 +0300</pubDate>
+      
+      <guid>https://eosfor.github.io/posts/2018-12-04-using-ipmanagement-module/</guid>
+      <description>Ok, now lets start using this thing. Assume we&amp;rsquo;ve got three different ranges &amp;lsquo;10.192.0.0/11&amp;rsquo;, &amp;lsquo;10.64.0.0/11&amp;rsquo; and &amp;lsquo;10.128.0.0/11&amp;rsquo;. These ranges correspond to three different geographic locations in Azure. There are already some ranges used in these top level blocks. And we have the whole list of ranges, which are in use already. So what we want to achieve is we want to automatically select the next available range and provision VNET for it.</description>
+    </item>
+    
+    <item>
+      <title>Considerations when running private AKS cluster</title>
+      <link>https://eosfor.github.io/posts/2018-08-04-considerations-when-running-private-aks/</link>
+      <pubDate>Sat, 04 Aug 2018 05:03:31 +0300</pubDate>
+      
+      <guid>https://eosfor.github.io/posts/2018-08-04-considerations-when-running-private-aks/</guid>
+      <description>For the last two weeks I&amp;rsquo;ve been playing with Azure Kubernetes Service (AKS) and with it&amp;rsquo;s public counterpart - acs-engine. Here is a bit about the experience I got with it, having in mind I&amp;rsquo;ve never worked with these tools before. Here I&amp;rsquo;m trying to look at this from the Infrastructure perspective, but not from the developers&amp;rsquo; perspective.
+Containers, Cloud and private environments Few things to keep in mind for AKS Well first of all, lets see what we&amp;rsquo;ve got.</description>
+    </item>
+    
+  </channel>
+</rss>

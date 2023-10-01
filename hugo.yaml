@@ -1,0 +1,6 @@
+baseURL: 'https://eosfor.github.io'
+languageCode: 'en-us'
+title: 'Modern IT Engineer'
+theme: 'lightbi-hugo'
+builddrafts: true
+author: 'eosfor'
