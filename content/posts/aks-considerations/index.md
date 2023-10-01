@@ -5,6 +5,7 @@ categories:  ['Azure', 'Kubernetes']
 tags:  ['Azure', 'Kubernetes']
 date:  2018-08-04 05:03:31 +03:00
 description: 'Things to keep in mind when running private AKS'
+author: eosfor
 ---
 
 For the last two weeks I've been playing with [Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/) (AKS) and with it's public counterpart - [acs-engine](https://github.com/Azure/acs-engine). Here is a bit about the experience I got with it, having in mind I've never worked with these tools before. Here I'm trying to look at this from the Infrastructure perspective, but not from the developers' perspective.
@@ -66,7 +67,92 @@ Provisioning itself is very simple. You create a template based on the [ARM spec
 
 Simple example looks like this:
 
-{% gist 976bbd856b9116fbbbf8eeccd7d71517 aksDeploymentSample.json %}
+```json
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "type": "string"
+    },
+    "kubernetesVersion": {
+      "type": "string",
+      "defaultValue": "1.10.6",
+      "allowedValues": [
+        "1.10.6",
+        "1.10.5",
+        "1.10.3"
+      ],
+    },
+    "vnetSubnetID": {
+      "type": "string"
+    },
+    "dnsPrefix": {
+      "type": "string"
+    },
+    "workerCount": {
+      "type": "int"
+    },
+    "servicePrincipalClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "generate with the command line: "
+      }
+    },
+    "servicePrincipalSecret": {
+      "type": "securestring"
+    },
+    "vmSize": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "name": "[parameters('clusterName')]",
+      "type": "Microsoft.ContainerService/managedClusters",
+      "apiVersion": "2018-03-31",
+      "location": "[resourceGroup().location]",
+      "tags": {},
+      "properties": {
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "agentPoolProfiles": [
+          {
+            "name": "[concat(parameters('clusterName'))]",
+            "count": "[parameters('workerCount')]",
+            "vmSize": "[parameters('vmSize')]",
+            "vnetSubnetID": "[parameters('vnetSubnetID')]",
+            "maxPods": 15
+          }
+        ],
+        "linuxProfile": {
+          "adminUsername": "azureuser",
+          "ssh": {
+            "publicKeys": [
+              {
+                "keyData": "ssh-rsa <key goes here>"
+              }
+            ]
+          }
+        },
+        "networkProfile": {
+          "networkPlugin": "azure",
+          "serviceCidr":"172.66.0.0/16",
+          "DNSServiceIP":"172.66.0.10",
+          "dockerBridgeCidr":"172.33.0.1/16"
+        },
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('servicePrincipalClientId')]",
+          "secret": "[parameters('servicePrincipalSecret')]"
+        },
+        "enableRBAC": false
+      }
+    }
+  ],
+  "outputs": {}
+}
+```
 
 There are couple of things to pay attention to:
 
@@ -83,6 +169,60 @@ As far as I got, Azure Kubernetes Service and acs-engine are similar, but differ
 
 Example template may look like this:
 
-{% gist d630ceea2cae84f7169f256737bb3d25 acsEngineSampleTemplate.json %}
+```json
+{
+    "apiVersion": "vlabs",
+    "properties": {
+        "orchestratorProfile": {
+            "orchestratorType": "Kubernetes",
+            "kubernetesConfig": {
+                "privateCluster": {
+                    "enabled": true
+                },
+                "kubeletConfig": {
+                    "--eviction-hard": "memory.available<250Mi,nodefs.available<20%,nodefs.inodesFree<10%",
+                    "--max-pods": "10"
+                }
+            }
+        },
+        "masterProfile": {
+            "count": 1,
+            "dnsPrefix": "clusterdns",
+            "vmSize": "Standard_D2s_v3",
+            "vnetSubnetId": "/subscriptions/<your subscription ID>/resourceGroups/<network RG>/providers/Microsoft.Network/virtualNetworks/<network name>/subnets/<subnet name>",
+            "firstConsecutiveStaticIP": "<ip address of a first master>",
+            "vnetCidr": "10.10.5.0/24"
+        },
+        "agentPoolProfiles": [
+            {
+                "name": "devworker",
+                "count": 3,
+                "vmSize": "Standard_D2s_v3",
+                "StorageProfile":"ManagedDisks",
+                "diskSizesGB": [
+                    256
+                ],
+                "vnetSubnetId": "/subscriptions/<your subscription ID>/resourceGroups/<network RG>/providers/Microsoft.Network/virtualNetworks/<network name>/subnets/<subnet name>",
+                "availabilityProfile": "AvailabilitySet",
+                "acceleratedNetworkingEnabled":false
+            }
+        ],
+        "linuxProfile": {
+            "adminUsername": "<admin name goes here>",
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "keyData": "ssh-rsa <your key goes here>"
+                    }
+                ]
+            }
+        },
+        "servicePrincipalProfile": {
+            "clientId": "<your SP id goes here>",
+            "secret": "<your secret goes here>"
+        }
+    }
+}
+```
 
 As you can see it is similar to what AKS wants us to prepare so I conclude they are based on a similar codebase.
