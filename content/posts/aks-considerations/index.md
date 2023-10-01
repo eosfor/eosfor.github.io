@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  'Considerations when running private AKS cluster'
 categories:  ['Azure', 'Kubernetes']
 tags:  ['Azure', 'Kubernetes']
