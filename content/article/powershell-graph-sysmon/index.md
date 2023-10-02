@@ -12,8 +12,6 @@ So first thing to do in this case is create a graph object
 $g = New-Graph -Type BidirectionalGraph
 ```
 
-
-
 And now we can fill in the graph with some data right from the event log. It may take few seconds until all events are processed
 
 ```powershell
