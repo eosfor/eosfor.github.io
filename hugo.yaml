@@ -3,4 +3,14 @@ languageCode: 'en-us'
 title: 'Modern IT Engineer'
 theme: 'bilberry-hugo-theme/v4'
 builddrafts: true
-author: 'eosfor'
+
+
+params:
+  customImage: 'img/avatar.jpg'
+  author: 'eosfor'
+  description: 'My thoughts around modern IT'
+  enableMomentJs: true
+
+markup:
+  highlight:
+    linenos: false
