@@ -80,8 +80,8 @@ Get-VLSMBreakdown -Network 10.10.5.0/24 -SubnetSizeCidr $subnets | ft -AutoSize
 ```
 
 ```console
-type      Network     AddressFamily Netmask         Broadcast   FirstUsable LastUsable  Usable Tota
-----      -------     ------------- -------         ---------   ----------- ----------  ------ ----
+type      Network     AddressFamily Netmask         Broadcast   FirstUsable LastUsable  Usable Total
+----      -------     ------------- -------         ---------   ----------- ----------  ------ -----
 EDGSUBNET 10.10.5.224  InterNetwork 255.255.255.224 10.10.5.255 10.10.5.225 10.10.5.254     30   32
 GTWSUBNET 10.10.5.192  InterNetwork 255.255.255.224 10.10.5.223 10.10.5.193 10.10.5.222     30   32
 CRESUBNET 10.10.5.128  InterNetwork 255.255.255.192 10.10.5.191 10.10.5.129 10.10.5.190     62   64
@@ -119,11 +119,11 @@ Get-IPRanges -Networks "10.172.1.0/24", "10.172.0.0/24" -CIDR 22 -BaseNet "10.17
 ```
 
 ```console
-IsFree Network    AddressFamily Netmask       Broadcast    FirstUsable LastUsable   Usable Total Ci
+IsFree Network    AddressFamily Netmask       Broadcast    FirstUsable LastUsable   Usable Total Cidr
 ------ -------    ------------- -------       ---------    ----------- ----------   ------ ----- --
-False 10.172.0.0  InterNetwork 255.255.255.0 10.172.0.255 10.172.0.1  10.172.0.254    254   256 24
-False 10.172.1.0  InterNetwork 255.255.255.0 10.172.1.255 10.172.1.1  10.172.1.254    254   256 24
-True  10.172.4.0  InterNetwork 255.255.252.0 10.172.7.255 10.172.4.1  10.172.7.254   1022  1024 22
+False  10.172.0.0  InterNetwork 255.255.255.0 10.172.0.255 10.172.0.1  10.172.0.254    254   256 24
+False  10.172.1.0  InterNetwork 255.255.255.0 10.172.1.255 10.172.1.1  10.172.1.254    254   256 24
+True   10.172.4.0  InterNetwork 255.255.252.0 10.172.7.255 10.172.4.1  10.172.7.254   1022  1024 22
 ```
 
 What if we need to find more than just one range at a time? No worries. We can accomplish this with the following script. Here, we are using Azure as the source of truth, as it allows us to always query it for the real IP ranges that are in use.
@@ -170,9 +170,7 @@ True  10.172.5.0    InterNetwork 255.255.255.0   10.172.5.255 10.172.5.1   10.17
 True  10.172.6.0    InterNetwork 255.255.255.0   10.172.6.255 10.172.6.1   10.172.6.254    254 256
 True  10.172.7.0    InterNetwork 255.255.255.0   10.172.7.255 10.172.7.1   10.172.7.254    254 256
 True  10.172.8.0    InterNetwork 255.255.255.128 10.172.8.127 10.172.8.1   10.172.8.126    126 128
-True  10.172.8.128  InterNetwork 255.255.255.
-
-128 10.172.8.255 10.172.8.129 10.172.8.254    126 128
+True  10.172.8.128  InterNetwork 255.255.255.128 10.172.8.255 10.172.8.129 10.172.8.254    126 128
 True  10.172.9.0    InterNetwork 255.255.255.128 10.172.9.127 10.172.9.1   10.172.9.126    126 128
 True  10.172.9.128  InterNetwork 255.255.255.192 10.172.9.191 10.172.9.129 10.172.9.190     62  64
 True  10.172.9.192  InterNetwork 255.255.255.192 10.172.9.255 10.172.9.193 10.172.9.254     62  64
