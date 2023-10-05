@@ -103,8 +103,7 @@ totalPrice totalACU vmRecords
 Here we see that, compared to the first test, the cost remains minimal. But we managed to increase the overall performance slightly.
 
 Let's see which VM sizes the model has picked for us. For that, we'll use the [DataFrame](https://devblogs.microsoft.com/dotnet/an-introduction-to-dataframe/). The .NET Interactive can display it conveniently, making it readable. To achieve this, we
-
- need to convert the resulting set of VMs into a CSV string and then pass it to the extension method. Well, it doesn't look like an extension method, but it is. Unfortunately, this is how PowerShell does it.
+need to convert the resulting set of VMs into a CSV string and then pass it to the extension method. Well, it doesn't look like an extension method, but it is. Unfortunately, this is how PowerShell does it.
 
 ```powershell
 $csv = ($ret.vmRecords | ConvertTo-Csv -NoTypeInformation) -join "`n"
@@ -216,9 +215,7 @@ However, by default, MiniZinc does not have syntax to optimize for multiple para
 
 1. Plug `solve  minimize totalPrice;` into the model.
 2. The model executes, PowerShell takes the output from MiniZinc, parses it, and passes it to the next command via the PowerShell pipeline.
-3. This input gets transformed into a constraint +
-
- another `solve` statement - `constraint totalACU >= $($InputObject.totalACU); solve  minimize totalPrice;` or `constraint totalPrice <= $($InputObject.totalPrice * 10000); solve  maximize totalACU;` where `$($InputObject.xxx)` is the result from the previous command.
+3. This input gets transformed into a constraint + another `solve` statement - `constraint totalACU >= $($InputObject.totalACU); solve  minimize totalPrice;` or `constraint totalPrice <= $($InputObject.totalPrice * 10000); solve  maximize totalACU;` where `$($InputObject.xxx)` is the result from the previous command.
 4. The model executes, PowerShell takes the output from MiniZinc, parses it, and passes it to the next command via the PowerShell pipeline.
 
 In the end, here's what is happening. The input to the model is the set of VMs with their sizes and all possible target VM sizes along with their attributes and ACU from Azure. For each VM, the model tries to find a counterpart from the list of sizes that satisfies all constraints and at the same time tries to optimize the objective function.
