@@ -5,13 +5,14 @@ draft = true
 tags = ['Powershell', 'Azure']
 +++
 
-> This works in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
-
-## Scenario
-
 Suppose we have been allocated the IP range of `10.172.0.0/16` by the network team for planned Azure Landing Zones. The goal is to automate this by creating a tool that will automatically calculate IP ranges for us, based on some high-level and easy-to-understand details regarding the future networks.
 
-This notebook demonstrates how to achieve this using the [ipmgmt](https://github.com/eosfor/ipmgmt) module. Let's start by installing it:
+This notebook demonstrates how to achieve this using the [ipmgmt](https://github.com/eosfor/ipmgmt) module.
+<!--more-->
+
+> This works in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
+
+Let's start by installing it:
 
 ```powershell
 Install-Module ipmgmt -Scope CurrentUser

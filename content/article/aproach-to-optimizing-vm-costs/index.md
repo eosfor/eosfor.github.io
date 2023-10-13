@@ -4,9 +4,11 @@ date: 2023-10-03T12:48:52-07:00
 draft: true
 ---
 
-> This works in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
-
 Are you considering transitioning your servers from an on-prem DC to Azure cloud? One step in this journey involves mapping existing servers to their Azure counterparts. The goal is to reduce the costs of the overall bundle of boxes while obtaining the highest possible performance. In theory, we can map the source VMs to the target VMs based on the number of virtual CPUs and the amount of RAM. Although this isn't the most challenging task, it doesn't guarantee the highest possible performance for the lowest possible price. If we always opt for a VM with the lowest price, we may compromise on performance. Conversely, choosing VMs with the highest performance could result in higher costs. Is there a middle ground? Is it possible to achieve what we want? Let's find out.
+
+<!--more-->
+
+> This works in [Binder](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
 
 ## MiniZinc
 

@@ -6,6 +6,8 @@ tags: ['Powershell', 'PsQuickGraph']
 ---
 
 Hello colleagues, this is an example I promised answering [this](https://twitter.com/cyb3rops/status/895024725730238464) tweet. I used this [sysmon config](https://github.com/SwiftOnSecurity/sysmon-config) to capture activities happening on my system. Unfortunately it did not capture a lot of network-related activities, perhaps I need to change it to extend network-level filters. But on the other hand it captured a lot of process level activities, so in this example i'd like to try to graph process creation events.
+<!--more-->
+
 So first thing to do in this case is create a graph object
 
 ```powershell

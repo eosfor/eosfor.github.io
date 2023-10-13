@@ -5,6 +5,15 @@ draft: true
 featuredImage: "article/no-caf-webapps/newroad.jpg"
 ---
 
+In the journey of infrastructure creation within Azure, many organizations lean towards crafting complex hub-and-spoke topologies to host their applications, even when the necessity for such complexity isn’t apparent. A common justification echoes: “It’s mandated by the [Microsoft Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)”. However, embarking on this path unfolds a myriad of related, albeit previously unexplored, domains. For instance, the newfound need to manage IP spaces, delve into VLSM subnetting - topics unfamiliar to most Dev teams. Once networked, the quest doesn’t end; it merely morphs into challenges like private DNS resolution, establishing access to internal resources, and the list trails on.
+
+Yet, if we pause to reflect, many Azure services including Azure Web Apps were designed with a public persona. Initially, some didn’t even entertain VNET integration, and this model was well-accepted.
+
+In this article, we aim to traverse a less convoluted route towards securely hosting Web Apps, whilst sidestepping the network-centric hurdles.
+<!--more-->
+
+Our compass is pointed towards simplicity, without trading off security. This simplicity envelops both the infrastructure architecture and the provisioning templates, ensuring a streamlined automation process. Our discourse unfolds the potential of maintaining a straightforward yet secure architecture, shedding the excess, and focusing on what truly matters for running Web Apps securely in Azure.
+
 - [Overview](#overview)
   - [A word on naming conventions](#a-word-on-naming-conventions)
 - [Provision infrastructure](#provision-infrastructure)
@@ -15,17 +24,7 @@ featuredImage: "article/no-caf-webapps/newroad.jpg"
 - [Deploy Web Apps](#deploy-web-apps)
   - [Cleanup](#cleanup)
 
-
 > If you want to try this out, there is a Jupyter notebook, which works in [Binder](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
-
-
-In the journey of infrastructure creation within Azure, many organizations lean towards crafting complex hub-and-spoke topologies to host their applications, even when the necessity for such complexity isn’t apparent. A common justification echoes: “It’s mandated by the [Microsoft Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)”. However, embarking on this path unfolds a myriad of related, albeit previously unexplored, domains. For instance, the newfound need to manage IP spaces, delve into VLSM subnetting - topics unfamiliar to most Dev teams. Once networked, the quest doesn’t end; it merely morphs into challenges like private DNS resolution, establishing access to internal resources, and the list trails on.
-
-Yet, if we pause to reflect, many Azure services including Azure Web Apps were designed with a public persona. Initially, some didn’t even entertain VNET integration, and this model was well-accepted.
-
-In this narrative, we aim to traverse a less convoluted route towards securely hosting Web Apps, whilst sidestepping the network-centric hurdles.
-
-Our compass is pointed towards simplicity, without trading off security. This simplicity envelops both the infrastructure architecture and the provisioning templates, ensuring a streamlined automation process. Our discourse unfolds the potential of maintaining a straightforward yet secure architecture, shedding the excess, and focusing on what truly matters for running Web Apps securely in Azure.
 
 ## Overview
 
