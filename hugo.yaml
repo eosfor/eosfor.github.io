@@ -15,3 +15,9 @@ params:
 markup:
   highlight:
     linenos: false
+
+languages:
+  en:
+    weight: 1
+  ru:
+    weigth: 2
