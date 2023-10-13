@@ -2,6 +2,7 @@
 title: 'Do we always need to follow CAF recommendations?'
 date: 2023-10-12T09:46:34-07:00
 draft: true
+featuredImage: "article/no-caf-webapps/newroad.jpg"
 ---
 
 - [Overview](#overview)
@@ -153,7 +154,7 @@ Now lets make it all to life.
 
 > The section below is provided for reference. You can try all this yourself in [![Binder](https://mybinder.org/badge_logo.svg)][def]. All source code is in the repo [here](https://github.com/eosfor/scripting-notes/tree/main/notebooks/en)
 
-[def]: https://mybinder.org/v2/gh/eosfor/scripting-notes
+[def]: https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD
 
 ### Logging in to Azure
 
