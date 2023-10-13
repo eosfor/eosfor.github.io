@@ -18,7 +18,7 @@ featuredImage: "article/no-caf-webapps/newroad.jpg"
 
 > If you want to try this out, there is a Jupyter notebook, which works in [![Binder](https://mybinder.org/badge_logo.svg)][def]
 
-[def]: https://mybinder.org/v2/gh/eosfor/scripting-notes
+[def]: https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD
 
 In the journey of infrastructure creation within Azure, many organizations lean towards crafting complex hub-and-spoke topologies to host their applications, even when the necessity for such complexity isn’t apparent. A common justification echoes: “It’s mandated by the [Microsoft Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)”. However, embarking on this path unfolds a myriad of related, albeit previously unexplored, domains. For instance, the newfound need to manage IP spaces, delve into VLSM subnetting - topics unfamiliar to most Dev teams. Once networked, the quest doesn’t end; it merely morphs into challenges like private DNS resolution, establishing access to internal resources, and the list trails on.
 
@@ -152,9 +152,8 @@ The better approach is to avoid any assumptions about names, let them be anythin
 
 Now lets make it all to life. 
 
-> The section below is provided for reference. You can try all this yourself in [![Binder](https://mybinder.org/badge_logo.svg)][def]. All source code is in the repo [here](https://github.com/eosfor/scripting-notes/tree/main/notebooks/en)
-
-[def]: https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD
+> The section below is provided for reference. You can try all this yourself in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD).
+> All source code is in the repo [here](https://github.com/eosfor/scripting-notes/tree/main/notebooks/en)
 
 ### Logging in to Azure
 
