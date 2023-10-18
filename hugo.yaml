@@ -18,6 +18,8 @@ markup:
 
 languages:
   en:
-    weight: 1
+    params:
+      weight: 1
   ru:
-    weigth: 2
+    params:
+      weigth: 2
