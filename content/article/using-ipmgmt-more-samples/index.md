@@ -10,7 +10,7 @@ Suppose we have been allocated the IP range of `10.172.0.0/16` by the network te
 This notebook demonstrates how to achieve this using the [ipmgmt](https://github.com/eosfor/ipmgmt) module.
 <!--more-->
 
-> This works in [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
+> This works in {{< hyperlink-image "Binder" "https://mybinder.org/badge_logo.svg" "https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD" >}}
 
 Let's start by installing it:
 

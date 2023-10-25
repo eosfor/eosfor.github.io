@@ -24,7 +24,7 @@ Our compass is pointed towards simplicity, without trading off security. This si
 - [Deploy Web Apps](#deploy-web-apps)
   - [Cleanup](#cleanup)
 
-> If you want to try this out, there is a Jupyter notebook, which works in [Binder](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD)
+> If you want to try this out, there is a Jupyter notebook, which works in {{< hyperlink-image "Binder" "https://mybinder.org/badge_logo.svg" "https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD" >}}
 
 ## Overview
 
