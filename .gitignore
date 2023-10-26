@@ -7,3 +7,4 @@ _site
 .hugo_build.lock
 _posts
 .vscode
+resources/_gen/

@@ -11,10 +11,7 @@ params:
   author: 'eosfor'
   description: 'My thoughts around modern IT'
   enableMomentJs: true
-
-markup:
-  highlight:
-    linenos: false
+  siteWidth: 1200px
 
 languages:
   en:

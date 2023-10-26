@@ -181,7 +181,7 @@ Now we are ready to create everything from scratch. To make it all repeatable we
 
 First we create resource groups:
 
-```powershell
+```powershell {linenos=inline}
 $sharedEnvironments = 'SHARED-DATA', 'SHARED-CONFIGURATION'
 $location = 'westus'
 
@@ -207,7 +207,7 @@ New-AzResourceGroupDeployment -Name 'shared-config-provisioning' -ResourceGroupN
 The subsequent phase involves setting up the actual environment. Our intention is to avoid provisioning multiple environments simultaneously, considering we might wish to update only one at a time in the future. The section below establishes a Resource Group and an environment within it. If updates are required later on, simply provide a name along with an amended template.
 
 
-```powershell
+```powershell {linenos=inline}
 $environmentRg = 'DEV'
 $location = 'westus'
 
