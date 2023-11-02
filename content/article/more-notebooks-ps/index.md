@@ -2,6 +2,7 @@
 title: 'Continuing the Conversation on Jupyter and PowerShell'
 date: 2023-10-30T22:06:36-07:00
 draft: true
+series: ["Jupyter, PowerShell и Azure Cloud"]
 ---
 
 Let's dive a little deeper into the Jupyter-PowerShell duo. First, we’ll try to uncover the ‘why’ behind this alliance. Next, we’ll pry into the ‘how’ of the operation. And finally, we'll unveil the secrets of crafting a notebook and launching it into the digital cosmos for your team or, who knows, the whole world to see. Ready? Set. Go!
@@ -35,7 +36,7 @@ It’s simpler than a spell. We wield the power of [.NET Interactive](https://gi
 
 ## How to Use It
 
-In our last visual tale (video), we chatted about syncing up VSCode with Jupyter. This time, let’s unravel how to craft such a notebook that's eager to leap beyond the VSCode boundaries.
+Last time, we chatted about syncing up VSCode with Jupyter. This time, let’s unravel how to craft such a notebook that's eager to leap beyond the VSCode boundaries.
 
 For this endeavor, we summon [Binder](https://mybinder.org) and Docker. A script of this sacred ritual can be found [here](https://github.com/eosfor/scripting-notes/blob/main/Dockerfile). The [Binder scripture](https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html) mentions that Docker should be invoked only in mundane circumstances. My case is far from mundane; I beckon a kernel that's not a usual guest, and had to call upon some extra magical tools, like `minizinc`. This Dockerfile scripts a Docker image, forging an environment based on Jupyter Notebook with additional spell components and configurations. Here's a brief saga of each step in this Dockerfile:
 
