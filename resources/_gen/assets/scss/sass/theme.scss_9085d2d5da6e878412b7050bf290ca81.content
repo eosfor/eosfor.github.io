@@ -9776,7 +9776,7 @@ readers do not read off random characters that represent icons */
   .bilberry-hugo-theme .bubble .fas {
     font-size: 15pt; }
   .bilberry-hugo-theme .container {
-    width: 800px;
+    width: 1200px;
     max-width: 100%; }
   .bilberry-hugo-theme .ulist {
     padding-left: 1em; }
@@ -10104,7 +10104,7 @@ readers do not read off random characters that represent icons */
     overflow: hidden;
     background-color: #fff;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    width: 700px;
+    width: 1100px;
     position: relative; }
     .bilberry-hugo-theme article:before {
       content: "";
@@ -10219,7 +10219,8 @@ readers do not read off random characters that represent icons */
         margin: 1.5em 0;
         padding: 2em;
         border-left: 0.5em solid #ededed;
-        font-size: 1.05em; }
+        font-size: 1.05em;
+        display: flex; }
         .bilberry-hugo-theme article .content blockquote cite {
           text-transform: uppercase;
           font-style: normal;
@@ -10515,7 +10516,7 @@ readers do not read off random characters that represent icons */
     color: #777; }
     .bilberry-hugo-theme .credits .container:after {
       display: none; }
-  @media (max-width: 800px) {
+  @media (max-width: 1200px) {
     .bilberry-hugo-theme nav.permanentTopNav {
       display: none; }
     .bilberry-hugo-theme nav .container {
