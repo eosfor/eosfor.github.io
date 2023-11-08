@@ -2,6 +2,7 @@
 title: 'Continuing the Conversation on Jupyter and PowerShell'
 date: 2023-10-30T22:06:36-07:00
 draft: true
+featuredImage: "article/more-notebooks-ps/bridge.jpg"
 series: ["Jupyter, PowerShell и Azure Cloud"]
 ---
 
