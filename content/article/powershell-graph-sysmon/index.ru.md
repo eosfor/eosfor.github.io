@@ -118,3 +118,7 @@ $g.Vertices | % { if ( ($g.InDegree($_) -eq 0) -and ($g.OutDegree($_) -gt 2) ) {
 Export-Graph -Graph $g -Path "$($env:TEMP)\comms.svg" -Format MSAGL_MDS
 Export-Graph -Graph $g -Path "$($env:TEMP)\comms.gv" -Format Graphviz
 ```
+
+Выглядит все это примерно вот так
+
+{{< video type="youtube" id="LuRo8GEwp1w" >}}
