@@ -120,6 +120,7 @@ This is how it looks like:
     </div>
 </div>
 
-You can see the whole thing in a ready-to use [jupyter notebook](https://github.com/eosfor/scripting-notes/blob/main/notebooks/en/vnet-topology-visualization-d3js.ipynb). 
 
-{{< hyperlink-image "Binder" "https://mybinder.org/badge_logo.svg" "https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD" >}}
+You can see the whole thing in a ready-to use [jupyter notebook](https://github.com/eosfor/scripting-notes/blob/main/notebooks/en/vnet-topology-visualization-d3js.ipynb).
+
+{{< video type="youtube" id="qnWar8mPbfg" >}}
