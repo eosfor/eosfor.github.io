@@ -10,40 +10,43 @@ Have you ever wondered how a cloud-based, multi-agent AI service handles a flurr
 
 <!--more-->
 
-1. The Task at Hand
+## The Task at Hand
 
 Imagine you’re running a magical multi-agent AI system in the cloud. Users keep sending in queries, each one with a certain number of tokens, and your AI agents must figure out how to handle them. Sometimes they split requests, sometimes they drop them if they’re too big, and sometimes they direct them right through the main pipeline. We want to figure out:
-	•	How many requests do we get in total?
-	•	How many do we split vs. send directly?
-	•	How often do we drop requests (and at what cost)?
-	•	How does all of this affect our resource usage and total cost (in good old dollars)?
+
+- How many requests do we get in total?
+- How many do we split vs. send directly?
+- How often do we drop requests (and at what cost)?
+- How does all of this affect our resource usage and total cost (in good old dollars)?
 
 In other words, we want to simulate the day-to-day life of our AI agentic system and see what happens when the going gets tough—or at least, when the queries keep rolling in.
 
 
-2. Our Simulation Framework
+## Our Simulation Framework
 
 For our simulation, we put on our Python hats and set up a playful environment. We used libraries like numpy, pandas, and possibly tqdm for those delightful progress bars that let us watch our simulation run in real time. Our main steps looked a bit like this:
-	1.	Generate incoming requests: We produce a batch of user queries with random sizes (in tokens).
-	2.	Route the requests: Some requests go directly to the AI agents; others are split into multiple smaller requests if they’re too large.
-	3.	Cost modeling: We keep track of how many tokens each request uses, then calculate LLM (or multi-agent) costs and AKS (Azure Kubernetes Service) costs based on usage—both in dollars.
-	4.	Statistics: We record everything—number of direct requests, split requests, dropped requests, total tokens, and costs.
-	5.	Repeat: We run this entire simulation multiple times (100 runs, in our case) to get nice summary statistics.
+
+1.	Generate incoming requests: We produce a batch of user queries with random sizes (in tokens).
+2.	Route the requests: Some requests go directly to the AI agents; others are split into multiple smaller requests if require some custom processing
+3.	Cost modeling: We keep track of how many tokens each request uses, then calculate LLM (or multi-agent) costs and AKS (Azure Kubernetes Service) costs based on usage—both in dollars.
+4.	Statistics: We record everything—number of direct requests, split requests, dropped requests, total tokens, and costs.
+5.	Repeat: We run this entire simulation multiple times (100 runs, in our case) to get nice summary statistics.
 
 This framework gives us a robust way to see how our hypothetical cloud-based AI system behaves under a variety of random conditions.
 
 
-3. Assumptions & Numbers
+## Assumptions & Numbers
 
 Now for the fun part—how did we decide which numbers to plug in?
-	•	Token Distribution: We assumed user queries come in a variety of sizes, with a certain average length and standard deviation. The system (i.e., our band of AI agents) might add some overhead tokens for each query because, hey, systems gotta system.
-	•	Split Threshold: If a query exceeded our threshold, we split it into smaller pieces. We set this threshold somewhat arbitrarily based on what we thought was a “typical big request.”
-	•	Costs in Dollars: We used a made-up cost model for LLM usage and AKS usage. For example, maybe 1 million tokens cost a certain number of dollars, and each AKS node has a cost per hour. We aimed to keep these costs in a plausible range for demonstration purposes.
-	•	Dropping Requests: We allowed the system to drop requests if they were too huge or if the cluster was at capacity. We pretended it was more cost-effective to drop them than to scale to infinity—harsh, but it’s just a simulation!
+
+- Token Distribution: We assumed user queries come in a variety of sizes, with a certain average length and standard deviation. The system (i.e., our band of AI agents) might add some overhead tokens for each query because, hey, systems gotta system.
+- Split Threshold: If a query exceeded our threshold, we split it into smaller pieces. We set this threshold somewhat arbitrarily based on what we thought was a “typical big request.”
+- Costs in Dollars: We used a made-up cost model for LLM usage and AKS usage. For example, maybe 1 million tokens cost a certain number of dollars, and each AKS node has a cost per hour. We aimed to keep these costs in a plausible range for demonstration purposes.
+- Dropping Requests: We allowed the system to drop requests if they were too huge or if the cluster was at capacity. We pretended it was more cost-effective to drop them than to scale to infinity—harsh, but it’s just a simulation!
 
 Our goal was not to create a perfectly realistic production environment, but rather to highlight the trade-offs and behaviors that might emerge under these assumptions.
 
-4. A Quick Peek at the Code
+## A Quick Peek at the Code
 
 We won’t overwhelm you with all the gritty details, but here’s the general shape of our Python code:
 
@@ -91,14 +94,14 @@ print(summary)
 ```
 
 Essentially:
-	1.	We generate a batch of requests with random sizes.
-	2.	We decide whether to direct them, split them, or drop them.
-	3.	We calculate how many tokens went through and the costs in dollars.
-	4.	We collect all these stats in a DataFrame and spit out summary statistics.
+1. We generate a batch of requests with random sizes.
+2. We decide whether to direct them, split them, or drop them.
+3. We calculate how many tokens went through and the costs in dollars.
+4. We collect all these stats in a DataFrame and spit out summary statistics.
 
+You can find the notebook [here](https://github.com/eosfor/scripting-notes/blob/8d0af479302fd43f40b73627d16f72d8a12c7d79/notebooks/en/agentic-ai-infra-simulation/sim.ipynb)
 
-
-5. Results: The Grand Reveal
+## Results: The Grand Reveal
 
 After 100 simulation runs, we got some neat summary statistics:
 
@@ -135,8 +138,6 @@ And here’s the visual side of things (see the attached figure). It shows:
 From the chart, we can see that whenever the load spikes (green line), the AKS nodes usage (blue line) tends to respond. The failed requests (orange line) stay relatively low, indicating our scaling strategy handles most spikes well. The PCA correlation curve (gray dotted line) helps confirm which periods show the strongest relationships among these metrics.
 
 ![chart](chart.jpeg)
-
-You can find the notebook [here](https://github.com/eosfor/scripting-notes/blob/8d0af479302fd43f40b73627d16f72d8a12c7d79/notebooks/en/agentic-ai-infra-simulation/sim.ipynb)
 
 Wrapping Up (and a Question for You!)
 
