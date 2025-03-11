@@ -12,22 +12,20 @@ Have you ever wondered how a cloud-based, multi-agent AI service handles a flurr
 
 ## The Task at Hand
 
-Imagine you’re running a magical multi-agent AI system in the cloud. Users keep sending in queries, each one with a certain number of tokens, and your AI agents must figure out how to handle them. Sometimes they split requests, sometimes they drop them if they’re too big, and sometimes they direct them right through the main pipeline. We want to figure out:
+Imagine you’re running a magical multi-agent AI system in the cloud. Users keep sending in queries, each one with a certain number of tokens, and your AI agents must figure out how to handle them. Sometimes they split requests, if they requre some custom processing, sometimes they drop them if they’re too many of them. We want to figure out:
 
 - How many requests do we get in total?
-- How many do we split vs. send directly?
-- How often do we drop requests (and at what cost)?
+- How often do we drop requests, having in mind a limited capacity of our compute cluster?
 - How does all of this affect our resource usage and total cost (in good old dollars)?
 
 In other words, we want to simulate the day-to-day life of our AI agentic system and see what happens when the going gets tough—or at least, when the queries keep rolling in.
 
-
 ## Our Simulation Framework
 
-For our simulation, we put on our Python hats and set up a playful environment. We used libraries like numpy, pandas, and possibly tqdm for those delightful progress bars that let us watch our simulation run in real time. Our main steps looked a bit like this:
+For our simulation, we put on our Python hats and set up a playful environment. We used `SimPy` - discrete-event simulation framework based on standard Python. Our main steps looked a bit like this:
 
 1.	Generate incoming requests: We produce a batch of user queries with random sizes (in tokens).
-2.	Route the requests: Some requests go directly to the AI agents; others are split into multiple smaller requests if require some custom processing
+2.	Route the requests: Some requests processed by the Agent which takes them; others are split into multiple sub-agents, to simulate some complex queries.
 3.	Cost modeling: We keep track of how many tokens each request uses, then calculate LLM (or multi-agent) costs and AKS (Azure Kubernetes Service) costs based on usage—both in dollars.
 4.	Statistics: We record everything—number of direct requests, split requests, dropped requests, total tokens, and costs.
 5.	Repeat: We run this entire simulation multiple times (100 runs, in our case) to get nice summary statistics.
@@ -40,7 +38,7 @@ This framework gives us a robust way to see how our hypothetical cloud-based AI 
 Now for the fun part—how did we decide which numbers to plug in?
 
 - Token Distribution: We assumed user queries come in a variety of sizes, with a certain average length and standard deviation. The system (i.e., our band of AI agents) might add some overhead tokens for each query because, hey, systems gotta system.
-- Split Threshold: If a query exceeded our threshold, we split it into smaller pieces. We set this threshold somewhat arbitrarily based on what we thought was a “typical big request.”
+- Split Threshold: We assume that there is a ratio of request which are too complaex and requre complex processig. So we split the stream of requests based in this ratio, randomly.
 - Costs in Dollars: We used a made-up cost model for LLM usage and AKS usage. For example, maybe 1 million tokens cost a certain number of dollars, and each AKS node has a cost per hour. We aimed to keep these costs in a plausible range for demonstration purposes.
 - Dropping Requests: We allowed the system to drop requests if they were too huge or if the cluster was at capacity. We pretended it was more cost-effective to drop them than to scale to infinity—harsh, but it’s just a simulation!
 
@@ -124,8 +122,7 @@ After 100 simulation runs, we got some neat summary statistics:
 
 What does all this mean?
 
-- We’re seeing around 80% of requests get split. That means our threshold is set so that a good chunk of queries are big enough to be chopped into smaller pieces.
-- We drop a relatively small number of requests (591 on average), which might be acceptable if we’re optimizing for cost rather than 100% coverage.
+- We drop a relatively small number of requests (591 on average), which says that our cluster with all limits we set for it scales fine and most of the time can accomodate the load.
 - The total cost in dollars ends up around $1283, with LLM cost at about $424 and AKS cost at about $858. Looks like our AI usage is cheaper than our compute infrastructure in this scenario!
 - Max nodes at 11 suggests we capped our cluster at 11 nodes. On average, we only used about 8 nodes, which means we have a bit of headroom before we start dropping too many requests.
 
