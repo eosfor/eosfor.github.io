@@ -2,7 +2,6 @@
 title: 'Как упростить инфраструктуру в облаке и жить спокойно?'
 date: 2023-10-12T09:46:34-07:00
 draft: true
-featuredImage: "article/no-caf-webapps/newroad.jpg"
 ---
 
 > Хочешь погонять? У нас есть Jupyter notebook, который отлично работает на [Binder](https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD).

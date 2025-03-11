@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="en">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Considerations when running private AKS cluster &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Considerations when running private AKS cluster">
+    <meta itemprop="description" content="Things to keep in mind when running private AKS">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/article/aks-considerations/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Considerations when running private AKS cluster">
+  <meta property="og:description" content="Things to keep in mind when running private AKS">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2018-08-04T05:03:31+03:00">
+    <meta property="article:modified_time" content="2018-08-04T05:03:31+03:00">
+    <meta property="article:tag" content="Azure">
+    <meta property="article:tag" content="Kubernetes">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/article/aks-considerations/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/aks-considerations/" class="active">en</a>
+                
+            
+                
+                
+
+                
+                    <a href="/ru/">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/article/aks-considerations/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/article/aks-considerations/">
+            Considerations when running private AKS cluster
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2018-08-04</span>
+            
+        
+
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="http://localhost:1313/categories/azure/">Azure</a>
+                    
+                
+                    
+                    
+                        <a href="http://localhost:1313/categories/kubernetes/">Kubernetes</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>For the last two weeks I&rsquo;ve been playing with <a href="https://docs.microsoft.com/en-us/azure/aks/">Azure Kubernetes Service</a> (AKS) and with it&rsquo;s public counterpart - <a href="https://github.com/Azure/acs-engine">acs-engine</a>. Here is a bit about the experience I got with it, having in mind I&rsquo;ve never worked with these tools before. Here I&rsquo;m trying to look at this from the Infrastructure perspective, but not from the developers&rsquo; perspective.</p>
+<h2 id="containers-cloud-and-private-environments">Containers, Cloud and private environments</h2>
+<h3 id="few-things-to-keep-in-mind-for-aks">Few things to keep in mind for AKS</h3>
+<p>Well first of all, lets see what we&rsquo;ve got. There are a lot of documentation on the Internet, I&rsquo;m not going to repeat it here. I just want to highlight a few key points to keep in mind when building your clusters using either one of these two toolsets.</p>
+<p>The Kubernetes, is an orchestrator software. It orchestrates containers across multiple nodes. So we may have master nodes and worker nodes. Master nodes perform management operations on the cluster and run major part of a control plane. Worker nodes are supposed to run workloads, meaning containers, and they are managed by specific software agents, which are in turn also a part of a control plane. On the other hand, Kubernetes does not run containers by itself. It just manages underlying container framework, like <a href="https://www.docker.com">Docker</a>. In terms of AKS as a managed offering, Microsoft runs and manages master nodes for you, and provides a public endpoint, where you can manage your cluster.</p>
+<p>Another point to bear in mind is the following:</p>
+<blockquote>
+<p>Kubernetes imposes the following fundamental requirements on any networking implementation (barring any intentional network segmentation policies):</p>
+<ul>
+<li>all containers can communicate with all other containers without NAT</li>
+<li>all nodes can communicate with all containers (and vice-versa) without NAT</li>
+<li>the IP that a container sees itself as is the same IP that others see it as</li>
+</ul></blockquote>
+<p>And from <a href="https://kubernetes.io/docs/concepts/cluster-administration/networking/">networking perspective</a> we got another term to pay attention to - <a href="https://www.youtube.com/watch?v=Vn6KYkNevBQ">CNI</a>. In basic terms CNI is a piece of software, that allows your containers to communicate. In Azure we may use two types of CNIs - kubenet and <a href="https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md">Azure CNI</a>. Kubenet is a basic component, which is native to Kubernetes and provided by it. Azure CNI, is a piece of software provided by Microsoft and supported in Azure. When using AKS, keep in mind that by default it uses kubenet, as a default networking plugin. You need to go through the documentation <a href="https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters">here</a> and configure <code>networkProfile</code> section in order to set all parameters correctly, something like this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#e6db74">&#34;networkProfile&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;networkPlugin&#34;</span>: <span style="color:#e6db74">&#34;azure&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;serviceCidr&#34;</span>:<span style="color:#e6db74">&#34;172.66.0.0/16&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;DNSServiceIP&#34;</span>:<span style="color:#e6db74">&#34;172.66.0.10&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;dockerBridgeCidr&#34;</span>:<span style="color:#e6db74">&#34;172.22.0.1/16&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Another thing to mention is that there was a requirement to put everything into a private VNET, accessible only from corporate environment. Typically corporate environments in Azure Hybrid Cloud are based on hub-and-spoke design, as follows:</p>
+<p><img src="https://docs.microsoft.com/en-us/azure/networking/media/networking-virtual-datacenter/vdc-high-level.png" alt="hub and spoke"></p>
+<p>In most cases as part of this design, especially at the very beginning, you may have something called <a href="https://docs.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-forced-tunneling-rm">&ldquo;Forced tunneling&rdquo;</a>, which is basically a default route coming from On-Prem to forward all traffic back, for inspection. Sometime is causes issues. So, in order to be able to provision AKS, you need to make sure that the following list of domains is freely accessible from the VNET, you want to put your AKS to:</p>
+<ul>
+<li>*.azmk8s.io</li>
+<li>*.azureedge.net</li>
+<li>*.auth.docker.io</li>
+<li>*.quay.io</li>
+<li>*.blob.core.windows.net</li>
+<li>*.azure-automation.net</li>
+<li>*.opinsights.azure.com</li>
+<li>*.management.azure.com</li>
+<li>*.login.microsoftonline.com</li>
+</ul>
+<p>These domains/apexes are used during provisioning process and &ldquo;post-provisioning scripts&rdquo;, so if they are not available, your cluster wont come up.</p>
+<p>In addition to this I&rsquo;ve found unusual dependency in the provisioning procedure - <code>8.8.8.8:53</code> or <code>8.8.4.4:53</code>. These &ldquo;endpoints&rdquo; needs to be accessible too.</p>
+<p>Next thing to think about is this. You run only worker VMs, masters are running somewhere inside Microsoft. As part of it you get a publicly available endpoint, you can find the name of this endpoint on the portal. When you run <code>az aks get-credentials --resource-group &lt;your RG here&gt; --name &lt;your cluster name here&gt;</code> it creates the <code>.kube</code> folder and <code>config</code> file, where it stores all you need to connect to a cluster. So you can manage your cluster right over the Internet. This information may be crucial when making decisions about the technology to go with.</p>
+<p>Another problem you may face are various internal dependencies. Such as DNS servers, internal authentication mechanisms, internal PKI, repositories and so on. If you need them, you need to think about adding proper configuration to the nodes in advance.</p>
+<p>After provisioning you get a cluster object and an additional Resource Group, named something like <code>MC_&lt;cluster Resource Group Name&gt;_&lt;RG Location&gt;</code> with you worker VMs. In case you chose using azure-cni, each VM will have multiple IP addresses assigned. The number of IP addresses is configurable, and the idea is that each of your PODs will receive one of these IPs, which, in turn, fully accessible inside of VNET, and thus, fully routable inside of an organization. Typically you don&rsquo;t want to connect to these VMs directly, because they are, kind of, not persistent, so to speak. Each time you scale or update cluster to a newer version those VMs will be recreated and any custom configuration you put on those will be destroyed. So if you need some custom configuration from DNS side, for instance to set your internal DNS server as a default - use VNET level configuration.</p>
+<p>Provisioning itself is very simple. You create a template based on the <a href="https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters">ARM spec here</a> and run the deployment into a resource group.</p>
+<p>Simple example looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;$schema&#34;</span>: <span style="color:#e6db74">&#34;https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;contentVersion&#34;</span>: <span style="color:#e6db74">&#34;1.0.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;parameters&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;clusterName&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;kubernetesVersion&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;defaultValue&#34;</span>: <span style="color:#e6db74">&#34;1.10.6&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;allowedValues&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;1.10.6&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;1.10.5&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;1.10.3&#34;</span>
+</span></span><span style="display:flex;"><span>      ],
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;vnetSubnetID&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;dnsPrefix&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;workerCount&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;int&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;servicePrincipalClientId&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;metadata&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;generate with the command line: &#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;servicePrincipalSecret&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;securestring&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;vmSize&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;variables&#34;</span>: {},
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;resources&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;clusterName&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;Microsoft.ContainerService/managedClusters&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;apiVersion&#34;</span>: <span style="color:#e6db74">&#34;2018-03-31&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;location&#34;</span>: <span style="color:#e6db74">&#34;[resourceGroup().location]&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;tags&#34;</span>: {},
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;kubernetesVersion&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;kubernetesVersion&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;dnsPrefix&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;dnsPrefix&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;agentPoolProfiles&#34;</span>: [
+</span></span><span style="display:flex;"><span>          {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;[concat(parameters(&#39;clusterName&#39;))]&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;count&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;workerCount&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;vmSize&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;vmSize&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;vnetSubnetID&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;vnetSubnetID&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;maxPods&#34;</span>: <span style="color:#ae81ff">15</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;linuxProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;adminUsername&#34;</span>: <span style="color:#e6db74">&#34;azureuser&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;ssh&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;publicKeys&#34;</span>: [
+</span></span><span style="display:flex;"><span>              {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;keyData&#34;</span>: <span style="color:#e6db74">&#34;ssh-rsa &lt;key goes here&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;networkProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;networkPlugin&#34;</span>: <span style="color:#e6db74">&#34;azure&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;serviceCidr&#34;</span>:<span style="color:#e6db74">&#34;172.66.0.0/16&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;DNSServiceIP&#34;</span>:<span style="color:#e6db74">&#34;172.66.0.10&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;dockerBridgeCidr&#34;</span>:<span style="color:#e6db74">&#34;172.33.0.1/16&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;servicePrincipalProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;clientId&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;servicePrincipalClientId&#39;)]&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;secret&#34;</span>: <span style="color:#e6db74">&#34;[parameters(&#39;servicePrincipalSecret&#39;)]&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;enableRBAC&#34;</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;outputs&#34;</span>: {}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>There are couple of things to pay attention to:</p>
+<ul>
+<li><strong>maxPods</strong> option - sets the number of IPs per node, and through this number of PODs per node. Your need to have enough free IPs in your VNET for that</li>
+<li><strong>networkPlugin</strong> options - sets the network plugin you want to use, &ldquo;azure&rdquo; means azure-cni</li>
+<li><strong>serviceCidr</strong> option – sets a CIDR notation IP range from which to assign service cluster IPs. It must not overlap with any Subnet IP ranges</li>
+<li><strong>DNSServiceIP</strong> option – sets An IP address assigned to the Kubernetes DNS service. It must be within the Kubernetes service address range specified in serviceCidr</li>
+<li><strong>dockerBridgeCidr</strong> option – sets a CIDR notation IP range assigned to the Docker bridge network. It must not overlap with any Subnet IP ranges or the Kubernetes service address range</li>
+<li><strong>keyData</strong> option – sets an ssh key to use to access VMs of a cluster. Using this you&rsquo;ll be able to login to your worker VMs</li>
+</ul>
+<h3 id="azure-kubernetes-service-vs-acs-engine">Azure Kubernetes Service vs acs-engine</h3>
+<p>As far as I got, Azure Kubernetes Service and acs-engine are similar, but different. Well, from the Azure perspective both provision Kubernetes cluster for you. However, the main difference we&rsquo;ve got with acs-engine is that it creates full cluster for you, including master nodes and worker nodes. It also requires access to the same set of endpoints and domains, as it uses, I guess, the same or similar set of scripts, to perform a deployment. One of the biggest benefits of acs-engine is that it is able to use your custom VNETs, and even your own custom images! However, they should be &ldquo;compatible&rdquo; with dpkg, as it is used in the scripts. Be default they support Ubuntu and RHEL. In general what acs-engine does is it takes a <a href="https://github.com/Azure/acs-engine/blob/master/docs/clusterdefinition.md">json template of it&rsquo;s own format</a> as an input, and generates an ARM template, which then can be provisioned into a resource group. At the end of the day you get your own cluster in a form of a number of VMs, and you will need to manage this cluster yourself.</p>
+<p>Example template may look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;apiVersion&#34;</span>: <span style="color:#e6db74">&#34;vlabs&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;orchestratorProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;orchestratorType&#34;</span>: <span style="color:#e6db74">&#34;Kubernetes&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;kubernetesConfig&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;privateCluster&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;enabled&#34;</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;kubeletConfig&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;--eviction-hard&#34;</span>: <span style="color:#e6db74">&#34;memory.available&lt;250Mi,nodefs.available&lt;20%,nodefs.inodesFree&lt;10%&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;--max-pods&#34;</span>: <span style="color:#e6db74">&#34;10&#34;</span>
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;masterProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;count&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;dnsPrefix&#34;</span>: <span style="color:#e6db74">&#34;clusterdns&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;vmSize&#34;</span>: <span style="color:#e6db74">&#34;Standard_D2s_v3&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;vnetSubnetId&#34;</span>: <span style="color:#e6db74">&#34;/subscriptions/&lt;your subscription ID&gt;/resourceGroups/&lt;network RG&gt;/providers/Microsoft.Network/virtualNetworks/&lt;network name&gt;/subnets/&lt;subnet name&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;firstConsecutiveStaticIP&#34;</span>: <span style="color:#e6db74">&#34;&lt;ip address of a first master&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;vnetCidr&#34;</span>: <span style="color:#e6db74">&#34;10.10.5.0/24&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;agentPoolProfiles&#34;</span>: [
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;devworker&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;count&#34;</span>: <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;vmSize&#34;</span>: <span style="color:#e6db74">&#34;Standard_D2s_v3&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;StorageProfile&#34;</span>:<span style="color:#e6db74">&#34;ManagedDisks&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;diskSizesGB&#34;</span>: [
+</span></span><span style="display:flex;"><span>                    <span style="color:#ae81ff">256</span>
+</span></span><span style="display:flex;"><span>                ],
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;vnetSubnetId&#34;</span>: <span style="color:#e6db74">&#34;/subscriptions/&lt;your subscription ID&gt;/resourceGroups/&lt;network RG&gt;/providers/Microsoft.Network/virtualNetworks/&lt;network name&gt;/subnets/&lt;subnet name&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;availabilityProfile&#34;</span>: <span style="color:#e6db74">&#34;AvailabilitySet&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;acceleratedNetworkingEnabled&#34;</span>:<span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;linuxProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;adminUsername&#34;</span>: <span style="color:#e6db74">&#34;&lt;admin name goes here&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;ssh&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;publicKeys&#34;</span>: [
+</span></span><span style="display:flex;"><span>                    {
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">&#34;keyData&#34;</span>: <span style="color:#e6db74">&#34;ssh-rsa &lt;your key goes here&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                ]
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;servicePrincipalProfile&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;clientId&#34;</span>: <span style="color:#e6db74">&#34;&lt;your SP id goes here&gt;&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;secret&#34;</span>: <span style="color:#e6db74">&#34;&lt;your secret goes here&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>As you can see it is similar to what AKS wants us to prepare so I conclude they are based on a similar codebase.</p>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/azure/">Azure</a>
+                    
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/kubernetes/">Kubernetes</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/article/sankey-d3/">Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/azure-networking-d3js/">Visualizing Azure Networking using D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/how-to-deal-with-zscaler-and-azcli/">How to Make ZScaler and Azure CLI Work Together</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/more-notebooks-ps/">Continuing the Conversation on Jupyter and PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/no-caf-webapps/">Do we always need to follow CAF recommendations?</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/aproach-to-optimizing-vm-costs/">Approach to Optimizing VM Costs</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/using-ipmgmt-more-samples/">How to automate IP ranges calculations in Azure using PowerShell</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            
+            <a href="http://localhost:1313/categories/"><strong>Categories</strong></a>
+            
+
+            <ul>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/powershell/">PowerShell (2)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/azure/">Azure (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/kubernetes/">Kubernetes (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/psquickgraph/">PSQuickGraph (1)</a>
+                
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Other languages</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/aks-considerations/" class="active">en</a>
+                        
+                    
+                        
+                        
+
+                        
+                            <a href="/ru/">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

@@ -8,8 +8,6 @@ Are you considering transitioning your servers from an on-prem DC to Azure cloud
 
 <!--more-->
 
-> This works in {{< hyperlink-image "Binder" "https://mybinder.org/badge_logo.svg" "https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD" >}}
-
 ## MiniZinc
 
 Our starting point is MiniZinc. Here's what they say about it on their website:

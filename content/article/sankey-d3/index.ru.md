@@ -2,7 +2,6 @@
 title: 'Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js'
 date: 2024-05-02T21:36:03-07:00
 draft: true
-featuredImage: "article/sankey-d3/header.webp"
 ---
 
 <script type="module" src="display.js"></script>

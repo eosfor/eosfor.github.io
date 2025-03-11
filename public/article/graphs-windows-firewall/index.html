@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="en">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Using graphs to analyze Windows Firewall logs &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Using graphs to analyze Windows Firewall logs">
+    <meta itemprop="description" content="How to use PowerShell and graphs for Firewall analysis">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/article/graphs-windows-firewall/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Using graphs to analyze Windows Firewall logs">
+  <meta property="og:description" content="How to use PowerShell and graphs for Firewall analysis">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2017-08-08T00:53:57+03:00">
+    <meta property="article:modified_time" content="2017-08-08T00:53:57+03:00">
+    <meta property="article:tag" content="Powershell">
+    <meta property="article:tag" content="PsQuickGraph">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/article/graphs-windows-firewall/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/graphs-windows-firewall/" class="active">en</a>
+                
+            
+                
+                
+
+                
+                    <a href="/ru/">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/article/graphs-windows-firewall/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/article/graphs-windows-firewall/">
+            Using graphs to analyze Windows Firewall logs
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2017-08-08</span>
+            
+        
+
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="http://localhost:1313/categories/powershell/">PowerShell</a>
+                    
+                
+                    
+                    
+                        <a href="http://localhost:1313/categories/psquickgraph/">PSQuickGraph</a>
+                    
+                
+            </span>
+        
+
+        
+    </div>
+
+    
+        
+
+        <p>Hello colleagues, lets talk about how we can use graphs to look inside of communications happening in our environments in an easy way. First of all we need to have some data to analyze. Lets gather some. It is pretty simple - just use <a href="https://technet.microsoft.com/en-us/library/cc947815%28v=ws.10%29.aspx">this article</a> and enable Windows Firewall Logging. I usually put the logs into a separate folder, just for easy access. Here is how it looks like on my system:</p>
+<p><img src="/article/graphs-windows-firewall/fwlog.png" alt="img"></p>
+<p>As you can see, it is structured, so it is good idea to parse it as objects. Lets do it, and it may look like the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$f = gc <span style="color:#e6db74">&#34;C:\Temp\pfirewall_public.log&#34;</span>
+</span></span><span style="display:flex;"><span>$regex = <span style="color:#e6db74">&#39;^(?\&lt;datetime\&gt;\d{4,4}-\d{2,2}-\d{2,2}\s\d{2}:\d{2}:\d{2})\s(?\&lt;action\&gt;\w+)\s(?\&lt;protocol\&gt;\w+)\s(?\&lt;srcip\&gt;\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?\&lt;dstip\&gt;\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?\&lt;srcport\&gt;\d{1,5})\s(?\&lt;dstport\&gt;\d{1,5})\s(?\&lt;size\&gt;\d+|-)\s(?\&lt;tcpflags\&gt;\d+|-)\s(?\&lt;tcpsyn\&gt;\d+|-)\s(?\&lt;tcpack\&gt;\d+|-)\s(?\&lt;tcpwin\&gt;\d+|-)\s(?\&lt;icmptype\&gt;\d+|-)\s(?\&lt;icmpcode\&gt;\d+|-)\s(?\&lt;info\&gt;\d+|-)\s(?\&lt;path\&gt;.+)$&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$log =
+</span></span><span style="display:flex;"><span>$f | % {
+</span></span><span style="display:flex;"><span>    $_ <span style="color:#f92672">-match</span> $regex | Out-Null
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ($Matches) {
+</span></span><span style="display:flex;"><span>    [<span style="color:#66d9ef">PSCustomObject</span>]@{
+</span></span><span style="display:flex;"><span>        action   = $Matches.action
+</span></span><span style="display:flex;"><span>        srcip    = [<span style="color:#66d9ef">ipaddress</span>]$Matches.srcip
+</span></span><span style="display:flex;"><span>        dstport  = $Matches.dstport
+</span></span><span style="display:flex;"><span>        tcpflags = $Matches.tcpflags
+</span></span><span style="display:flex;"><span>        dstip    = [<span style="color:#66d9ef">ipaddress</span>]$Matches.dstip
+</span></span><span style="display:flex;"><span>        info     = $Matches.info
+</span></span><span style="display:flex;"><span>        size     = $Matches.size
+</span></span><span style="display:flex;"><span>        protocol = $Matches.protocol
+</span></span><span style="display:flex;"><span>        tcpack   = $Matches.tcpac
+</span></span><span style="display:flex;"><span>        srcport  = $Matches.srcport
+</span></span><span style="display:flex;"><span>        tcpsyn   = $Matches.tcpsyn
+</span></span><span style="display:flex;"><span>        datetime = [<span style="color:#66d9ef">datetime</span>]$Matches.datetime
+</span></span><span style="display:flex;"><span>        icmptype = $Matches.icmptype
+</span></span><span style="display:flex;"><span>        tcpwin   = $Matches.tcpwin
+</span></span><span style="display:flex;"><span>        icmpcode = $Matches.icmpcode
+</span></span><span style="display:flex;"><span>        path     = $Matches.path
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>} 
+</span></span></code></pre></div><p>The <strong>$regex</strong> variable here contains a long regular expression which is going to parse our file onto objects - one per line. We use <strong>-match</strong> operator in the pipeline to apply this expression to each line of the file and suppress output by piping it to <strong>Out-Null</strong>. This is not the fastest way of parsing files but to me one of the easiest ones. If the there is a match <strong>$Matches</strong> variable gets populated. Here we want to do the trick. First we fill in the hashtable with the fields we would like to put into our new object and then convert this hashtable to an object. One thing to pay attention to is we convert datetime field into [datetime] type to be able to use filtering and sorting capabilities later on. The same we do with ip addresses. So at the end we&rsquo;ve got objects and they look like this:</p>
+<p><img src="/article/graphs-windows-firewall/fwlog3.png" alt="Img"></p>
+<p>Looks great so far, but what is next? First of all objects we&rsquo;ve got are just edges of our graph. So what we can do now to convert the set of edges to a set of vertices along with their edges? This is really easy, lets just add them</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$g = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$log | ? {$_.srcip <span style="color:#f92672">-and</span> $_.dstip} | % {
+</span></span><span style="display:flex;"><span>    Add-Edge -From $_.srcip -To $_.dstip -Graph $g | out-null
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>So here we create a graph and add vertices. Source and destination IPs being converted into string representations and added to the graph, and the library itself takes care about duplicated entries. So at the end we have a $g variable containing the graph. Now we can easily display it by issuing</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Show-GraphLayout -Graph $g
+</span></span></code></pre></div><p>which will display something like this</p>
+<p><img src="/article/graphs-windows-firewall/fwlog4.png" alt="Img"></p>
+<p>It does not look beautiful for me as it basically shows only a single log from my own laptop. But if we had multiple logs from some environment we would be able to see communications happened inside and outside the environment.</p>
+<p>What else can we do here? For example we can try to filter the set of log data we parsed and display the smaller subset of data, for instance like this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$d = ($log | sort datetime -Descending | select -First <span style="color:#ae81ff">1</span>).datetime.addhours(<span style="color:#ae81ff">-1</span>)
+</span></span><span style="display:flex;"><span>$twoHrsLog = $log.Where({$_.datetime <span style="color:#f92672">-gt</span> $d})
+</span></span><span style="display:flex;"><span>$g1 = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$twoHrsLog | ? {$_.srcip <span style="color:#f92672">-and</span> $_.dstip} | % {
+</span></span><span style="display:flex;"><span>    Add-Edge -From $_.srcip -To $_.dstip -Graph $g1 | out-null
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>Show-GraphLayout -Graph $g1
+</span></span></code></pre></div><p>where we just filter the log to see just communications happened for the last hour. We could also filter by IPs or by degree of out or in edges</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$g2 = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$x = $g.Vertices.Where({$g.OutDegree($_) <span style="color:#f92672">-gt</span> <span style="color:#ae81ff">0</span>})
+</span></span><span style="display:flex;"><span>$x | where {$_ <span style="color:#f92672">-ne</span> <span style="color:#e6db74">&#39;192.168.0.107&#39;</span>} | % {$e = $g.InEdges($_); <span style="color:#66d9ef">if</span> ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
+</span></span><span style="display:flex;"><span>$x | where {$_ <span style="color:#f92672">-ne</span> <span style="color:#e6db74">&#39;192.168.0.107&#39;</span>} | % {$e = $g.OutEdges($_); <span style="color:#66d9ef">if</span> ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Show-GraphLayout -Graph $g2
+</span></span></code></pre></div><p>Complete set of commands is below</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e">#file and regular expression</span>
+</span></span><span style="display:flex;"><span>$f = gc <span style="color:#e6db74">&#34;C:\Temp\pfirewall_public.log&#34;</span>
+</span></span><span style="display:flex;"><span>$regex = <span style="color:#e6db74">&#39;^(?&lt;datetime&gt;\d{4,4}-\d{2,2}-\d{2,2}\s\d{2}:\d{2}:\d{2})\s(?&lt;action&gt;\w+)\s(?&lt;protocol&gt;\w+)\s(?&lt;srcip&gt;\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?&lt;dstip&gt;\b(?:\d{1,3}\.){3}\d{1,3}\b)\s(?&lt;srcport&gt;\d{1,5})\s(?&lt;dstport&gt;\d{1,5})\s(?&lt;size&gt;\d+|-)\s(?&lt;tcpflags&gt;\d+|-)\s(?&lt;tcpsyn&gt;\d+|-)\s(?&lt;tcpack&gt;\d+|-)\s(?&lt;tcpwin&gt;\d+|-)\s(?&lt;icmptype&gt;\d+|-)\s(?&lt;icmpcode&gt;\d+|-)\s(?&lt;info&gt;\d+|-)\s(?&lt;path&gt;.+)$&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#parsing</span>
+</span></span><span style="display:flex;"><span>$log =
+</span></span><span style="display:flex;"><span>$f | % {
+</span></span><span style="display:flex;"><span>    $_ <span style="color:#f92672">-match</span> $regex | Out-Null
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ($Matches) {
+</span></span><span style="display:flex;"><span>    [<span style="color:#66d9ef">PSCustomObject</span>]@{
+</span></span><span style="display:flex;"><span>        action   = $Matches.action
+</span></span><span style="display:flex;"><span>        srcip    = [<span style="color:#66d9ef">ipaddress</span>]$Matches.srcip
+</span></span><span style="display:flex;"><span>        dstport  = $Matches.dstport
+</span></span><span style="display:flex;"><span>        tcpflags = $Matches.tcpflags
+</span></span><span style="display:flex;"><span>        dstip    = [<span style="color:#66d9ef">ipaddress</span>]$Matches.dstip
+</span></span><span style="display:flex;"><span>        info     = $Matches.info
+</span></span><span style="display:flex;"><span>        size     = $Matches.size
+</span></span><span style="display:flex;"><span>        protocol = $Matches.protocol
+</span></span><span style="display:flex;"><span>        tcpack   = $Matches.tcpac
+</span></span><span style="display:flex;"><span>        srcport  = $Matches.srcport
+</span></span><span style="display:flex;"><span>        tcpsyn   = $Matches.tcpsyn
+</span></span><span style="display:flex;"><span>        datetime = [<span style="color:#66d9ef">datetime</span>]$Matches.datetime
+</span></span><span style="display:flex;"><span>        icmptype = $Matches.icmptype
+</span></span><span style="display:flex;"><span>        tcpwin   = $Matches.tcpwin
+</span></span><span style="display:flex;"><span>        icmpcode = $Matches.icmpcode
+</span></span><span style="display:flex;"><span>        path     = $Matches.path
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">#whole graph</span>
+</span></span><span style="display:flex;"><span>$g = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$log | ? {$_.srcip <span style="color:#f92672">-and</span> $_.dstip} | % {
+</span></span><span style="display:flex;"><span>    Add-Edge -From $_.srcip -To $_.dstip -Graph $g | out-null
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Show-GraphLayout -Graph $g
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#subset of log records filterd by time</span>
+</span></span><span style="display:flex;"><span>$d = ($log | sort datetime -Descending | select -First <span style="color:#ae81ff">1</span>).datetime.addhours(<span style="color:#ae81ff">-1</span>)
+</span></span><span style="display:flex;"><span>$twoHrsLog = $log.Where({$_.datetime <span style="color:#f92672">-gt</span> $d})
+</span></span><span style="display:flex;"><span>$g1 = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$twoHrsLog | ? {$_.srcip <span style="color:#f92672">-and</span> $_.dstip} | % {
+</span></span><span style="display:flex;"><span>    Add-Edge -From $_.srcip -To $_.dstip -Graph $g1 | out-null
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Show-GraphLayout -Graph $g1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#subset of log records filtered by degree of edges</span>
+</span></span><span style="display:flex;"><span>$g2 = new-graph -Type BidirectionalGraph
+</span></span><span style="display:flex;"><span>$x = $g.Vertices.Where({$g.OutDegree($_) <span style="color:#f92672">-gt</span> <span style="color:#ae81ff">0</span>})
+</span></span><span style="display:flex;"><span>$x | where {$_ <span style="color:#f92672">-ne</span> <span style="color:#e6db74">&#39;192.168.0.107&#39;</span>} | % {$e = $g.InEdges($_); <span style="color:#66d9ef">if</span> ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
+</span></span><span style="display:flex;"><span>$x | where {$_ <span style="color:#f92672">-ne</span> <span style="color:#e6db74">&#39;192.168.0.107&#39;</span>} | % {$e = $g.OutEdges($_); <span style="color:#66d9ef">if</span> ($e) {$e | % {add-edge -from $_.source -to $_.target -Graph $g2}}}
+</span></span><span style="display:flex;"><span>Show-GraphLayout -Graph $g2
+</span></span></code></pre></div>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/powershell/">Powershell</a>
+                    
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/psquickgraph/">PsQuickGraph</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/article/sankey-d3/">Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/azure-networking-d3js/">Visualizing Azure Networking using D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/how-to-deal-with-zscaler-and-azcli/">How to Make ZScaler and Azure CLI Work Together</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/more-notebooks-ps/">Continuing the Conversation on Jupyter and PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/no-caf-webapps/">Do we always need to follow CAF recommendations?</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/aproach-to-optimizing-vm-costs/">Approach to Optimizing VM Costs</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/using-ipmgmt-more-samples/">How to automate IP ranges calculations in Azure using PowerShell</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            
+            <a href="http://localhost:1313/categories/"><strong>Categories</strong></a>
+            
+
+            <ul>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/powershell/">PowerShell (2)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/azure/">Azure (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/kubernetes/">Kubernetes (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/psquickgraph/">PSQuickGraph (1)</a>
+                
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Other languages</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/graphs-windows-firewall/" class="active">en</a>
+                        
+                    
+                        
+                        
+
+                        
+                            <a href="/ru/">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="ru">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js">
+    <meta itemprop="description" content="Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js - My thoughts around modern IT">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/ru/article/sankey-d3/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js">
+  <meta property="og:description" content="И снова здравствуйте. В этот раз посмотрим на то, как можно визуализировать трафик, текущий через Azure Firewall, средствами PowerShell, Jupyter и D3js">
+  <meta property="og:locale" content="ru">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2024-05-02T21:36:03-07:00">
+    <meta property="article:modified_time" content="2024-05-02T21:36:03-07:00">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/ru/article/sankey-d3/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/ru" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/ru">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/sankey-d3/">en</a>
+                
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/ru/article/sankey-d3/" class="active">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/ru/article/sankey-d3/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/ru/article/sankey-d3/">
+            Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2024-05-02</span>
+            
+        
+
+        
+
+        
+
+        
+    </div>
+
+    
+        
+
+        <script type="module" src="display.js"></script>
+<p>И снова здравствуйте. В этот раз посмотрим на то, как можно визуализировать трафик, текущий через Azure Firewall, средствами PowerShell, Jupyter и D3js</p>
+<p>На самом деле все относительно несложно. Нам, как обычно, дужно всего лишь вынуть данные из Azure, подготовить их и &ldquo;скормить&rdquo; JavaScript библиотеке. С первым все очень, просто. Шлем запрос в Log Analytics, и все. Он содержит все нужные данные.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$query = <span style="color:#e6db74">@&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">AZFWApplicationRule | where TimeGenerated &gt;= </span>$dateFilter<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;@</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$data = Invoke-AzOperationalInsightsQuery -WorkspaceId $WorkspaceID -Query $query -ErrorAction Stop | Select-Object -ExpandProperty Results
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$sourceIpGroups = $data | Group-Object SourceIp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$dataSet = 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">foreach</span> ($group <span style="color:#66d9ef">in</span> $sourceIpGroups) {
+</span></span><span style="display:flex;"><span>    $source = $group.Name
+</span></span><span style="display:flex;"><span>    $targets = $group.Group | Group-Object DestinationIp, Action
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">foreach</span>($target <span style="color:#66d9ef">in</span> $targets) {
+</span></span><span style="display:flex;"><span>        [<span style="color:#66d9ef">PSCustomObject</span>]@{
+</span></span><span style="display:flex;"><span>            source = $source;
+</span></span><span style="display:flex;"><span>            sourceName = $source
+</span></span><span style="display:flex;"><span>            target = $target.Group[<span style="color:#ae81ff">0</span>].DestinationIp
+</span></span><span style="display:flex;"><span>            action = $target.Group[<span style="color:#ae81ff">0</span>].Action
+</span></span><span style="display:flex;"><span>            value = $target.Count
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Теперь дело за трансформацией. Данные для библиотечки должны быть примерно вот в таком виде. Это просто список вершин, и список ребер, с дополнгительным атрибутом - <code>value</code>. Атрибут содержит &ldquo;вес&rdquo; ребра, собственно некое значение, показывающее &ldquo;силу&rdquo; связи.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;nodes&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Agricultural &#39;waste&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Bio-conversion&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Liquid&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Losses&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;links&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;source&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;target&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">124.729</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;source&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;target&#34;</span>: <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0.597</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;source&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;target&#34;</span>: <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">26.862</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;source&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;target&#34;</span>: <span style="color:#ae81ff">4</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">280.322</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Таким образом, нам надо пребразовать наши данные к этому виду:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$nodes = ($data.source + $data.target) | Select-Object -Unique
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$links = $data | % {
+</span></span><span style="display:flex;"><span>    [<span style="color:#66d9ef">pscustomobject</span>]@{
+</span></span><span style="display:flex;"><span>        source = $nodes.IndexOf($_.source)
+</span></span><span style="display:flex;"><span>        target = $nodes.IndexOf($_.target)
+</span></span><span style="display:flex;"><span>        value = $_.value
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#66d9ef">pscustomobject</span>]@{
+</span></span><span style="display:flex;"><span>    nodes = $nodes | % { [<span style="color:#66d9ef">pscustomobject</span>]@{name = $_} }
+</span></span><span style="display:flex;"><span>    links = $links
+</span></span><span style="display:flex;"><span>} | ConvertTo-Json -Depth <span style="color:#ae81ff">10</span> | out-file <span style="color:#e6db74">&#34;traffic-data/data.json&#34;</span>
+</span></span></code></pre></div><p>Тут мы просто объединяем список источников и приемников трафика в единый список вершин, удаляем неуникальные записи. Затем формируем список связей в нужном нам формате, и объединяем эти два списка в единый объект. И экспортируем результат в json.
+Ну и наконец, мы можем прочесть это файл в JavaScript и, не мудрствуя лукаво, визуализировать его</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">width</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">800</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">height</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">d3f</span>.<span style="color:#a6e22e">json</span>(<span style="color:#e6db74">&#34;traffic-data/data.json&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Create the SVG container.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">svg</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">d3</span>.<span style="color:#a6e22e">select</span>(<span style="color:#e6db74">&#39;#graph-container&#39;</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#39;svg&#39;</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;width&#34;</span>, <span style="color:#a6e22e">width</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;height&#34;</span>, <span style="color:#a6e22e">height</span>)
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">call</span>(<span style="color:#a6e22e">d3</span>.<span style="color:#a6e22e">zoom</span>().<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;zoom&#34;</span>, (<span style="color:#a6e22e">event</span>) =&gt; {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">svg</span>.<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;transform&#34;</span>, <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">transform</span>);
+</span></span><span style="display:flex;"><span>    }))
+</span></span><span style="display:flex;"><span>    .<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;g&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">drawSankey</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">drawSankey</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sankey</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">d3sa</span>.<span style="color:#a6e22e">sankey</span>()
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">nodeAlign</span>(<span style="color:#a6e22e">d3sa</span>.<span style="color:#a6e22e">sankeyLeft</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">nodeWidth</span>(<span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">nodePadding</span>(<span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">extent</span>([[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">50</span>], [<span style="color:#a6e22e">width</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">5</span>]]);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">graph</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">sankey</span>(<span style="color:#a6e22e">data</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">color</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">d3</span>.<span style="color:#a6e22e">scaleOrdinal</span>(<span style="color:#a6e22e">d3</span>.<span style="color:#a6e22e">schemeSet3</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Drawing nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rect</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">svg</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;g&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stroke&#34;</span>, <span style="color:#e6db74">&#34;#000&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">selectAll</span>(<span style="color:#e6db74">&#34;rect&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">data</span>(<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">nodes</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34;rect&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x0</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y0</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;height&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y1</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y0</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y1</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y0</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;width&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x1</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x0</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;fill&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">color</span>(<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">name</span>));
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">rect</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;title&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">d</span> =&gt; <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74">\n</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">targetLinks</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">targetLinks</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">o</span> =&gt; <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">source</span>.<span style="color:#a6e22e">name</span>).<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34;\n&#34;</span>) <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Creating gradients for links
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">defs</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">svg</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;defs&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">links</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">link</span>, <span style="color:#a6e22e">i</span>) =&gt; {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">gradient</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">defs</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;linearGradient&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;id&#34;</span>, <span style="color:#e6db74">&#34;gradient&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;gradientUnits&#34;</span>, <span style="color:#e6db74">&#34;userSpaceOnUse&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;x1&#34;</span>, <span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">source</span>.<span style="color:#a6e22e">x1</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;x2&#34;</span>, <span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">x0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">gradient</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;stop&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;offset&#34;</span>, <span style="color:#e6db74">&#34;0%&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stop-color&#34;</span>, <span style="color:#a6e22e">color</span>(<span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">source</span>.<span style="color:#a6e22e">name</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">gradient</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;stop&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;offset&#34;</span>, <span style="color:#e6db74">&#34;100%&#34;</span>)
+</span></span><span style="display:flex;"><span>            .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stop-color&#34;</span>, <span style="color:#a6e22e">color</span>(<span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">name</span>));
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Drawing links with gradient
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">svg</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;g&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;fill&#34;</span>, <span style="color:#e6db74">&#34;none&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stroke-opacity&#34;</span>, <span style="color:#ae81ff">0.5</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">selectAll</span>(<span style="color:#e6db74">&#34;path&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">data</span>(<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">links</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34;path&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;d&#34;</span>, <span style="color:#a6e22e">d3sa</span>.<span style="color:#a6e22e">sankeyLinkHorizontal</span>())
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stroke&#34;</span>, (<span style="color:#a6e22e">d</span>, <span style="color:#a6e22e">i</span>) =&gt; <span style="color:#e6db74">`url(#gradient</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">i</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)`</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;stroke-width&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; Math.<span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">width</span>))
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;title&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">d</span> =&gt; <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">source</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> → </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">target</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Drawing labels for the nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">svg</span>.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34;g&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">selectAll</span>(<span style="color:#e6db74">&#34;text&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">data</span>(<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">nodes</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34;text&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x0</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">width</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">6</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x0</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">6</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; (<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y1</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">y0</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;dy&#34;</span>, <span style="color:#e6db74">&#34;0.35em&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;text-anchor&#34;</span>, <span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">x0</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">width</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;start&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;end&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#34;font-size&#34;</span>, <span style="color:#e6db74">&#34;15px&#34;</span>)
+</span></span><span style="display:flex;"><span>        .<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">d</span> =&gt; <span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">name</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Получается примерно следующее:</p>
+<div style="display: flex; justify-content: space-between;">
+    <div id="graph-container" style="flex-grow: 1;"></div>
+</div>
+<p>Готовый Jupyter notebook можно найти <a href="https://github.com/eosfor/scripting-notes/blob/main/notebooks/en/traffic-through-AzureFW-d3js.ipynb">тут</a></p>
+
+
+    
+    <div class="responsive-video youtube">
+        <iframe class="no-js-hidden" src="https://www.youtube-nocookie.com/embed/0RDeLdTq4Is?rel=0" allowfullscreen></iframe>
+
+        <div class="no-js-message">
+            The YouTube player can not be loaded with disabled JavaScript. <br>
+            The following video is embedded here: <br>
+
+            <a href="https://youtube.com/watch?v=0RDeLdTq4Is" target="_blank">
+                https://youtube.com/watch?v=0RDeLdTq4Is
+            </a>
+        </div>
+    </div>
+    
+</div>
+
+    
+<div class="footer no-tags">
+
+
+    
+
+    
+    <div class="languages">
+        <i class="fa fa-language"></i>
+        <div class="links">
+            
+                <a href="http://localhost:1313/article/sankey-d3/">en</a>
+            
+        </div>
+    </div>
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Последние записи</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/sankey-d3/">Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/azure-networking-d3js/">Визуализируем Azure Networking при помощи D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/powershell-graph-sysmon/">Анализ связей между приложениями с использованием SysMon</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-deal-with-zscaler-and-azcli/">Как подружить ZScaler и Azure CLI</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/more-notebooks-ps/">Продолжаем разговор о Jupyter и PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-configure-vscode-for-jupyter/">Как настроить VSCode для работы с Jupyter Notebooks и .NET Interactive</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/short-on-jupyter-and-powershell/">Что такое Jupyter Notebooks в двух словах</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Социальные медиа</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Другие языки</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/sankey-d3/">en</a>
+                        
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/ru/article/sankey-d3/" class="active">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

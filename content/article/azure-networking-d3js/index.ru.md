@@ -2,7 +2,6 @@
 title: 'Визуализируем Azure Networking при помощи D3js'
 date: 2024-04-29T16:26:08-07:00
 draft: true
-featuredImage: "article/azure-networking-d3js/header2.webp"
 ---
 
 <script type="module" src="display.js"></script>

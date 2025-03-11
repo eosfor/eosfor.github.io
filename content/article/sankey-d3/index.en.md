@@ -2,7 +2,6 @@
 title: 'Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js'
 date: 2024-05-02T21:36:03-07:00
 draft: true
-featuredImage: "article/sankey-d3/header.webp"
 ---
 
 <script type="module" src="display.js"></script>

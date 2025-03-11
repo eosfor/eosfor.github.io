@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="ru">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Как упростить инфраструктуру в облаке и жить спокойно? &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Как упростить инфраструктуру в облаке и жить спокойно?">
+    <meta itemprop="description" content="Как упростить инфраструктуру в облаке и жить спокойно? - My thoughts around modern IT">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/ru/article/no-caf-webapps/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Как упростить инфраструктуру в облаке и жить спокойно?">
+  <meta property="og:description" content="Хочешь погонять? У нас есть Jupyter notebook, который отлично работает на Binder.
+В процессе в Azure многие компании устремляются к сложным топологиям hub-and-spoke, чтобы разместить свои приложения, даже когда необходимости в такой сложности нет. Обычно их мотивируют словами: “Так требует Microsoft Cloud Adoption Framework (CAF)”. Но, взявшись за это дело, они сталкиваются с массой новых вопросов, о которых раньше даже не думали. Например, с неожиданной потребностью управлять IP-адресами или изучать VLSM subnetting – темы, которые для большинства Dev команд – темный лес. И когда сеть уже настроена, приключения только начинаются: вам предстоит разбираться с приватным DNS, доступом к внутренним ресурсам и многим другим.
+Однако, если задуматься, многие сервисы Azure, включая Azure Web Apps, изначально были созданы для публичного использования. Некоторые даже не предполагали интеграцию с VNET, и такая модель была вполне приемлема.
+В этом рассказе мы попробуем пойти более простым путем, чтобы безопасно разместить Web Apps, минуя все эти сетевые препятствия.">
+  <meta property="og:locale" content="ru">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2023-10-12T09:46:34-07:00">
+    <meta property="article:modified_time" content="2023-10-12T09:46:34-07:00">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/ru/article/no-caf-webapps/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/ru" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/ru">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/no-caf-webapps/">en</a>
+                
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/ru/article/no-caf-webapps/" class="active">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/ru/article/no-caf-webapps/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/ru/article/no-caf-webapps/">
+            Как упростить инфраструктуру в облаке и жить спокойно?
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2023-10-12</span>
+            
+        
+
+        
+
+        
+
+        
+    </div>
+
+    
+        
+
+        <blockquote>
+<p>Хочешь погонять? У нас есть Jupyter notebook, который отлично работает на <a href="https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD">Binder</a>.</p></blockquote>
+<p>В  процессе в Azure многие компании устремляются к сложным топологиям hub-and-spoke, чтобы разместить свои приложения, даже когда необходимости в такой сложности нет. Обычно их мотивируют словами: &ldquo;Так требует <a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/">Microsoft Cloud Adoption Framework (CAF)</a>&rdquo;. Но, взявшись за это дело, они сталкиваются с массой новых вопросов, о которых раньше даже не думали. Например, с неожиданной потребностью управлять IP-адресами или изучать VLSM subnetting – темы, которые для большинства Dev команд – темный лес. И когда сеть уже настроена, приключения только начинаются: вам предстоит разбираться с приватным DNS, доступом к внутренним ресурсам и многим другим.</p>
+<p>Однако, если задуматься, многие сервисы Azure, включая Azure Web Apps, изначально были созданы для публичного использования. Некоторые даже не предполагали интеграцию с VNET, и такая модель была вполне приемлема.</p>
+<p>В этом рассказе мы попробуем пойти более простым путем, чтобы безопасно разместить Web Apps, минуя все эти сетевые препятствия.</p>
+<p>Наша цель – простота, но не в ущерб безопасности. Эта простота касается как архитектуры инфраструктуры, так и шаблонов развертывания (Bicep templates), обеспечивая плавный процесс автоматизации. Мы рассмотрим возможности создания простой, но безопасной архитектуры, отбросив все лишнее и сосредоточившись на том, что действительно важно для безопасной работы Web Apps в Azure.</p>
+<h2 id="обзор">Обзор</h2>
+<p>Предоставленная диаграмма наглядно демонстрирует архитектуру типичной конфигурации приложения, работающего в основном на Web Apps. Эти Web Apps &lsquo;размещены&rsquo; в виртуальной сети (VNET), используя функцию интеграции Web App VNET (Web App VNET integration). К сожалению, у нас нет другого выбора, кроме как использовать VNET. Azure Web Apps не предлагают простого метода назначения им статического публичного IP. Таким образом, мы используем VNET и NAT Gateway, чтобы исходящий трафик имел известный публичный IP, что позволяет легко внести наши приложения в белый список корпоративных ресурсов или любого другого публичного сервиса. То, что упрощает этот процесс, – мы не планируем соединять его с какой-либо внешней сетью. Таким образом, мы всегда можем использовать диапазон 10.0.0.0/8, что почти полностью исключает необходимость управления IP-адресами.</p>
+<p>Пока у нас есть &ldquo;VNET-заглушка&rdquo;, мы также можем использовать Private endpoints для подключения к бэкенд-сервисам. Однако это необязательно, если вы можете добавить публичный IP NAT Gateway в список разрешенных IP прямо на самих этих сервисах. Это упростит все еще больше. Однако не все службы поддерживают межсетевой экран (Firewall) на уровне службы; например, Azure App Configuration, который я использую, не имеет такой функции. В этой архитектуре я нацелился на единый подход, поэтому я не хотел, чтобы некоторые бэкенд-сервисы использовали Private Link, а другие – белый список (Whitelist) в качестве меры безопасности. Это единственная причина, по которой я решил пойти сложным путем и подключить все бэкенд-сервисы с использованием частных конечных точек. В общем, если бы App Configuration поддерживал межсетевой экран на уровне службы, я бы обошелся без Private endpoints. Автоматизация стала бы намного проще.</p>
+<p>С другой стороны, исходящий трафик из Web Apps следует стандартному пути от публичных конечных точек каждого Web App. Некоторые Web Apps могут иметь отключенный публичный доступ, в то время как другие могут быть доступны по мере необходимости. В целях безопасности мы разрешаем только определенным IP выполнять управляющие действия. Все это позволяет иметь &ldquo;частную&rdquo; версию Web Apps, так как мы можем внести их в белый список для каждого разработчика. Мы также можем использовать Cloud Web Application Firewall (WAF), например, Cloudflare WAF, чтобы пропустить трафик клиентов и разрешить только коммуникации, исходящие от WAF, в Web Apps.</p>
+<p>С точки зрения безопасности мы можем утверждать, что на L3 мы можем гарантировать, что только известные диапазоны могут устанавливать TCP-соединения с нашими публичными приложения. Внутри этих &ldquo;разрешенных туннелей&rdquo; весь трафик зашифрован. Наконец, мы ОБЯЗАНЫ требовать межсервисной аутентификации между всеми коммуницирующими конечными точками. Взаимная аутентификация лучше, если это возможно.</p>
+<p>Вот некоторые преимущества этого подхода:</p>
+<ol>
+<li><strong>Простота и настроимость</strong>: Избавление от лишней сложности, связанной с VNET, упрощает инфраструктуру и делает изменения легче.</li>
+<li><strong>Environment без VM</strong>: Нет необходимости во временных VM,  Jump Boxes или подобных ресурсах.</li>
+<li><strong>Доступность</strong>: Позволяет командам DEV получать удаленный доступ, сохраняя конфиденциальность через белый список (Whitelist), без необходимости настройки VPN или DNS/hosts-файлов.</li>
+<li><strong>Стоимостная эффективность</strong>: Использует только необходимые ресурсы, избегая дополнительных расходов на поддерживающие компоненты, такие как Azure Firewall.</li>
+</ol>
+<div class="mermaid">flowchart BT
+    subgraph DEV-ENVIRONMENT
+        subgraph DEV-VNET
+            appsvc1-subnet --> default-Nat-GW
+            subnetB --> default-Nat-GW
+            pvtEndpointSubnet
+        end
+        subgraph App-Svc-PlanA
+            AppA-->appsvc1-subnet
+            AppB-->appsvc1-subnet
+            AppC-->appsvc1-subnet
+            AppA-AppService-PublicIP
+        end
+    end
+    subgraph SHARED-DATA
+        direction BT
+        SQL-Server
+        Redis-Cache
+    end
+    subgraph SHARED-CONFIG-SECRETS
+        KeyVault
+        AppConfiguration-Service
+    end
+    subgraph OPERATION-CONNECTIONS
+        OPS
+        DEV
+        AzDO
+    end
+    subgraph CUSTOMER-CONNECTIONS
+        Customers --> Cloud-WAF
+    end
+    subgraph CORPORATE-PUBLIC-SERVICES
+        OAuth
+        SMTP
+        Other-REST
+    end
+    subgraph OTHER-PUBLIC-SERVICES
+        Observability
+        Search
+        AI
+        etc
+    end
+    AppA-AppService-PublicIP --> AppA
+    default-Nat-GW --> nat-GW-PIP
+    SHARED-DATA  -.-> pvtEndpointSubnet
+    SHARED-CONFIG-SECRETS  -.-> pvtEndpointSubnet
+    OPERATION-CONNECTIONS -.https+whitelisting.-> AppA-AppService-PublicIP
+    Cloud-WAF -.https+whitelisting.-> AppA-AppService-PublicIP
+    nat-GW-PIP -.encrypted+whitelisting.-> CORPORATE-PUBLIC-SERVICES
+    nat-GW-PIP -.encrypted+whitelisting.-> OTHER-PUBLIC-SERVICES
+
+    classDef red fill:#fdc;
+    classDef blue fill:#bde0fe;
+    class SHARED-CONFIG-SECRETS red;
+    class SHARED-DATA red;
+    class DEV-ENVIRONMENT,DEV-VNET,App-Svc-PlanA blue;
+  </div>
+  <p>Мы можем разделить нашу систему на несколько главных частей:</p>
+<ul>
+<li><strong>Environment</strong>: Здесь все, что нужно для работы приложений, например, Web Apps.</li>
+<li><strong>Данные</strong>: Здесь управляем базами данных и другими подобными вещами.</li>
+<li><strong>Конфигурация и Секреты</strong>: Здесь храним настройки и секретную информацию.</li>
+</ul>
+<p>Основная идея в том, чтобы каждый раздел был независимым. Разработчики управляют Environment(ами), но есть вещи, которыми другие люди могут управлять в целях безопасности. Нам нужно, чтобы эти разделы были отдельными, чтобы можно было контролировать доступ к ним.</p>
+<p>Еще одна задача - сделать так, чтобы эти части легко работали вместе, но при этом были независимыми на этапе создания/развертывания. Чтобы это сделать, мы используем что-то, что назовем &ldquo;Interconnect&rdquo;. Это как мост между разделами. Он помогает им общаться друг с другом, не мешая их работе. В некотором смысле напоминает <a href="https://en.wikipedia.org/wiki/Mediator_pattern">mediator pattern</a>, когда есть некий центральный элемент, который знает чуть больше чем остальные элементы и умеет их связать друг с другом.</p>
+<p>Преимущества &ldquo;Interconnect&rdquo;:</p>
+<ol>
+<li><strong>Простота</strong>: Он упрощает управление каждой частью.</li>
+<li><strong>Гибкость</strong>: Можно легко соединять разные части без лишней работы.</li>
+<li><strong>Автоматизация</strong>: Он может автоматически создавать нужные связи между частями.</li>
+<li><strong>Безопасность</strong>: Он помогает контролировать, как части общаются между собой, делая это безопасно.</li>
+</ol>
+<p>Таким образом, у нас есть четыре основные части: Environment(ы), Данные, Конфигурация и Interconnect, который все это соединяет.</p>
+<h3 id="несколько-слов-о-соглашениях-по-именованию">Несколько слов о соглашениях по именованию</h3>
+<p>Конечно, давайте попробуем сделать это проще:</p>
+<p>Не стоит усложнять себе жизнь придумыванием сложных правил для именования в Azure. Вот основные причины:</p>
+<ul>
+<li><strong>Сложность</strong>: Иногда, пытаясь упростить вещи, мы делаем их сложнее. Например, создание правил для имен может потребовать дополнительной работы и программирования, что увеличивает риск ошибок.</li>
+<li><strong>Задержки</strong>: Если что-то новое появляется в Azure или не соответствует нашим правилам именования, это может замедлить работу и инновации.</li>
+<li><strong>Лишняя работа</strong>: Azure уже все знает о своих ресурсах. Не нужно дублировать эту информацию в имени ресурса, это как давать имя книге, которая уже имеет название. Если нужна дополнительная информация, лучше просто спросить у Azure.</li>
+</ul>
+<p>В общем, вместо того чтобы придумывать сложные правила для именования, лучше просто дать ресурсам понятные имена и использовать PowerShell или любой другой способ программного взаимодействия с Azure, чтобы получить всю нужную информацию и использовать ее в вашей автоматизации.</p>
+<h3 id="подготовка-инфраструктуры">Подготовка инфраструктуры</h3>
+<p>Давайте оживим все это.</p>
+<blockquote>
+<p>Ниже представлен раздел для справки. Вы можете попробовать все это самостоятельно в <a href="https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD">Binder</a>.
+Весь исходный код находится в репозитории <a href="https://github.com/eosfor/scripting-notes/tree/main/notebooks/en">здесь</a>.</p></blockquote>
+<h3 id="вход-в-azure">Вход в Azure</h3>
+<p>Сначала импортируем модуль PS и входим в Azure. Мы используем <code>UseDeviceAuthentication</code>, так как Jupyter notebooks может работать где-то в контейнере, и у него нет пользовательского интерфейса или браузера. Также мы загружаем небольшую библиотеку вспомогательных функций для нашего эксперимента.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Install-Module Az
+</span></span><span style="display:flex;"><span>Import-Module az
+</span></span><span style="display:flex;"><span>. ./helper3.ps1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Login-AzAccount -UseDeviceAuthentication
+</span></span></code></pre></div><h3 id="создание-общих-ресурсов">Создание общих ресурсов</h3>
+<p>Теперь мы готовы создать все с нуля. Чтобы все это было повторяемо, сначала мы создаем общие элементы. Так в будущем, когда нам понадобятся только окружения приложений, мы всегда можем пропустить эти шаги.</p>
+<p>Создаем ресурсные группы</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$sharedEnvironments = <span style="color:#e6db74">&#39;SHARED-DATA&#39;</span>, <span style="color:#e6db74">&#39;SHARED-CONFIGURATION&#39;</span>
+</span></span><span style="display:flex;"><span>$location = <span style="color:#e6db74">&#39;westus&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$sharedEnvironments | % { 
+</span></span><span style="display:flex;"><span>    $resourceGroup = Get-AzResourceGroup -Name $_ -ErrorAction SilentlyContinue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-not</span> $resourceGroup) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># If it doesn&#39;t exist, create it</span>
+</span></span><span style="display:flex;"><span>        New-AzResourceGroup -Name $_ -Location $location
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Теперь применяем шаблоны</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>New-AzResourceGroupDeployment -Name <span style="color:#e6db74">&#39;shared-data-provisioning&#39;</span> -ResourceGroupName <span style="color:#e6db74">&#39;SHARED-DATA&#39;</span> -TemplateFile ./dataLayer.bicep
+</span></span><span style="display:flex;"><span>New-AzResourceGroupDeployment -Name <span style="color:#e6db74">&#39;shared-config-provisioning&#39;</span> -ResourceGroupName <span style="color:#e6db74">&#39;SHARED-CONFIGURATION&#39;</span> -TemplateFile ./configSecretsLayer.bicep
+</span></span></code></pre></div><h3 id="создание-нового-окружения-environment">Создание нового окружения (Environment)</h3>
+<p>Следующий этап включает настройку реального окружения. Мы стремимся избегать создания нескольких окружений одновременно, учитывая что в будущем мы можем захотеть обновить только одно из них.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$environmentRg = <span style="color:#e6db74">&#39;DEV&#39;</span>
+</span></span><span style="display:flex;"><span>$location = <span style="color:#e6db74">&#39;westus&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$environmentRg | % { 
+</span></span><span style="display:flex;"><span>    $resourceGroup = Get-AzResourceGroup -Name $_ -ErrorAction SilentlyContinue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">-not</span> $resourceGroup) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># If it doesn&#39;t exist, create it</span>
+</span></span><span style="display:flex;"><span>        New-AzResourceGroup -Name $_ -Location $location
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>$envProvisioningResults = New-AzResourceGroupDeployment -Name <span style="color:#e6db74">&#39;dev-env-provisioning&#39;</span> -ResourceGroupName $environmentRg -TemplateFile ./appLayer.bicep
+</span></span></code></pre></div><h3 id="взаимодействие-между-общими-элементами-и-окружениями">Взаимодействие между общими элементами и окружениями</h3>
+<p>Теперь пришло время для <code>interconnect</code>. На этом этапе нам нужно интегрировать общие ресурсы в новый Environment. Мы стремимся упростить этот процесс и сделать его динамическим.
+Если в двух словах, то происходит следующее:</p>
+<ul>
+<li>Перечисляются все ресурсы в <code>source</code> окружении.</li>
+<li>Определяются и выбираются те ресурсы, которые поддерживают Private Link/Private Endpoints, и интегрирует их в <code>target</code> Environment.</li>
+<li>Создает необходимые частные DNS-зоны для сервисов найденных на предыдущем этапе.</li>
+<li>Сопоставляются Private Link/Private Endpoints с соответствующими частными DNS-зонами, обеспечивая автоматическую регистрацию в них.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Connect-Environment -SourceEnvResourceGroup <span style="color:#e6db74">&#39;SHARED-DATA&#39;</span> -TargetEnvResourceGroup <span style="color:#e6db74">&#39;DEV&#39;</span>
+</span></span><span style="display:flex;"><span>Connect-Environment -SourceEnvResourceGroup <span style="color:#e6db74">&#39;SHARED-CONFIGURATION&#39;</span> -TargetEnvResourceGroup <span style="color:#e6db74">&#39;DEV&#39;</span>
+</span></span></code></pre></div><h3 id="развертывание-web-apps">Развертывание Web Apps</h3>
+<blockquote>
+<p>Содержание этого раздела не является реальным способом выполнения развертывания. Это процесс и набор скриптовых шагов, которые вы можете использовать в вашем процессе автоматической доставки для автоматизации развертывания приложений.</p></blockquote>
+<p>Обычно, когда вы создаете Web Apps, вам нужно знать App Service Plan, на котором будет работать ваше приложение, а также подсеть, используемую этим планом. К сожалению, между планом и подсетью нет прямой связи. Эта связь появляется, когда вы создаете первое приложение в плане и подключаете его к сети. Все последующие приложения должны использовать ту же подсеть.</p>
+<p>Таким образом, перед созданием Web App вам нужно определить эти два параметра. Команда ниже, из библиотеки которую мы загрузили ранее, помогает в этом.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$webAppMappingHtml = Get-AppServicePlanDetail -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span>
+</span></span></code></pre></div><p>После того как вы выбрали план для размещения вашего приложения, вы можете создать новые Web Apps, как указано ниже. Если в плане нет Web Apps, вы должны указать имя виртуальной сети (vnet) и имя подсети. Если в плане уже есть хотя бы одно приложение, эти значения будут определены автоматически. Функции тоже из библиотечки.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># no web apps yet</span>
+</span></span><span style="display:flex;"><span>New-WebApp -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span> -TargetAppSvcPlan <span style="color:#e6db74">&#39;dev1-appsvc-plan&#39;</span> -TargetSubnetName <span style="color:#e6db74">&#39;appsvc1-subnet&#39;</span> -TargetVnetName <span style="color:#e6db74">&#39;application-stub-vnet&#39;</span> -WebAppName  <span style="color:#e6db74">&#39;testWebApp1-nbrylply&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># there is one now</span>
+</span></span><span style="display:flex;"><span>New-WebApp -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span> -TargetAppSvcPlan <span style="color:#e6db74">&#39;dev1-appsvc-plan&#39;</span> -WebAppName  <span style="color:#e6db74">&#39;testWebApp2-nbrylply&#39;</span>
+</span></span></code></pre></div><h3 id="очистка">Очистка</h3>
+<p>Почистим все за собой :).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Remove-AzWebApp -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span> -Name <span style="color:#e6db74">&#39;testWebApp1-nbrylply&#39;</span> -Force
+</span></span><span style="display:flex;"><span>Remove-AzWebApp -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span> -Name <span style="color:#e6db74">&#39;testWebApp2-nbrylply&#39;</span> -Force
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Remove-AzResourceGroup -ResourceGroupName <span style="color:#e6db74">&#39;DEV&#39;</span> -Force
+</span></span><span style="display:flex;"><span>Remove-AzResourceGroup -ResourceGroupName <span style="color:#e6db74">&#39;SHARED-DATA&#39;</span> -Force
+</span></span><span style="display:flex;"><span>Remove-AzResourceGroup -ResourceGroupName <span style="color:#e6db74">&#39;SHARED-CONFIGURATION&#39;</span> -Force
+</span></span></code></pre></div>
+    
+</div>
+
+    
+<div class="footer no-tags">
+
+
+    
+
+    
+    <div class="languages">
+        <i class="fa fa-language"></i>
+        <div class="links">
+            
+                <a href="http://localhost:1313/article/no-caf-webapps/">en</a>
+            
+        </div>
+    </div>
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Последние записи</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/sankey-d3/">Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/azure-networking-d3js/">Визуализируем Azure Networking при помощи D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/powershell-graph-sysmon/">Анализ связей между приложениями с использованием SysMon</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-deal-with-zscaler-and-azcli/">Как подружить ZScaler и Azure CLI</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/more-notebooks-ps/">Продолжаем разговор о Jupyter и PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-configure-vscode-for-jupyter/">Как настроить VSCode для работы с Jupyter Notebooks и .NET Interactive</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/short-on-jupyter-and-powershell/">Что такое Jupyter Notebooks в двух словах</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Социальные медиа</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Другие языки</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/no-caf-webapps/">en</a>
+                        
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/ru/article/no-caf-webapps/" class="active">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

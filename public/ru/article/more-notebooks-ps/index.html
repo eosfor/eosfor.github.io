@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="ru">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Продолжаем разговор о Jupyter и PowerShell &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Продолжаем разговор о Jupyter и PowerShell">
+    <meta itemprop="description" content="Продолжаем разговор о Jupyter и PowerShell - My thoughts around modern IT">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/ru/article/more-notebooks-ps/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Продолжаем разговор о Jupyter и PowerShell">
+  <meta property="og:description" content="В этот раз мы поговорим обо всем этом более подробно. Для начала - зачем нам все это может понадобиться. Затем немного детальней о том, как это работает. И наконец - как сделать ноутбук и поделиться им со всем миром, ну или с другими командами на вашем проекте. Поехали">
+  <meta property="og:locale" content="ru">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2023-10-30T22:06:36-07:00">
+    <meta property="article:modified_time" content="2023-10-30T22:06:36-07:00">
+    <meta property="og:image" content="http://localhost:1313/article/more-notebooks-ps/_featuredImage.jpg">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/ru/article/more-notebooks-ps/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/ru" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/ru">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/more-notebooks-ps/">en</a>
+                
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/ru/article/more-notebooks-ps/" class="active">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/ru/article/more-notebooks-ps/">
+    <i class="fas fa-fw fa-video"></i>
+</a>
+
+<article class="video">
+    
+
+
+    
+        
+    <div class="responsive-video youtube">
+        <iframe class="no-js-hidden" src="https://www.youtube-nocookie.com/embed/GHhCV3sNRyU?rel=0" allowfullscreen></iframe>
+
+        <div class="no-js-message">
+            The YouTube player can not be loaded with disabled JavaScript. <br>
+            The following video is embedded here: <br>
+
+            <a href="https://youtube.com/watch?v=GHhCV3sNRyU" target="_blank">
+                https://youtube.com/watch?v=GHhCV3sNRyU
+            </a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/ru/article/more-notebooks-ps/">
+            Продолжаем разговор о Jupyter и PowerShell
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2023-10-30</span>
+            
+        
+
+        
+
+        
+
+        
+    </div>
+
+    
+        
+
+        <p>В этот раз мы поговорим обо всем этом более подробно. Для начала - зачем нам все это может понадобиться. Затем немного детальней о том, как это работает. И наконец - как сделать ноутбук и поделиться им со всем миром, ну или с другими командами на вашем проекте. Поехали</p>
+<h2 id="небольшой-шаг-назад">Небольшой шаг назад</h2>
+<p>Давайте немного повторим азы.</p>
+<p>Jupyter Notebook – это веб-приложение, которое позволяет создавать и делиться документами, содержащими живой код, уравнения, визуализации и объяснительный текст. Эти документы, ”записные книжки” или &ldquo;ноутбуки&rdquo;, кому как нравится, можно использовать для анализа данных, статистического моделирования, машинного обучения и многого другого.</p>
+<p>Ноутбуки работают со своим форматом файла - ipynb. Сокращение ipynb происходит от IPython Notebook, где IPython - это интерактивный интерпретатор Python, на котором изначально был основан Jupyter. Файлы <code>.ipynb</code> сохраняют и воспроизводят ваш код вместе с результатами и комментариями, что делает их отличным инструментом для обучения и совместной работы.</p>
+<p>Azure Devops и Github дают возможность открывать эти интерактивные ноутбуки в режиме read only прямо в браузере, что делает процесс разработки и совместной работы еще более гладким и шелковистым. Это как иметь интерактивную книгу или интерактивный отчет, которым можно легко поделиться с командой и который всегда будет актуальным, благодаря живому коду внутри него.</p>
+<p><img src="/article/more-notebooks-ps/image.png" alt="ipynb-on-github"></p>
+<p>Зачем все это нужно, спросите вы. Вот несколько сценариев</p>
+<ul>
+<li><strong>Автоматизация</strong>: Jupyter Notebooks позволяет создать автоматизированные руководства, которые пригодятся при возникновении проблем. Это может быть особенно полезно для повторяющихся или трудоемких задач, где можно создать ноутбуки с документированными шагами, которые автоматически запускаются, когда что-то идет не так.</li>
+<li><strong>Совместная работа</strong>: С помощью Jupyter Notebooks команды могут с легкостью делиться кодом, заметками и ресурсами. Это отличный способ поддерживать единый источник знаний и улучшать совместную работу между разработчиками и командами DevOps.</li>
+<li><strong>Передача знаний от разработчиков к DevOps и SRE командам</strong>: С помощью Jupyter Notebooks можно создавать документацию и интерактивные руководства, которые помогают в передаче знаний от команды разработчиков к командам DevOps и SRE. Это упрощает процесс передачи знаний и помогает обеспечить гладкий переход от разработки к поддержке и управлению приложениями.</li>
+</ul>
+<p>Согласитесь, что значительно веселее не просто прочитать кусок документации, а еще и прямо в ней запустить код и получить результат!</p>
+<p>Jupyter Notebooks – это не просто инструмент, это мост между разработкой, DevOps и SRE, который помогает обеспечить бесшовное взаимодействие и обмен знаниями в вашей команде. И все это в интерактивном, легко доступном и дружелюбном формате, который облегчает жизнь каждому из участников процесса. А теперь, давайте углубимся в детали и узнаем, как все это работает на практике!</p>
+<h2 id="как-это-работает">Как это работает</h2>
+<p>Все относительно просто. Мы используем <a href="https://github.com/dotnet/interactive">.NET Interactive</a>. Проект дает возможность использовать такие языки как C# и F# напрямую в консоли (REPL). Кроме того он предоставляет ядро Jupyter, и на основе него Polyglot Notebooks, по-сути возможность исполнять в одном ноутбуке код на разных языках.</p>
+<p>В ноутбуке можно создавать ячейки с текстом, в формате маркдайун и ячейки с кодом, на одном из языков, поддерживаемых ядром. Ячейки с кодом, очевидно, можно исполнять прямо в ноутбуке, и получать результат. Результат сохраняется в ноутбуке, как часть <code>ipynb</code> файла, и таким образом можно делиться результатами работы вашего кода, вместе с документацией и самим кодом.</p>
+<h2 id="как-этим-пользоваться">Как этим пользоваться</h2>
+<p>В прошлом видео мы</p>
+<p>говорили о том, как настроить VSCode для работы с Jupyter. В этот раз мы поговорим о том, как создать ноутбук, которым можно поделиться с теми, у кого нет VSCode.</p>
+<p>А как быть в случаях, если ваш ноутбук использует инструменты, которые могут быть не установлены у вашей аудитории. А вдруг и VSCode у них нет?</p>
+<p>Для этого мы будем использовать <a href="https://mybinder.org">Binder</a>. Это проект, который помогает превратить ваш репозиторий с ноутбуками в Docker контейнер, и запустить его онлайн. Вы даже можете подготовить свой Docker файл, с нужными вам ядрами, скриптами, инструментами. Если положить его в корень репозитория, то Binder соберет на его основе образ, и запустит его. Пример такого файла можно найти <a href="https://github.com/eosfor/scripting-notes/blob/main/Dockerfile">тут</a>. В <a href="https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html">документации к Binder</a> указано, что Docker рекомендуется использовать только в обычных случаях. У меня как раз такой случай, я использую ядро, которое не идет по-умолчанию, и мне нужно было установить некоторые дополнительные инструменты, как <code>minizinc</code>. Этот Dockerfile создает образ Docker для среды, основанной на Jupyter Notebook, с дополнительными установками и конфигурациями. Вот краткое разъяснение каждого этапа в этом Dockerfile:</p>
+<ol>
+<li><strong>Многопроходная сборка</strong>:
+<ul>
+<li>Используется многопроходная сборка Docker с двумя базовыми образами: <code>minizinc/minizinc</code> и <code>jupyter/base-notebook:ubuntu-20.04</code>.</li>
+<li>Команды <code>COPY --from=composer</code> копируют файлы из первого этапа сборки (<code>composer</code>) во второй этап сборки (<code>builder</code>).</li>
+</ul>
+</li>
+<li><strong>Установка зависимостей для .NET CLI</strong>:
+<ul>
+<li>Задаются аргументы и переменные среды для последующих команд.</li>
+<li>Устанавливаются необходимые зависимости, включая <code>curl</code>, и другие библиотеки, необходимые для работы .NET Core SDK.</li>
+</ul>
+</li>
+<li><strong>Установка .NET Core SDK</strong>:
+<ul>
+<li>Используется скрипт <code>dotnet-install.sh</code> для установки .NET Core SDK.</li>
+<li>Создается символическая ссылка на исполняемый файл <code>dotnet</code>.</li>
+</ul>
+</li>
+<li><strong>Добавление источников пакетов NuGet</strong>:
+<ul>
+<li>Создается файл <code>NuGet.config</code> с настроенными источниками пакетов NuGet.</li>
+</ul>
+</li>
+<li><strong>Установка <code>nteract_on_jupyter</code></strong>:
+<ul>
+<li>Устанавливается <code>nteract_on_jupyter</code> через pip.</li>
+</ul>
+</li>
+<li><strong>Установка Microsoft.DotNet.Interactive</strong>:
+<ul>
+<li>Устанавливается инструмент <code>Microsoft.DotNet.Interactive</code> через .NET CLI.</li>
+<li>Затем устанавливаются спецификации ядра для Jupyter через <code>dotnet interactive jupyter install</code>.</li>
+</ul>
+</li>
+<li><strong>Обновление прав</strong>:
+<ul>
+<li>Обновляются права на файлы и каталоги, чтобы убедиться, что они принадлежат пользователю <code>jovyan</code>.</li>
+</ul>
+</li>
+<li><strong>Установка рабочего каталога и копирование ноутбуков</strong>:
+<ul>
+<li>Устанавливается рабочий каталог на <code>${HOME}/notebooks/</code>.</li>
+<li>Копируются ноутбуки в рабочий каталог.</li>
+</ul>
+</li>
+</ol>
+<p>После того как этот файл создан и лежит в корне репозитория, <a href="https://mybinder.org">Binder</a>-у можно указать на этот репозиторий. Он склонирует его и попытается собрать образ на основе этого файла.</p>
+<p><img src="/article/more-notebooks-ps/image-1.png" alt="mybindre-build-process"></p>
+<p>Если все пройдет удачно, он загрузит его в container registry и запустит. В итоге ваш код и ваши ноутбуки станут доступны публично.</p>
+<p><img src="/article/more-notebooks-ps/image-2.png" alt="running-notebook"></p>
+    
+</div>
+
+    
+<div class="footer no-tags">
+
+
+    
+
+    
+    <div class="languages">
+        <i class="fa fa-language"></i>
+        <div class="links">
+            
+                <a href="http://localhost:1313/article/more-notebooks-ps/">en</a>
+            
+        </div>
+    </div>
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Последние записи</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/sankey-d3/">Визуализируем трафик, текущий через Azure Firewall c помощью PowerShell, Jupyter и d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/azure-networking-d3js/">Визуализируем Azure Networking при помощи D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/powershell-graph-sysmon/">Анализ связей между приложениями с использованием SysMon</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-deal-with-zscaler-and-azcli/">Как подружить ZScaler и Azure CLI</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/more-notebooks-ps/">Продолжаем разговор о Jupyter и PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/how-to-configure-vscode-for-jupyter/">Как настроить VSCode для работы с Jupyter Notebooks и .NET Interactive</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/ru/article/short-on-jupyter-and-powershell/">Что такое Jupyter Notebooks в двух словах</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Социальные медиа</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Другие языки</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/more-notebooks-ps/">en</a>
+                        
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/ru/article/more-notebooks-ps/" class="active">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

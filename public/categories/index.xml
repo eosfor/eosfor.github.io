@@ -2,37 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Modern IT Engineer</title>
-    <link>https://eosfor.github.io/categories/</link>
+    <link>http://localhost:1313/categories/</link>
     <description>Recent content in Categories on Modern IT Engineer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 25 Jun 2020 21:45:14 -0700</lastBuildDate><atom:link href="https://eosfor.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Azure</title>
-      <link>https://eosfor.github.io/categories/azure/</link>
-      <pubDate>Thu, 25 Jun 2020 21:45:14 -0700</pubDate>
-      
-      <guid>https://eosfor.github.io/categories/azure/</guid>
-      <description></description>
-    </item>
-    
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 04 Dec 2018 01:38:48 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PowerShell</title>
-      <link>https://eosfor.github.io/categories/powershell/</link>
+      <link>http://localhost:1313/categories/powershell/</link>
       <pubDate>Tue, 04 Dec 2018 01:38:48 +0300</pubDate>
-      
-      <guid>https://eosfor.github.io/categories/powershell/</guid>
+      <guid>http://localhost:1313/categories/powershell/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>Azure</title>
+      <link>http://localhost:1313/categories/azure/</link>
+      <pubDate>Sat, 04 Aug 2018 05:03:31 +0300</pubDate>
+      <guid>http://localhost:1313/categories/azure/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Kubernetes</title>
-      <link>https://eosfor.github.io/categories/kubernetes/</link>
+      <link>http://localhost:1313/categories/kubernetes/</link>
       <pubDate>Sat, 04 Aug 2018 05:03:31 +0300</pubDate>
-      
-      <guid>https://eosfor.github.io/categories/kubernetes/</guid>
+      <guid>http://localhost:1313/categories/kubernetes/</guid>
       <description></description>
     </item>
-    
+    <item>
+      <title>PSQuickGraph</title>
+      <link>http://localhost:1313/categories/psquickgraph/</link>
+      <pubDate>Tue, 08 Aug 2017 00:53:57 +0300</pubDate>
+      <guid>http://localhost:1313/categories/psquickgraph/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

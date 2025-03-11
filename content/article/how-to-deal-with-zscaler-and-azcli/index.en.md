@@ -2,7 +2,6 @@
 title: 'How to Make ZScaler and Azure CLI Work Together'
 date: 2023-12-05T19:39:54-08:00
 draft: true
-featuredImage: "article/how-to-deal-with-zscaler-and-azcli/header.png"
 ---
 
 There are times when ZScaler can get quite bothersome, and recently, I had one of those moments. This note aims to share the steps needed to get the Azure CLI to cooperate with ZScaler.

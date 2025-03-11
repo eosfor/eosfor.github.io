@@ -1,20 +1,54 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>PowerShell on Modern IT Engineer</title>
-    <link>https://eosfor.github.io/tags/powershell/</link>
-    <description>Recent content in PowerShell on Modern IT Engineer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 04 Dec 2018 01:38:48 +0300</lastBuildDate><atom:link href="https://eosfor.github.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <title>Powershell on Modern IT Engineer</title>
+    <link>http://localhost:1313/tags/powershell/</link>
+    <description>Recent content in Powershell on Modern IT Engineer</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 01 Oct 2023 18:39:14 -0700</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to automate IP ranges calculations in Azure using PowerShell</title>
+      <link>http://localhost:1313/article/using-ipmgmt-more-samples/</link>
+      <pubDate>Sun, 01 Oct 2023 18:39:14 -0700</pubDate>
+      <guid>http://localhost:1313/article/using-ipmgmt-more-samples/</guid>
+      <description>&lt;p&gt;Suppose we have been allocated the IP range of &lt;code&gt;10.172.0.0/16&lt;/code&gt; by the network team for planned Azure Landing Zones. The goal is to automate this by creating a tool that will automatically calculate IP ranges for us, based on some high-level and easy-to-understand details regarding the future networks.&lt;/p&gt;&#xA;&lt;p&gt;This notebook demonstrates how to achieve this using the &lt;a href=&#34;https://github.com/eosfor/ipmgmt&#34;&gt;ipmgmt&lt;/a&gt; module.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Using IP management module</title>
-      <link>https://eosfor.github.io/posts/2018-12-04-using-ipmanagement-module/</link>
+      <link>http://localhost:1313/article/ipmgmt-module/</link>
       <pubDate>Tue, 04 Dec 2018 01:38:48 +0300</pubDate>
-      
-      <guid>https://eosfor.github.io/posts/2018-12-04-using-ipmanagement-module/</guid>
-      <description>Ok, now lets start using this thing. Assume we&amp;rsquo;ve got three different ranges &amp;lsquo;10.192.0.0/11&amp;rsquo;, &amp;lsquo;10.64.0.0/11&amp;rsquo; and &amp;lsquo;10.128.0.0/11&amp;rsquo;. These ranges correspond to three different geographic locations in Azure. There are already some ranges used in these top level blocks. And we have the whole list of ranges, which are in use already. So what we want to achieve is we want to automatically select the next available range and provision VNET for it.</description>
+      <guid>http://localhost:1313/article/ipmgmt-module/</guid>
+      <description>&lt;p&gt;Assume we&amp;rsquo;ve got three different ranges &amp;lsquo;10.192.0.0/11&amp;rsquo;, &amp;lsquo;10.64.0.0/11&amp;rsquo; and &amp;lsquo;10.128.0.0/11&amp;rsquo;. These ranges correspond to three different geographic locations in Azure. There are already some ranges used in these top level blocks. And we have the whole list of ranges, which are in use already. So what we want to achieve is we want to automatically select the next available range and provision VNET for it.&lt;/p&gt;</description>
     </item>
-    
+    <item>
+      <title>Use Powershell to analyze Sysmon events</title>
+      <link>http://localhost:1313/article/powershell-graph-sysmon/</link>
+      <pubDate>Thu, 10 Aug 2017 13:37:07 +0300</pubDate>
+      <guid>http://localhost:1313/article/powershell-graph-sysmon/</guid>
+      <description>&lt;p&gt;Hello colleagues, this is an example I promised answering &lt;a href=&#34;https://twitter.com/cyb3rops/status/895024725730238464&#34;&gt;this&lt;/a&gt; tweet. I used this &lt;a href=&#34;https://github.com/SwiftOnSecurity/sysmon-config&#34;&gt;sysmon config&lt;/a&gt; to capture activities happening on my system. Unfortunately it did not capture a lot of network-related activities, perhaps I need to change it to extend network-level filters. But on the other hand it captured a lot of process level activities, so in this example i&amp;rsquo;d like to try to graph process creation events.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Using graphs to analyze Windows Firewall logs</title>
+      <link>http://localhost:1313/article/graphs-windows-firewall/</link>
+      <pubDate>Tue, 08 Aug 2017 00:53:57 +0300</pubDate>
+      <guid>http://localhost:1313/article/graphs-windows-firewall/</guid>
+      <description>&lt;p&gt;Hello colleagues, lets talk about how we can use graphs to look inside of communications happening in our environments in an easy way. First of all we need to have some data to analyze. Lets gather some. It is pretty simple - just use &lt;a href=&#34;https://technet.microsoft.com/en-us/library/cc947815%28v=ws.10%29.aspx&#34;&gt;this article&lt;/a&gt; and enable Windows Firewall Logging. I usually put the logs into a separate folder, just for easy access. Here is how it looks like on my system:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Enhancing VM Search in Azure with PowerShell</title>
+      <link>http://localhost:1313/article/search-azure-objects2/</link>
+      <pubDate>Thu, 17 Dec 2015 10:35:09 +0300</pubDate>
+      <guid>http://localhost:1313/article/search-azure-objects2/</guid>
+      <description>&lt;p&gt;In this walkthrough, we&amp;rsquo;ll explore various functionalities of PowerShell, including dynamic parameters, parallel execution of script blocks, and index building for efficient searches, among other features.&lt;/p&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s dive in by understanding the problem at hand. Often, there&amp;rsquo;s a need to search VMs not only by their names but also by their internal IP addresses or the names of their disks. However, the absence of an out-of-the-box API for this task led me to develop a custom tool. The goals were outlined as follows:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Search Azure Objects</title>
+      <link>http://localhost:1313/article/search-azure-objects/</link>
+      <pubDate>Mon, 02 Nov 2015 19:35:54 +0300</pubDate>
+      <guid>http://localhost:1313/article/search-azure-objects/</guid>
+      <description>&lt;p&gt;In our environment we have more than one subscription. Even more than five. And this amount grows constantly. What we do with all of this is we support VMs and stuff there. One of the issues is that users usually do not know name of Azure Service which is used to host their VMs, and it so happens that they do not know even their Subscription Name or Subscription ID. To bring up and control their VMs and environments the use some “middleware” which hides all of this info from them. So they usually come to us and say: “here you are a list of VMs we have problems with, please have a look and fix”. Sometimes such list contains not only VMs but storage accounts along with VMs etc. Unfortunately classic azure cmdlets does not provide an option to search for objects in the cloud by their name. On the other hand new Azure Management portal does. It can find objects by name. So I decided to do a little hack end use this API in order to simplify our live.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

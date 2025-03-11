@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="en">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Using IP management module &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Using IP management module">
+    <meta itemprop="description" content="How to use ipmgmt PowerShell module">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/article/ipmgmt-module/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Using IP management module">
+  <meta property="og:description" content="How to use ipmgmt PowerShell module">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2018-12-04T01:38:48+03:00">
+    <meta property="article:modified_time" content="2018-12-04T01:38:48+03:00">
+    <meta property="article:tag" content="Powershell">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/article/ipmgmt-module/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/ipmgmt-module/" class="active">en</a>
+                
+            
+                
+                
+
+                
+                    <a href="/ru/">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/article/ipmgmt-module/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/article/ipmgmt-module/">
+            Using IP management module
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2018-12-04</span>
+            
+        
+
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="http://localhost:1313/categories/powershell/">PowerShell</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>Assume we&rsquo;ve got three different ranges &lsquo;10.192.0.0/11&rsquo;, &lsquo;10.64.0.0/11&rsquo; and &lsquo;10.128.0.0/11&rsquo;. These ranges correspond to three different geographic locations in Azure. There are already some ranges used in these top level blocks. And we have the whole list of ranges, which are in use already. So what we want to achieve is we want to automatically select the next available range and provision VNET for it.</p>
+<h1 id="the-process">The process</h1>
+<p>Lets say we&rsquo;ve extracted all VNET ranges and got their list, like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$nets = <span style="color:#e6db74">&#39;10.192.1.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.192.2.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.192.3.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.192.6.0/24&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;10.192.7.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.192.8.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.192.9.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.64.1.0/24&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;10.64.2.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.64.3.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.64.4.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.64.5.0/24&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;10.64.8.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.64.9.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.128.1.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.128.2.0/24&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;10.128.4.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.128.5.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.128.7.0/24&#39;</span>,<span style="color:#e6db74">&#39;10.128.8.0/22&#39;</span>
+</span></span></code></pre></div><p>Assume we need to find the next range of size /22 in the network &lsquo;10.64.0.0/11&rsquo;. We do it this way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-IPRanges -Networks $nets -CIDR <span style="color:#ae81ff">22</span> -BaseNet <span style="color:#e6db74">&#34;10.64.0.0/11&#34;</span> | ft -AutoSize
+</span></span></code></pre></div><p><img src="/article/ipmgmt-module/2018-12-04-16-40-18.png" alt="fisttest"></p>
+<p>What this output shows is the list of your networks, marked by IsFree flag. Basically, it assumes that if the range is in the list, then it is in use. The row, where IsFree is true, is the range that the commandlet identified as a next available slot for your network. Lets try another one</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-IPRanges -Networks $nets -CIDR <span style="color:#ae81ff">24</span> -BaseNet <span style="color:#e6db74">&#34;10.64.0.0/11&#34;</span> | ft -AutoSize
+</span></span></code></pre></div><p>In this case output is a bit different. First two ranges, which have been identified fits one of free slots that the base network range has. And the last one, is the slot at the end of the list of occupied ranges.</p>
+<p><img src="/article/ipmgmt-module/2018-12-04-16-40-51.png" alt="secondtest"></p>
+<p>So if we want to filter out just those, that we are interested in, we can do like below, so we can pick one of these.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-IPRanges -Networks $nets -CIDR <span style="color:#ae81ff">24</span> -BaseNet <span style="color:#e6db74">&#34;10.64.0.0/11&#34;</span> | ? isfree <span style="color:#f92672">-eq</span> $true | ft -AutoSize
+</span></span></code></pre></div><p><img src="/article/ipmgmt-module/2018-12-04-16-44-26.png" alt="thirdtest"></p>
+<p>Ok, lets say we&rsquo;ve chosen &lsquo;10.64.6.0/24&rsquo;. Next step is to break it down by subnets, if needed. Let say that because of some corporate policies we want to have four subnets in this VNET. First subnet will be reserved for Gateway subnet, then we have a DMZ subnet, to put our WAF, as no other devices is supported in the WAF subnet. Next subnet, we call it EDGE - is basically a subnet we put put our WEB-facing VMs into, then APP - for application layer, and BKE - for data layer. In order to do this automatically we need to have a range we picked up on the previous step. And we need to define a layout. We need also to specify a size of each subnet in number of IPs. Like below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$subnets = @{type = <span style="color:#e6db74">&#34;GTWSUBNET&#34;</span>; size = <span style="color:#ae81ff">30</span>},
+</span></span><span style="display:flex;"><span>@{type = <span style="color:#e6db74">&#34;DMZSUBNET&#34;</span>; size = <span style="color:#ae81ff">62</span>},
+</span></span><span style="display:flex;"><span>@{type = <span style="color:#e6db74">&#34;EDGSUBNET&#34;</span>; size = <span style="color:#ae81ff">30</span>},
+</span></span><span style="display:flex;"><span>@{type = <span style="color:#e6db74">&#34;APPSUBNET&#34;</span>; size = <span style="color:#ae81ff">62</span>},
+</span></span><span style="display:flex;"><span>@{type = <span style="color:#e6db74">&#34;BKESUBNET&#34;</span>; size = <span style="color:#ae81ff">62</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Get-VLSMBreakdown -Network <span style="color:#ae81ff">10.64</span>.6.<span style="color:#ae81ff">0</span>/<span style="color:#ae81ff">24</span> -SubnetSize $subnets | ft -AutoSize
+</span></span></code></pre></div><p>This will be our VNET breakdown, by subnets</p>
+<p><img src="/article/ipmgmt-module/2018-12-04-16-53-13.png" alt="breakdown"></p>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/powershell/">Powershell</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/article/sankey-d3/">Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/azure-networking-d3js/">Visualizing Azure Networking using D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/how-to-deal-with-zscaler-and-azcli/">How to Make ZScaler and Azure CLI Work Together</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/more-notebooks-ps/">Continuing the Conversation on Jupyter and PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/no-caf-webapps/">Do we always need to follow CAF recommendations?</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/aproach-to-optimizing-vm-costs/">Approach to Optimizing VM Costs</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/using-ipmgmt-more-samples/">How to automate IP ranges calculations in Azure using PowerShell</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            
+            <a href="http://localhost:1313/categories/"><strong>Categories</strong></a>
+            
+
+            <ul>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/powershell/">PowerShell (2)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/azure/">Azure (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/kubernetes/">Kubernetes (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/psquickgraph/">PSQuickGraph (1)</a>
+                
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Other languages</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/ipmgmt-module/" class="active">en</a>
+                        
+                    
+                        
+                        
+
+                        
+                            <a href="/ru/">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>

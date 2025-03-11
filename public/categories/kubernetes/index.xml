@@ -2,20 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kubernetes on Modern IT Engineer</title>
-    <link>https://eosfor.github.io/categories/kubernetes/</link>
+    <link>http://localhost:1313/categories/kubernetes/</link>
     <description>Recent content in Kubernetes on Modern IT Engineer</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 04 Aug 2018 05:03:31 +0300</lastBuildDate><atom:link href="https://eosfor.github.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 04 Aug 2018 05:03:31 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Considerations when running private AKS cluster</title>
-      <link>https://eosfor.github.io/posts/2018-08-04-considerations-when-running-private-aks/</link>
+      <link>http://localhost:1313/article/aks-considerations/</link>
       <pubDate>Sat, 04 Aug 2018 05:03:31 +0300</pubDate>
-      
-      <guid>https://eosfor.github.io/posts/2018-08-04-considerations-when-running-private-aks/</guid>
-      <description>For the last two weeks I&amp;rsquo;ve been playing with Azure Kubernetes Service (AKS) and with it&amp;rsquo;s public counterpart - acs-engine. Here is a bit about the experience I got with it, having in mind I&amp;rsquo;ve never worked with these tools before. Here I&amp;rsquo;m trying to look at this from the Infrastructure perspective, but not from the developers&amp;rsquo; perspective.
-Containers, Cloud and private environments Few things to keep in mind for AKS Well first of all, lets see what we&amp;rsquo;ve got.</description>
+      <guid>http://localhost:1313/article/aks-considerations/</guid>
+      <description>&lt;p&gt;For the last two weeks I&amp;rsquo;ve been playing with &lt;a href=&#34;https://docs.microsoft.com/en-us/azure/aks/&#34;&gt;Azure Kubernetes Service&lt;/a&gt; (AKS) and with it&amp;rsquo;s public counterpart - &lt;a href=&#34;https://github.com/Azure/acs-engine&#34;&gt;acs-engine&lt;/a&gt;. Here is a bit about the experience I got with it, having in mind I&amp;rsquo;ve never worked with these tools before. Here I&amp;rsquo;m trying to look at this from the Infrastructure perspective, but not from the developers&amp;rsquo; perspective.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

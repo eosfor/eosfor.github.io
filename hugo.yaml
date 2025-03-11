@@ -1,7 +1,7 @@
 baseURL: 'https://eosfor.darkcity.dev'
 languageCode: 'en-us'
 title: 'Modern IT Engineer'
-theme: 'bilberry-hugo-theme/v4'
+theme: 'bilberry-hugo-theme'
 builddrafts: true
 googleAnalytics: G-4SWGXNDCQX
 

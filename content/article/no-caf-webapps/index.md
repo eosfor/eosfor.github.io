@@ -2,7 +2,6 @@
 title: 'Do we always need to follow CAF recommendations?'
 date: 2023-10-12T09:46:34-07:00
 draft: true
-featuredImage: "article/no-caf-webapps/newroad.jpg"
 ---
 
 In the journey of infrastructure creation within Azure, many organizations lean towards crafting complex hub-and-spoke topologies to host their applications, even when the necessity for such complexity isn’t apparent. A common justification echoes: “It’s mandated by the [Microsoft Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)”. However, embarking on this path unfolds a myriad of related, albeit previously unexplored, domains. For instance, the newfound need to manage IP spaces, delve into VLSM subnetting - topics unfamiliar to most Dev teams. Once networked, the quest doesn’t end; it merely morphs into challenges like private DNS resolution, establishing access to internal resources, and the list trails on.
@@ -24,7 +23,6 @@ Our compass is pointed towards simplicity, without trading off security. This si
 - [Deploy Web Apps](#deploy-web-apps)
   - [Cleanup](#cleanup)
 
-> If you want to try this out, there is a Jupyter notebook, which works in {{< hyperlink-image "Binder" "https://mybinder.org/badge_logo.svg" "https://mybinder.org/v2/gh/eosfor/scripting-notes/HEAD" >}}
 
 ## Overview
 

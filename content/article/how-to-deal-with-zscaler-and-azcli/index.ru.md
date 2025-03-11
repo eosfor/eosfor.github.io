@@ -2,7 +2,6 @@
 title: 'Как подружить ZScaler и Azure CLI'
 date: 2023-12-05T19:39:54-08:00
 draft: true
-featuredImage: "article/how-to-deal-with-zscaler-and-azcli/header.png"
 ---
 
 Иногда ZScaler может усложнить работу, и вот один из таких случаев. В этой заметке я хочу поделиться настройкой Azure CLI для работы с ZScaler.

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+
+  
+<html itemscope itemtype="https://schema.org/WebPage" class="no-js" lang="en">
+
+<head prefix="og: http://ogp.me/ns#"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="http://localhost:1313/">
+    <meta name="author" content="eosfor">
+    <meta name="description" content="My thoughts around modern IT">
+    <meta name="keywords" content="">
+    <meta name="generator" content="Hugo 0.145.0">
+    <title>
+        
+           
+               Enhancing VM Search in Azure with PowerShell &vert; Modern IT Engineer
+           
+        
+    </title>
+    <meta itemprop="name" content="Enhancing VM Search in Azure with PowerShell">
+    <meta itemprop="description" content="Enhancing VM Search in Azure with PowerShell - My thoughts around modern IT">
+    <meta property="og:site_name" content="Modern IT Engineer">
+
+    <meta property="og:url" content="http://localhost:1313/article/search-azure-objects2/">
+  <meta property="og:site_name" content="Modern IT Engineer">
+  <meta property="og:title" content="Enhancing VM Search in Azure with PowerShell">
+  <meta property="og:description" content="In this walkthrough, we’ll explore various functionalities of PowerShell, including dynamic parameters, parallel execution of script blocks, and index building for efficient searches, among other features.
+Let’s dive in by understanding the problem at hand. Often, there’s a need to search VMs not only by their names but also by their internal IP addresses or the names of their disks. However, the absence of an out-of-the-box API for this task led me to develop a custom tool. The goals were outlined as follows:">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="article">
+    <meta property="article:published_time" content="2015-12-17T10:35:09+03:00">
+    <meta property="article:modified_time" content="2015-12-17T10:35:09+03:00">
+    <meta property="article:tag" content="Powershell">
+    <meta property="article:tag" content="Azure">
+
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+
+
+    
+    <link rel="canonical" href="http://localhost:1313/article/search-azure-objects2/">
+    
+
+    <link rel="stylesheet" href="http://localhost:1313/theme.css">
+
+    
+
+    
+
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+    
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/" class="logo">
+                
+                    <img src="/img/avatar.jpg" alt="">
+                
+
+                <span class="overlay"><i class="fa fa-home"></i></span>
+            </a>
+        </div>
+        <div class="titles">
+            <h3 class="title">
+                <a href="/">
+                    Modern IT Engineer
+                </a>
+            </h3>
+
+            
+        </div>
+
+        <div class="languages">
+            
+                
+                
+                  
+                
+
+                
+                    <a href="/article/search-azure-objects2/" class="active">en</a>
+                
+            
+                
+                
+
+                
+                    <a href="/ru/">ru</a>
+                
+            
+            </div>
+        
+
+        
+            <div class="toggler">
+        
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+    </div>
+</header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="http://localhost:1313/article/search-azure-objects2/">
+    <i class="fas fa-fw fa-pencil-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="http://localhost:1313/article/search-azure-objects2/">
+            Enhancing VM Search in Azure with PowerShell
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2015-12-17</span>
+            
+        
+
+        
+
+        
+
+        
+    </div>
+
+    
+        
+
+        <p>In this walkthrough, we&rsquo;ll explore various functionalities of PowerShell, including dynamic parameters, parallel execution of script blocks, and index building for efficient searches, among other features.</p>
+<p>Let&rsquo;s dive in by understanding the problem at hand. Often, there&rsquo;s a need to search VMs not only by their names but also by their internal IP addresses or the names of their disks. However, the absence of an out-of-the-box API for this task led me to develop a custom tool. The goals were outlined as follows:</p>
+<ul>
+<li>Speedily extract data from Azure using parallel threads.</li>
+<li>Avoid multiple lookups in the VM array by employing an index.</li>
+<li>Ensure the flexibility to add indexes as needed, with search commands adapting dynamically.</li>
+<li>Prioritize the use of standard, documented REST calls.</li>
+<li>Utilize classic REST calls, given that nearly all VMs are V1.</li>
+</ul>
+<p>For a quick glance at the code, <a href="https://github.com/eosfor/AzureSearch">check out the samples here</a>.</p>
+<h2 id="extracting-data">Extracting Data</h2>
+<p>Our environment comprises more than ten subscriptions, a number that&rsquo;s slated to grow. The lookup procedure should seamlessly span all existing subscriptions and automatically discover new ones as they emerge. The pragmatic approach I identified was to locally store all data extracted from Azure in an array. Initial trials using the traditional PowerShell Azure cmdlets like <code>Get-AzureVM</code> proved to be slow, especially for a single subscription. An attempt to run this cmdlet in parallel using the <a href="https://github.com/powercode/PSParallel">PSParallel</a> module was unfruitful, as some cmdlets within the MS Azure module seemed unprepared for parallel execution. The issues suspected to emanate from the <code>Select-AzureSubscription</code> part resulted in unpredictable failures and peculiar error messages. After a period of experimentation, I opted to switch gears to the Azure REST API for data extraction. Although this shift made it unfeasible to pass the returned objects to other Azure cmdlets, the upside was a significantly quicker data retrieval. The way to circumvent this limitation remains a subject for future exploration.</p>
+<p>The first step was to list cloud services in parallel using <a href="https://msdn.microsoft.com/en-us/library/azure/ee460781.aspx?tduid=%287e6af0dae94cd99be610744b05b54dd4%29%28256380%29%282459594%29%28XdSn0e3h3.k-wrFcUJSbpSAsQV7.MdbuBQ%29%28%29">this call</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$sub = Get-AzureSubscription
+</span></span><span style="display:flex;"><span>$h = $sub.SubscriptionId | Invoke-Parallel { Invoke-RestMethod -uri https<span style="color:#960050;background-color:#1e0010">:</span>//management.core.windows.net/$_/services/hostedservices -Method GET -Headers $headers }
+</span></span></code></pre></div><p>This method was efficient and speedy. Following that, I executed <a href="https://msdn.microsoft.com/en-us/library/azure/ee460804.aspx">get deployment</a> to extract VM data and store it into a hashtable using the service name as a key. Upon completion, a list of all VMs across all subscriptions was at my disposal.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ht = [<span style="color:#66d9ef">hashtable</span>]::Synchronized(@{})
+</span></span><span style="display:flex;"><span>$h.HostedServices.HostedService | skip-null | invoke-parallel {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#declare function inside of the script block</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> xmlToObject {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">param</span>($o)
+</span></span><span style="display:flex;"><span>        $h = @{}
+</span></span><span style="display:flex;"><span>        $o  | gm -MemberType Property | % {
+</span></span><span style="display:flex;"><span>            $prop = $_.name
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ($o.<span style="color:#e6db74">&#39;$prop&#39;</span> <span style="color:#f92672">-is</span> <span style="color:#e6db74">&#39;System.Xml.XmlElement&#39;</span>) {
+</span></span><span style="display:flex;"><span>                $h[$prop] = xmlToObject $o.<span style="color:#e6db74">&#39;$prop&#39;</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> { $h[$prop] = $o.<span style="color:#e6db74">&#39;$prop&#39;</span> }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        $h
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>        $curr = $_
+</span></span><span style="display:flex;"><span>        $subId = ([<span style="color:#66d9ef">uri</span>]$curr.Url).Segments[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">-replace</span> <span style="color:#e6db74">&#39;\/&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        $d = Invoke-RestMethod -uri <span style="color:#e6db74">&#34;https://management.core.windows.net/</span>$subId<span style="color:#e6db74">/services/hostedservices/</span>$($curr.ServiceName)<span style="color:#e6db74">/deploymentslots/production&#34;</span> -Method GET -Headers $headers
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($d) {
+</span></span><span style="display:flex;"><span>            $ri1 = $d.Deployment.RoleInstanceList.RoleInstance | % { xmlToObject $_ }
+</span></span><span style="display:flex;"><span>            $ro1 = $d.Deployment.RoleList.Role | % { xmlToObject $_  }
+</span></span><span style="display:flex;"><span>            $ht[$curr.ServiceName] = $ri1 | % {$c = $_; $r = $c.<span style="color:#e6db74">&#39;RoleName&#39;</span>; $x = $ro1 | where {$_.<span style="color:#e6db74">&#39;RoleName&#39;</span> <span style="color:#f92672">-eq</span> $r}; $x.remove(<span style="color:#e6db74">&#39;RoleName&#39;</span>); [<span style="color:#66d9ef">pscustomobject</span>]($_ + $x) }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> { $ht[$curr.ServiceName] = $null }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">catch</span> { $data = <span style="color:#ae81ff">1</span> }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>A couple of points to note here. Firstly, the data returned by the call is formatted peculiarly. VM information is stored in</p>
+<p>two different places: in the <code>RoleInstanceList</code> subtree and the <code>RoleList</code> subtree. To streamline the subsequent index creation, I converted the mentioned XML subtrees to hashtables, merged them, and produced a <code>pscustomobject</code>. This new object was then added to a hashtable under the appropriate cloud service. Secondly, the conversion was executed by the <code>xmlToObject</code> function, which had to be explicitly added to each &ldquo;thread&rdquo;. Hence, the script block to run comprises the definition of the <code>xmlToObject</code> function alongside the REST method invocation.</p>
+<p>In essence, this script block extracts all deployments from the Cloud Service, retrieves machine details from the results, creates objects for each machine, and adds these objects to a hashtable under a Cloud Service Key. Consequently, we have a list of VMs indexed by Cloud Service Name.</p>
+<h2 id="building-indexes">Building Indexes</h2>
+<p>At this juncture, all the necessary data is at our fingertips. However, the need for a sudden lookup may arise, and without proper indexing, this process could be time-consuming, especially with multiple lookups. A straightforward solution is to build additional indexes using PowerShell hashtables:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># prepare indexes</span>
+</span></span><span style="display:flex;"><span>$ipAddrIndex = @{}
+</span></span><span style="display:flex;"><span>$storageAcctIndex = @{}
+</span></span><span style="display:flex;"><span>$storageFileIndex = @{}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#build indexes</span>
+</span></span><span style="display:flex;"><span>$ht.Keys | % {
+</span></span><span style="display:flex;"><span>    $ht[$_] | % {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($_.ipaddress) {$ipAddrIndex[$_.ipaddress] = $ipAddrIndex[$_.ipaddress] + (, $_)}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {$ipAddrIndex[<span style="color:#e6db74">&#39;noip&#39;</span>] = $ipAddrIndex[<span style="color:#e6db74">&#39;noip&#39;</span>] + (, $_)}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>$ht.Keys | % {
+</span></span><span style="display:flex;"><span>    $ht[$_] | % {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($_.OSVirtualHardDisk) {$url = [<span style="color:#66d9ef">uri</span>]$_.OSVirtualHardDisk.MediaLink; $storageAcctIndex[$url.host] = $storageAcctIndex[$url.host] + (, $_)}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {$storageAcctIndex[<span style="color:#e6db74">&#39;noDisk&#39;</span>] = $storageAcctIndex[<span style="color:#e6db74">&#39;noDisk&#39;</span>] + (, $_)}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>$ht.Keys | % {
+</span></span><span style="display:flex;"><span>    $ht[$_] | % {
+</span></span><span style="display:flex;"><span>        $curr = $_
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($_.OSVirtualHardDisk) {$url = [<span style="color:#66d9ef">uri</span>]$_.OSVirtualHardDisk.MediaLink; $storageFileIndex[$url.Segments[<span style="color:#ae81ff">-1</span>]] = $storageFileIndex[$url.Segments[<span style="color:#ae81ff">-1</span>]] + (, $_)}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {$storageFileIndex[<span style="color:#e6db74">&#39;noDrive&#39;</span>] = $storageFileIndex[<span style="color:#e6db74">&#39;noDrive&#39;</span>] + (, $_)}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($_.DataVirtualHardDisks) {
+</span></span><span style="display:flex;"><span>            $_.DataVirtualHardDisks.DataVirtualHardDisk | % {
+</span></span><span style="display:flex;"><span>                $url = [<span style="color:#66d9ef">uri</span>]$_.MediaLink; $storageFileIndex[$url.Segments[<span style="color:#ae81ff">-1</span>]] = $storageFileIndex[$url.Segments[<span style="color:#ae81ff">-1</span>]] + (, $curr)
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The task here involves traversing the array of VMs, extracting a value of the property we are interested in, and using it as a key in a hashtable. The value for this key is the object itself. For instance, a basic index could be created by the private IP address of the VMs. In this scenario, we run through objects in the original hashtable, extract the IP address of the machine, and create a record in a new hashtable with this IP as a key and the current object as the value.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ht.Keys | % {
+</span></span><span style="display:flex;"><span>    $ht[$_] | % {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ($_.ipaddress) {$ipAddrIndex[$_.ipaddress] = $ipAddrIndex[$_.ipaddress] + (, $_)}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {$ipAddrIndex[<span style="color:#e6db74">&#39;noip&#39;</span>] = $ipAddrIndex[<span style="color:#e6db74">&#39;noip&#39;</span>] + (, $_)}
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now, all our data is housed in a hashtable, along with a couple of indexes. In my case, they are by IP address, by storage account, and by VHD file names of the VMs. With these indexes, we can search for a VM using just the semantics of the hashtable as shown below. It returns all the VMs across all subscriptions with a private IP address of 10.10.10.10.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ipAddrIndex[<span style="color:#e6db74">&#39;10.10.10.10&#39;</span>]
+</span></span></code></pre></div><p>In the next article, we&rsquo;ll explore how to construct a cmdlet that dynamically builds its parameter set based on the names of indexes to perform lookups on those indexes.</p>
+
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/powershell/">Powershell</a>
+                    
+                
+                    
+                    
+                    <a href="http://localhost:1313/tags/azure/">Azure</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+            
+
+            
+
+        </div>
+    
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="http://localhost:1313/article/sankey-d3/">Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/azure-networking-d3js/">Visualizing Azure Networking using D3js</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/how-to-deal-with-zscaler-and-azcli/">How to Make ZScaler and Azure CLI Work Together</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/more-notebooks-ps/">Continuing the Conversation on Jupyter and PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/no-caf-webapps/">Do we always need to follow CAF recommendations?</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/aproach-to-optimizing-vm-costs/">Approach to Optimizing VM Costs</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://localhost:1313/article/using-ipmgmt-more-samples/">How to automate IP ranges calculations in Azure using PowerShell</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            
+            <a href="http://localhost:1313/categories/"><strong>Categories</strong></a>
+            
+
+            <ul>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/powershell/">PowerShell (2)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/azure/">Azure (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/kubernetes/">Kubernetes (1)</a>
+                
+                </li>
+                
+                <li>
+                
+                    <a href="http://localhost:1313/categories/psquickgraph/">PSQuickGraph (1)</a>
+                
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+                
+            </div>
+            
+
+            <div class="languages">
+                    <strong>Other languages</strong>
+                    
+                        
+                        
+                            
+                        
+
+                        
+                            <a href="/article/search-azure-objects2/" class="active">en</a>
+                        
+                    
+                        
+                        
+
+                        
+                            <a href="/ru/">ru</a>
+                        
+                    
+                </div>
+            
+
+            
+            <div class="archive">
+                
+            </div>
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/Lednerb" target="_blank">
+                &copy;
+                
+                2018 - 2025
+                
+                by Lednerb
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/Lednerb/bilberry-hugo-theme"
+                target="_blank">Bilberry Hugo Theme</a>
+        </div>
+    </div>
+</div>
+
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWGXNDCQX"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4SWGXNDCQX');
+        }
+      </script>
+
+    
+    <script src="http://localhost:1313/theme.js"></script>
+    
+
+    
+
+    
+
+    
+</body>
+
+</html>
