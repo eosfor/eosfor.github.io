@@ -5,10 +5,20 @@
     <description>Recent content on Modern IT Engineer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 02 May 2024 21:36:03 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 11 Mar 2025 01:25:25 -0700</lastBuildDate>
     
         <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Adventures in Agentic AI Simulation Land</title>
+      <link>http://localhost:1313/article/agentic-ai-infra-sim/</link>
+      <pubDate>Tue, 11 Mar 2025 01:25:25 -0700</pubDate>
+      
+      <guid>http://localhost:1313/article/agentic-ai-infra-sim/</guid>
+      <description>&lt;p&gt;(Or, How We Learned to Stop Worrying and Love the Cloud)&lt;/p&gt;
+&lt;p&gt;Have you ever wondered how a cloud-based, multi-agent AI service handles a flurry of incoming user requests without spontaneously combusting? Well, wonder no more! In this blog post, we’ll embark on a fun, light-hearted journey through a simulation that tests just how gracefully an AI agentic system (think: a set of AI agents working together) scales, splits, and handles all sorts of query traffic. We’ll talk about our framework, assumptions, code, and results—complete with a snazzy chart to show off our data.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Visualizing Traffic Flow through Azure Firewall Using PowerShell, Jupyter, and d3js</title>
