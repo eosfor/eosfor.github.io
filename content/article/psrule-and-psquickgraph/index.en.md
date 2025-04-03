@@ -86,6 +86,12 @@ Export-Graph -Graph $global:connectionGraph -Format MSAGL_SUGIYAMA -Path ./outpu
 
 This visualization is handy for quickly analyzing dependencies and identifying potential issues.
 
+![depGraph](pvtEndpointGraph.svg)
+
 Thus, we conveniently separate data collection, graph building, and final validation. This ensures our Azure infrastructure matches the intended architecture.
+
+And, of course you can try it all yourself in:
+
+[![codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=eosfor/psrule-demo&ref=main)
 
 Have you faced similar challenges? I'd love to hear how you validate dependencies between Azure resources!

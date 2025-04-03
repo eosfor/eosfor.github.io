@@ -86,6 +86,12 @@ Export-Graph -Graph $global:connectionGraph -Format MSAGL_SUGIYAMA -Path ./outpu
 
 Это удобно для быстрого визуального анализа и поиска проблем.
 
+![depGraph](pvtEndpointGraph.svg)
+
 Получается удобно: отдельно собираем данные, отдельно строим граф, отдельно проверяем его. Так мы точно уверены, что наша инфраструктура в Azure реализована именно так, как задумывалось.
+
+Ну и как вишенка на торте, увидеть и даже попробовать можно прямо тут:
+
+[![codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=eosfor/psrule-demo&ref=main)
 
 А вы сталкивались с подобными задачами? Поделитесь, как вы проверяете зависимости между ресурсами в Azure!
